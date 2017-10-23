@@ -1,0 +1,37 @@
+<profile>
+	<services>
+		<service>
+			<uuid>0000180d-0000-1000-8000-00805f9b34fb</uuid>
+			
+			<characteristics>
+				<characteristic>
+					<uuid>00002a37-0000-1000-8000-00805f9b34fb</uuid>
+					<value>0</value>
+					<permission>read</permission>
+					<descriptors>
+						<descriptor>
+							<uuid>00002902-0000-1000-8000-00805f9b34fb</uuid>
+							<value>Description in human readable form</value>
+						</descriptor>
+						<descriptor>
+							<uuid>00002901-0000-1000-8000-00805f9b34fb</uuid>
+							<value>Lorem ipsum consens nonses</value>
+						</descriptor>
+					</descriptors>
+				</characteristic>
+
+				<characteristic>
+					<uuid>00002a38-0000-1000-8000-00805f9b34fb</uuid>
+					<permission>notify</permission>
+					<value>0</value>
+				</characteristic>
+
+				<characteristic>	
+					<uuid>00002a39-0000-1000-8000-00805f9b34fb</uuid>
+					<permission>read write</permission>
+					<value>0</value>
+				</characteristic>
+			</characteristics>
+		</service>
+	</services>
+</profile>
