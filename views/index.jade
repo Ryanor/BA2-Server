@@ -7,8 +7,8 @@ block content
     br
     p Please be sure to fill in all values before submitting
     br
-    div(id='serviceroot', style="display: none")
-        input.remove(type='button', value='-', onclick='this.parentNode.parentNode.removeChild(this.parentNode);')
+    div(id='serviceroot')
+        input.remove(type='button', value='-', onclick='removeService(this)')
         br
         label.service(id='service', for='service') Service
         br
@@ -17,14 +17,26 @@ block content
         br
         label.service(id='serviceUUID', for='serviceUUID') Service UUID:
         input(name='serviceuuid', placeholder="Service UUID", value='')
-        div#characteristic
-            input.add(type='button', value='Add Characteristic', id='add_characteristic')
+        br
+        input.add(type='button', value='Add Characteristic', onclick='addCharacteristic()')
+
+    div(id='characteristicroot', style="display: none")
+            br
+            input.remove(type='button', value='-', onclick='removeCharacteristic(this)')
+            br
+            label.characteristic(id='characteristic', for='characteristic') Characteristic
+            br
+            label.service(id='characteristicUUID', for='servicename') Characteristic UUID:
+            input(name='characteristicUUID', placeholder='Characteristic UUID', value='')
+            br
+            label.service(id='characteristicValueType', for='serviceUUID') Characteristic value type:
+            input(name='characteristicValueType', placeholder="Characteristic value type", value='')
+            br
+            input.add(type='button', value='Add Descriptor', onclick='addDescriptor()')
+    span(id='characteristicend')
     span(id='serviceend')
+    br
     input.add(type='button', value='Add Service', onclick='addService()')
+
     br
     input.send(type='submit' value='Send profile to server')
-    //form(action='/signup',method='post')    style='display: none')
-        div(data-role='fieldcontain')
-                fieldset(data-role='controlgroup')
-                    label(for='email') email
-                        input(id='email',type='text',value='',placeholder='@',name='email')
