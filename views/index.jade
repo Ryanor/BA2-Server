@@ -7,36 +7,27 @@ block content
     br
     p Please be sure to fill in all values before submitting
     br
-    div(id='serviceroot')
-        input.remove(type='button', value='-', onclick='removeService(this)')
-        br
-        label.service(id='service', for='service') Service
-        br
-        label.service(id='servicename', for='servicename') Servicename:
-        input(name='servicename', placeholder='Service name', value='')
-        br
-        label.service(id='serviceUUID', for='serviceUUID') Service UUID:
-        input(name='serviceuuid', placeholder="Service UUID", value='')
-        br
-        input.add(type='button', value='Add Characteristic', onclick='addCharacteristic()')
+        div(id='serviceroot')
+            label.service(id='serviceUUID', for='serviceUUID') Service UUID:
+            input(name='serviceuuid', placeholder="Service UUID", value='')
+            br
+            input.add(type='button', value='Add Characteristic', onclick='addCharacteristic(this)')
 
-    div(id='characteristicroot', style="display: none")
+        div(id='characteristicroot')
             br
             input.remove(type='button', value='-', onclick='removeCharacteristic(this)')
             br
             label.characteristic(id='characteristic', for='characteristic') Characteristic
             br
-            label.service(id='characteristicUUID', for='servicename') Characteristic UUID:
+            label.service(id='characteristicUUID', for='characteristicUUID') Characteristic UUID:
             input(name='characteristicUUID', placeholder='Characteristic UUID', value='')
             br
-            label.service(id='characteristicValueType', for='serviceUUID') Characteristic value type:
+            label.service(id='characteristicValueType', for='characteristicValueType') Characteristic value type:
             input(name='characteristicValueType', placeholder="Characteristic value type", value='')
             br
             input.add(type='button', value='Add Descriptor', onclick='addDescriptor()')
-    span(id='characteristicend')
-    span(id='serviceend')
-    br
-    input.add(type='button', value='Add Service', onclick='addService()')
+        span(id='characteristicend')
 
+        span(id='serviceend')
     br
     input.send(type='submit' value='Send profile to server')

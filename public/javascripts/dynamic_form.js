@@ -1,5 +1,5 @@
 var service = 1;
-var characteristic = 0;
+var characteristic = 1;
 var descriptor = 0;
 
 function addService() {
@@ -17,7 +17,7 @@ function addService() {
     insertHere.parentNode.insertBefore(newFields, insertHere);
 }
 
-function addCharacteristic() {
+function addCharacteristic(context) {
     characteristic++;
     var newFields = document.getElementById('characteristicroot').cloneNode(true);
     newFields.id = '';
@@ -28,12 +28,23 @@ function addCharacteristic() {
         if (theName)
             newField[i].name = theName + characteristic;
     }
-    var insertHere = document.getElementById('characteristicend');
+    var insertHere = context.getElementById('characteristicend');
     insertHere.parentNode.insertBefore(newFields, insertHere);
 }
 
 function addDescriptor() {
-
+    service++;
+    var newFields = document.getElementById('serviceroot').cloneNode(true);
+    newFields.id = '';
+    newFields.style.display = 'block';
+    var newField = newFields.childNodes;
+    for (var i = 0; i < newField.length; i++) {
+        var theName = newField[i].name;
+        if (theName)
+            newField[i].name = theName + service;
+    }
+    var insertHere = document.getElementById('serviceend');
+    insertHere.parentNode.insertBefore(newFields, insertHere);
 }
 
 function removeService(context) {
@@ -44,8 +55,10 @@ function removeService(context) {
 }
 
 function removeCharacteristic(context) {
-    characteristic--;
-    context.parentNode.parentNode.removeChild(context.parentNode);
+    if(characteristic != 1) {
+        characteristic--;
+        context.parentNode.parentNode.removeChild(context.parentNode);
+    }
 }
 
 

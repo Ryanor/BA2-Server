@@ -1,8 +1,19 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    align-self: center;
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+#serviceroot {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: fuchsia;
+}
+
+#characteristicroot {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: aqua;
 }
