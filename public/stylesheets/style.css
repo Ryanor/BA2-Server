@@ -10,12 +10,13 @@ body {
 }
 
 .service {
+    margin-top: 10px;
     padding: 20px;
     background-color: mediumorchid;
 }
 
 .characteristic {
-
+    margin-top: 10px;
     border-style: solid;
     background-color: darkcyan;
 }
