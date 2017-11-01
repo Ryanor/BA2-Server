@@ -96,11 +96,16 @@ function addCharacteristic(serviceID) {
     labelCharacteristicUUID.setAttribute("for","input" + service + characteristic);
     labelCharacteristicUUID.innerHTML = "Characteristic UUID:";
 
+    var labelCharacteristicValue = document.createElement("label");
+    labelCharacteristicValue.innerHTML = "Characteristic Value:";
+
     characteristicDiv.appendChild(labelCharacteristic);
     characteristicDiv.appendChild(document.createElement("br"));
+    characteristicDiv.appendChild(labelCharacteristicUUID);
+//    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputCharacteristicUUID);
     characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(labelCharacteristicUUID);
+    characteristicDiv.appendChild(labelCharacteristicValue);
 
     // add characteristic to service
     var after = document.getElementById("characteristics_" + serviceID);

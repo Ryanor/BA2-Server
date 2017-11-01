@@ -5,35 +5,23 @@ body {
 }
 
 #profile {
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+    padding: 20px;
     background-color: bisque;
 }
 
 .service {
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+    padding: 20px;
     background-color: mediumorchid;
 }
 
 .characteristic {
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+
     border-style: solid;
     background-color: darkcyan;
 }
 
 .characteristicRoot {
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+    padding: 20px;
     background-color: darkcyan;
 }
 
