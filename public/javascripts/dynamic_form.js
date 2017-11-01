@@ -11,6 +11,9 @@ function addService() {
     serviceDiv.id = "service" + service;
     serviceDiv.className = "service";
 
+    var labelService = document.createElement("label");
+    labelService.innerHTML = "Service";
+
     var inputServiceUUID = document.createElement("input");
     inputServiceUUID.id = "input" + service;
     inputServiceUUID.className = "input";
@@ -27,7 +30,7 @@ function addService() {
     inputAddCharacteristic.type = "button";
     inputAddCharacteristic.value = "Add Characteristic";
     inputAddCharacteristic.onclick = function() {
-        addCharacteristic(serviceDiv);
+        addCharacteristic(serviceDiv.id);
     };
 
     var inputAddService = document.createElement("input");
@@ -36,23 +39,19 @@ function addService() {
     inputAddService.value = "Add Service";
     inputAddService.onclick = addService;
 
-    var characteristicsBeginDiv = document.createElement("div");
-    characteristicsBeginDiv.id = "characteristicsBegin" + service;
-    characteristicsBeginDiv.className = "characteristic";
-
-    var characteristicsEndDiv = document.createElement("div");
-    characteristicsEndDiv.id = "characteristicsEnd" + service;
-    characteristicsEndDiv.className = "characteristic";
+    var characteristicsDiv = document.createElement("div");
+    characteristicsDiv.id = "characteristics_" + serviceDiv.id;
+    characteristicsDiv.className = "characteristicRoot";
 
     // append label and input field
+    serviceDiv.appendChild(labelService);
     serviceDiv.appendChild(labelServiceUUID);
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputServiceUUID);
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputAddCharacteristic);
-    serviceDiv.appendChild(characteristicsBeginDiv);
+    serviceDiv.appendChild(characteristicsDiv);
     serviceDiv.appendChild(document.createElement("br"));
-    serviceDiv.appendChild(characteristicsEndDiv);
     serviceDiv.appendChild(inputAddService);
 
     if(service > 1 ){
@@ -75,19 +74,37 @@ function addService() {
 
 }
 
-function addCharacteristic(context) {
+function addCharacteristic(serviceID) {
     characteristic++;
-    var newFields = document.getElementById('characteristicroot').cloneNode(true);
-    newFields.id = '';
-    newFields.style.display = 'inline';
-    var newField = newFields.childNodes;
-    for (var i = 0; i < newField.length; i++) {
-        var theName = newField[i].name;
-        if (theName)
-            newField[i].name = theName + characteristic;
-    }
-    var insertHere = context.getElementById('characteristicend');
-    insertHere.parentNode.insertBefore(newFields, insertHere);
+
+    // create new characteristic node
+    var characteristicDiv = document.createElement("div");
+    characteristicDiv.id = "characteristic" + service + characteristic;
+    characteristicDiv.className = "characteristic";
+
+    var labelCharacteristic = document.createElement("label");
+    labelCharacteristic.innerHTML = "Characteristic";
+
+    var inputCharacteristicUUID = document.createElement("input");
+    inputCharacteristicUUID.id = "input" + service + characteristic;
+    inputCharacteristicUUID.className = "input";
+    inputCharacteristicUUID.name = "input" + service + characteristic;
+    inputCharacteristicUUID.type = "characteristic";
+    inputCharacteristicUUID.setAttribute("placeholder", "Enter Characteristic UUID");
+
+    var labelCharacteristicUUID = document.createElement("label");
+    labelCharacteristicUUID.setAttribute("for","input" + service + characteristic);
+    labelCharacteristicUUID.innerHTML = "Characteristic UUID:";
+
+    characteristicDiv.appendChild(labelCharacteristic);
+    characteristicDiv.appendChild(document.createElement("br"));
+    characteristicDiv.appendChild(inputCharacteristicUUID);
+    characteristicDiv.appendChild(document.createElement("br"));
+    characteristicDiv.appendChild(labelCharacteristicUUID);
+
+    // add characteristic to service
+    var after = document.getElementById("characteristics_" + serviceID);
+    after.appendChild(characteristicDiv);
 }
 
 function addDescriptor() {
@@ -101,7 +118,7 @@ function addDescriptor() {
         if (theName)
             newField[i].name = theName + service;
     }
-    var insertHere = document.getElementById('serviceend');
+    var insertHere = document.getElementsByName()
     insertHere.parentNode.insertBefore(newFields, insertHere);
 }
 

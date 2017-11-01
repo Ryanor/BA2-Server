@@ -5,6 +5,10 @@ body {
 }
 
 #profile {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
     background-color: bisque;
 }
 
@@ -12,19 +16,31 @@ body {
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
-    background-color: fuchsia;
+    margin-bottom: 20px;
+    background-color: mediumorchid;
 }
 
 .characteristic {
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
-    background-color: aqua;
+    margin-bottom: 20px;
+    border-style: solid;
+    background-color: darkcyan;
 }
 
-#characteristicroot {
+.characteristicRoot {
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
-    background-color: aqua;
+    margin-bottom: 20px;
+    background-color: darkcyan;
+}
+
+.descriptor {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    background-color: khaki;
 }
