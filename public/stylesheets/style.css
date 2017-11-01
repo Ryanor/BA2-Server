@@ -12,24 +12,32 @@ body {
 .service {
     margin-top: 10px;
     padding: 20px;
+    border-width: 1px;
+    border-style: solid;
     background-color: mediumorchid;
 }
 
 .characteristic {
     margin-top: 10px;
+    padding: 20px;
+    border-width: 1px;
     border-style: solid;
     background-color: darkcyan;
 }
 
-.characteristicRoot {
+.characteristicsRoot {
     padding: 20px;
     background-color: darkcyan;
 }
 
 .descriptor {
-    margin-top: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    border-width: 1px;
+    border-style: solid;
+    background-color: khaki;
+}
+
+.descriptorsRoot {
+    padding: 20px;
     background-color: khaki;
 }

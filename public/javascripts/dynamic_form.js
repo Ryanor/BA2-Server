@@ -1,5 +1,5 @@
 var service = 1;
-var characteristic = 1;
+var characteristic = 0;
 var descriptor = 0;
 
 
@@ -41,7 +41,7 @@ function addService() {
 
     var characteristicsDiv = document.createElement("div");
     characteristicsDiv.id = "characteristics_" + serviceDiv.id;
-    characteristicsDiv.className = "characteristicRoot";
+    characteristicsDiv.className = "characteristicsRoot";
 
     // append label and input field
     serviceDiv.appendChild(labelService);
@@ -82,8 +82,9 @@ function addCharacteristic(serviceID) {
     characteristicDiv.id = "characteristic" + service + characteristic;
     characteristicDiv.className = "characteristic";
 
-    var labelCharacteristic = document.createElement("label");
-    labelCharacteristic.innerHTML = "Characteristic";
+    var labelCharacteristicUUID = document.createElement("label");
+    labelCharacteristicUUID.setAttribute("for","input" + service + characteristic);
+    labelCharacteristicUUID.innerHTML = "Characteristic UUID:";
 
     var inputCharacteristicUUID = document.createElement("input");
     inputCharacteristicUUID.id = "input" + service + characteristic;
@@ -92,26 +93,28 @@ function addCharacteristic(serviceID) {
     inputCharacteristicUUID.type = "characteristic";
     inputCharacteristicUUID.setAttribute("placeholder", "Enter Characteristic UUID");
 
-    var labelCharacteristicUUID = document.createElement("label");
-    labelCharacteristicUUID.setAttribute("for","input" + service + characteristic);
-    labelCharacteristicUUID.innerHTML = "Characteristic UUID:";
-
     var labelCharacteristicValue = document.createElement("label");
     labelCharacteristicValue.innerHTML = "Characteristic Value:";
+
+    var descriptorsDiv = document.createElement("div");
+    descriptorsDiv.id = "descriptors_" + characteristicDiv.id;
+    descriptorsDiv.className = "descriptorsRoot";
 
     var inputAddDescriptor = document.createElement("input");
     inputAddDescriptor.id = "addDescriptor" + service + characteristic;
     inputAddDescriptor.type = "button";
     inputAddDescriptor.value = "Add Descriptor";
-    inputAddDescriptor.onclick = addDescriptor;
+    inputAddDescriptor.onclick = function() {
+        addDescriptor(characteristicDiv.id);
+    };
 
-    characteristicDiv.appendChild(labelCharacteristic);
-    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(labelCharacteristicUUID);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputCharacteristicUUID);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(labelCharacteristicValue);
+    characteristicDiv.appendChild(document.createElement("br"));
+    characteristicDiv.appendChild(descriptorsDiv);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputAddDescriptor);
 
@@ -120,11 +123,33 @@ function addCharacteristic(serviceID) {
     after.appendChild(characteristicDiv);
 }
 
-function addDescriptor() {
+function addDescriptor(characteristicID) {
     descriptor++;
-    
+    // create new characteristic node
+    var descriptorDiv = document.createElement("div");
+    descriptorDiv.id = "descriptor" + service + characteristic + descriptor;
+    descriptorDiv.className = "descriptor";
+
+    var labelDescriptorUUID = document.createElement("label");
+    labelDescriptorUUID.setAttribute("for","input" + service + characteristic + descriptor);
+    labelDescriptorUUID.innerHTML = "Descriptor UUID:";
+
+    var inputDescriptorUUID = document.createElement("input");
+    inputDescriptorUUID.id = "input" + service + characteristic + descriptor;
+    inputDescriptorUUID.className = "input";
+    inputDescriptorUUID.name = "input" + service + characteristic + descriptor;
+    inputDescriptorUUID.type = "descriptor";
+    inputDescriptorUUID.setAttribute("placeholder", "Enter Descriptor UUID");
+
+    descriptorDiv.appendChild(labelDescriptorUUID);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorUUID);
+
+    // add descriptor to characteristic
+    var after = document.getElementById("descriptors_" + characteristicID);
+    after.appendChild(descriptorDiv);
 }
 
-window.onload = addService;
-
-
+window.onload = function () {
+    addService();
+}
