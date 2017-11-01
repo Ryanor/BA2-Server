@@ -7,12 +7,8 @@ block content
     br
     p Please be sure to fill in all values before submitting
     br
-        div(id='serviceroot')
-            label.service(id='serviceUUID', for='serviceUUID') Service UUID:
-            input(name='serviceuuid', placeholder="Service UUID", value='')
-            br
-            input.add(type='button', value='Add Characteristic', onclick='addCharacteristic(this)')
-
+    div(id="profile")
+     
         div(id='characteristicroot')
             br
             input.remove(type='button', value='-', onclick='removeCharacteristic(this)')
