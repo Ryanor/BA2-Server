@@ -1,0 +1,41 @@
+{
+  "services": [
+    {
+      "uuid": "0000180d-0000-1000-8000-00805f9b34fb",
+      "characteristics": [
+        {
+          "uuid": "00002a37-0000-1000-8000-00805f9b34fb",
+          "value": "0",
+          "permission": [
+            "read"
+          ],
+          "descriptors": [
+            {
+              "uuid": "00002902-0000-1000-8000-00805f9b34fb",
+              "value": "Description in human readable form"
+            },
+            {
+              "uuid": "00002901-0000-1000-8000-00805f9b34fb",
+              "value": "Lorem ipsum consens nonses"
+            }
+          ]
+        },
+        {
+          "uuid": "00002a38-0000-1000-8000-00805f9b34fb",
+          "permission": [
+            "notify"
+          ],
+          "value": "0"
+        },
+        {
+          "uuid": "00002a39-0000-1000-8000-00805f9b34fb",
+          "permission": [
+            "read",
+            "write"
+          ],
+          "value": "0"
+        }
+      ]
+    }
+  ]
+}
