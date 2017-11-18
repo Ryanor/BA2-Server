@@ -9,7 +9,7 @@ var router = express.Router();
 router.get('/json', function (req, res, next) {
     res.set('Content-Type', 'application/json');
     //var parser = new xml2js.Parser();
-    res.sendFile(path.join(__dirname, '../public/profiles', 'test_profile.json'));
+    res.sendFile(path.join(__dirname, '../public/profiles', 'myjsonfile.json'));
 });
 
 router.get('/xml', function (req, res, next) {
