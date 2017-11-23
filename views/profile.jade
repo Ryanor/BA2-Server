@@ -4,21 +4,11 @@ html
         title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
         script(src="/javascripts/dynamic_form.js")
-        body
 
-    div(id='serviceroot', style="display: none")
-        input.remove(type='button', value='-', onclick='this.parentNode.parentNode.removeChild(this.parentNode);')
+    body
+        p Please be sure to fill in all values before submitting
         br
-        label.service(id='service', for='service') Service
+        div(id="profile")
+            h3 Profile 
         br
-        label.service(id='servicename', for='servicename') Servicename:
-        input(name='servicename', placeholder='Service name', value='')
-        br
-        label.service(id='serviceUUID', for='serviceUUID') Service UUID:
-        input(name='serviceuuid', placeholder="Service UUID", value='')
-        div#characteristic
-            input.add(type='button', value='Add Characteristic', id='add_characteristic')
-    span(id='serviceend')
-    input.add(type='button', value='Add Service', onclick='addService()')
-    br
-    input.send(type='submit' value='Send profile to server')
+        input.send(type='submit' value='Send profile to server')
