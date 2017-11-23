@@ -1,13 +1,21 @@
-extends layout
+doctype html
+html
+    head
+        title= title
 
-block content
+    body
     h1= title
     h3 Create your own device profile
     p By adding services, characterists and descriptors you can define your own device profile
-    br
-    p Please be sure to fill in all values before submitting
-    br
-    div(id="profile")
-        h3 Profile
-    br
-    input.send(type='submit' value='Send profile to server')
+
+    div
+        form(action='/profile',method='post')
+            label(for='serviceName') Service name:
+            input(id='serviceName', type='text', value='', placeholder='Service Name', name='serviceName')
+            br
+            label(for='serviceUUID') password
+            input(id='serviceUUID', type='text', value='', placeholder='Service UUID', name='serviceUUID')
+            br
+            input(type='submit', value='Send profile')
+
+
