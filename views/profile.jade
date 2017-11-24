@@ -8,7 +8,10 @@ html
     body
         p Please be sure to fill in all values before submitting
         br
-        div(id="profile")
-            h3 Profile 
-        br
-        input.send(type='submit' value='Send profile to server')
+        div
+            form(action='/profile', method='post')
+                div(id="profile")
+                    h3 Profile
+                    input(type='button', name="add_service", value='Add Service', onclick='addService()')
+                    br
+                input(type='submit', value='Send profile')

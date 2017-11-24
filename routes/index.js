@@ -12,7 +12,8 @@ router.get('/profile', function (req, res) {
 
 router.post('/profile', function (req, res) {
     console.log(req.body);
-    res.render('profile');
+    res.send(req.body);
+    //res.render('profile');
 });
 
 module.exports = router;

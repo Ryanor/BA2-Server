@@ -26,9 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/profile', profile);
 
-app.post('/', function (req, res) {
-    console.log(req.body);
-});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

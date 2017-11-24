@@ -21,5 +21,10 @@ router.get('/xml', function (req, res, next) {
     res.sendFile(path.join(__dirname, '../public/profiles', 'test_profile.xml'));
 });
 
+router.post('/profile', function (req, res) {
+    console.log(req.body);
+    res.send(req.body);
+    //res.render('profile');
+});
 
 module.exports = router;
