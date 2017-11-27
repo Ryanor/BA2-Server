@@ -16,23 +16,23 @@ function addService() {
 
     // Service description for user, for reusing service later on
     var labelServiceDescription = document.createElement("label");
-    labelServiceDescription.setAttribute("for","inputDescription" + service);
+    labelServiceDescription.setAttribute("for","ServiceDescription" + service);
     labelServiceDescription.innerHTML = "Service description for reuse:";
     var inputServiceDescription = document.createElement("input");
-    inputServiceDescription.id = "inputDescription" + service;
+    inputServiceDescription.id = "service_description" + service;
     inputServiceDescription.className = "input";
-    inputServiceDescription.name = "inputDescription" + service;
+    inputServiceDescription.name = "ServiceDescription" + service;
     inputServiceDescription.type = "service";
     inputServiceDescription.setAttribute("placeholder", "Enter description for service");
 
     // Service UUID
     var labelServiceUUID = document.createElement("label");
-    labelServiceUUID.setAttribute("for","input" + service);
+    labelServiceUUID.setAttribute("for","ServiceUUID" + service);
     labelServiceUUID.innerHTML = "Service UUID:";
     var inputServiceUUID = document.createElement("input");
-    inputServiceUUID.id = "input" + service;
+    inputServiceUUID.id = "service_uuid" + service;
     inputServiceUUID.className = "input";
-    inputServiceUUID.name = "input" + service;
+    inputServiceUUID.name = "ServiceUUID" + service;
     inputServiceUUID.type = "service";
     inputServiceUUID.setAttribute("placeholder", "Enter Service UUID");
 
@@ -95,23 +95,23 @@ function addCharacteristic(serviceDivID) {
 
     // Characteristic description for reuse
     var labelCharacteristicDescription = document.createElement("label");
-    labelCharacteristicDescription.setAttribute("for","inputDescription" + characteristic);
+    labelCharacteristicDescription.setAttribute("for","CharacteristicDescription" + characteristic);
     labelCharacteristicDescription.innerHTML = "Characteristic description:";
     var inputCharacteristicDescription = document.createElement("input");
-    inputCharacteristicDescription.id = "inputDescription" + characteristic;
+    inputCharacteristicDescription.id = "characteristic_description" + characteristic;
     inputCharacteristicDescription.className = "input";
-    inputCharacteristicDescription.name = "inputDescription" + characteristic;
+    inputCharacteristicDescription.name = "CharacteristicDescription" + characteristic;
     inputCharacteristicDescription.type = "characteristic";
     inputCharacteristicDescription.setAttribute("placeholder", "Enter description for characteristic");
 
     // Characteristic UUID
     var labelCharacteristicUUID = document.createElement("label");
-    labelCharacteristicUUID.setAttribute("for","input" + characteristic);
+    labelCharacteristicUUID.setAttribute("for","CharacteristicUUID" + characteristic);
     labelCharacteristicUUID.innerHTML = "Characteristic UUID:";
     var inputCharacteristicUUID = document.createElement("input");
-    inputCharacteristicUUID.id = "input" + characteristic;
+    inputCharacteristicUUID.id = "characteristic_uuid" + characteristic;
     inputCharacteristicUUID.className = "input";
-    inputCharacteristicUUID.name = "input" + characteristic;
+    inputCharacteristicUUID.name = "CharacteristicUUID" + characteristic;
     inputCharacteristicUUID.type = "characteristic";
     inputCharacteristicUUID.setAttribute("placeholder", "Enter Characteristic UUID");
 
@@ -206,34 +206,34 @@ function addDescriptor(characteristicDivID) {
 
     // description for Descriptor for later reuse
     var labelDescriptorDescription = document.createElement("label");
-    labelDescriptorDescription.setAttribute("for","inputDescription" + descriptor);
+    labelDescriptorDescription.setAttribute("for","DescriptorDescription" + descriptor);
     labelDescriptorDescription.innerHTML = "Descriptor description:";
     var inputDescriptorDescription = document.createElement("input");
-    inputDescriptorDescription.id = "inputDescription" + descriptor;
+    inputDescriptorDescription.id = "descriptor_description" + descriptor;
     inputDescriptorDescription.className = "input";
-    inputDescriptorDescription.name = "input" + descriptor;
+    inputDescriptorDescription.name = "DescriptorDescription" + descriptor;
     inputDescriptorDescription.type = "descriptor";
-    inputDescriptorDescription.setAttribute("placeholder", "Enter descritpion for Descriptor");
+    inputDescriptorDescription.setAttribute("placeholder", "Enter description for Descriptor");
 
     //  Descriptor UUID
     var labelDescriptorUUID = document.createElement("label");
-    labelDescriptorUUID.setAttribute("for","input" + descriptor);
+    labelDescriptorUUID.setAttribute("for","DescriptorUUID" + descriptor);
     labelDescriptorUUID.innerHTML = "Descriptor UUID:";
     var inputDescriptorUUID = document.createElement("input");
-    inputDescriptorUUID.id = "input" + descriptor;
+    inputDescriptorUUID.id = "descriptor_uuid" + descriptor;
     inputDescriptorUUID.className = "input";
-    inputDescriptorUUID.name = "input" + descriptor;
+    inputDescriptorUUID.name = "DescriptorUUID" + descriptor;
     inputDescriptorUUID.type = "descriptor";
     inputDescriptorUUID.setAttribute("placeholder", "Enter Descriptor UUID");
 
     //  Descriptor value
     var labelDescriptorValue = document.createElement("label");
-    labelDescriptorValue.setAttribute("for","inputValue" + descriptor);
+    labelDescriptorValue.setAttribute("for","DescriptorValue" + descriptor);
     labelDescriptorValue.innerHTML = "Descriptor value:";
     var inputDescriptorValue = document.createElement("input");
-    inputDescriptorValue.id = "inputValue" + descriptor;
+    inputDescriptorValue.id = "descriptor_value" + descriptor;
     inputDescriptorValue.className = "input";
-    inputDescriptorValue.name = "inputValue" + descriptor;
+    inputDescriptorValue.name = "DescriptorValue" + descriptor;
     inputDescriptorValue.type = "descriptorValue";
     inputDescriptorValue.setAttribute("placeholder", "Enter value for descriptor");
 
