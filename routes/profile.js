@@ -3,6 +3,7 @@ var path = require('path');
 var router = express.Router();
 
 
+
 /* GET profiles */
 router.get('/json', function (req, res, next) {
     res.set('Content-Type', 'application/json');
@@ -22,7 +23,7 @@ router.get('/xml', function (req, res, next) {
 });
 
 router.post('/profile', function (req, res) {
-    console.log(req.body);
+
     res.send(req.body);
     //res.render('profile');
 });

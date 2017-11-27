@@ -3,9 +3,16 @@ var characteristic = 0;
 var descriptor = 0;
 
 
+function convertForm() {
+    var frm = document.getElementById('profile');
+
+    var user = form2js(frm, '.', true);
+    console.log(JSON.stringify(user));
+}
+
 function addService() {
     // parent node
-    var parentNode = document.getElementById("profile");
+    var parentNode = document.getElementById("services");
     // create new service, containing Characteristics
     var serviceDiv = document.createElement("div");
     serviceDiv.id = "service" + service;
@@ -21,7 +28,7 @@ function addService() {
     var inputServiceDescription = document.createElement("input");
     inputServiceDescription.id = "service_description" + service;
     inputServiceDescription.className = "input";
-    inputServiceDescription.name = "ServiceDescription" + service;
+    inputServiceDescription.name = "service[" + service + "].description";
     inputServiceDescription.type = "service";
     inputServiceDescription.setAttribute("placeholder", "Enter description for service");
 
@@ -32,7 +39,7 @@ function addService() {
     var inputServiceUUID = document.createElement("input");
     inputServiceUUID.id = "service_uuid" + service;
     inputServiceUUID.className = "input";
-    inputServiceUUID.name = "ServiceUUID" + service;
+    inputServiceUUID.name = "service[" + service + "].uuid";
     inputServiceUUID.type = "service";
     inputServiceUUID.setAttribute("placeholder", "Enter Service UUID");
 
@@ -100,7 +107,7 @@ function addCharacteristic(serviceDivID) {
     var inputCharacteristicDescription = document.createElement("input");
     inputCharacteristicDescription.id = "characteristic_description" + characteristic;
     inputCharacteristicDescription.className = "input";
-    inputCharacteristicDescription.name = "CharacteristicDescription" + characteristic;
+    inputCharacteristicDescription.name = "service[" + serviceDivID + "].characteristic[" + characteristic + "].description";
     inputCharacteristicDescription.type = "characteristic";
     inputCharacteristicDescription.setAttribute("placeholder", "Enter description for characteristic");
 
@@ -111,7 +118,7 @@ function addCharacteristic(serviceDivID) {
     var inputCharacteristicUUID = document.createElement("input");
     inputCharacteristicUUID.id = "characteristic_uuid" + characteristic;
     inputCharacteristicUUID.className = "input";
-    inputCharacteristicUUID.name = "CharacteristicUUID" + characteristic;
+    inputCharacteristicUUID.name = "service[" + serviceDivID + "].characteristic[" + characteristic + "].uuid";
     inputCharacteristicUUID.type = "characteristic";
     inputCharacteristicUUID.setAttribute("placeholder", "Enter Characteristic UUID");
 

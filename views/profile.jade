@@ -4,14 +4,14 @@ html
         title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
         script(src="/javascripts/dynamic_form.js")
-
+        script(src="/javascripts/serialize.js")
     body
         p Please be sure to fill in all values before submitting
         br
         div
-            form(action='/profile', method='post')
-                div(id="profile")
+            form(id="profile", action='/profile', method='post')
+                div(id="services")
                     h3 Profile
                     input(type='button', name="add_service", value='Add Service', onclick='addService()')
                     br
-                input(type='submit', value='Send profile')
+                input(type='button', id='submit_profile', value='Send profile', onclick='convertForm()')
