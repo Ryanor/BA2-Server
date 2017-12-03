@@ -1,9 +1,8 @@
 var express = require('express');
 var path = require('path');
-var fs = require('fs');
-var xml2js = require('xml2js');
-
 var router = express.Router();
+
+
 
 /* GET profiles */
 router.get('/json', function (req, res, next) {
@@ -21,6 +20,12 @@ router.get('/json1', function (req, res, next) {
 router.get('/xml', function (req, res, next) {
     res.set('Content-Type', 'application/xml');
     res.sendFile(path.join(__dirname, '../public/profiles', 'test_profile.xml'));
+});
+
+router.post('/profile', function (req, res) {
+
+    res.send(req.body);
+    //res.render('profile');
 });
 
 module.exports = router;

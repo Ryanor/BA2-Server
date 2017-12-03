@@ -1,30 +1,21 @@
-extends layout
+doctype html
+html
+    head
+        title= title
 
-block content
+    body
     h1= title
     h3 Create your own device profile
     p By adding services, characterists and descriptors you can define your own device profile
-    br
-    p Please be sure to fill in all values before submitting
-    br
-    div(id='serviceroot', style="display: none")
-        input.remove(type='button', value='-', onclick='this.parentNode.parentNode.removeChild(this.parentNode);')
-        br
-        label.service(id='service', for='service') Service
-        br
-        label.service(id='servicename', for='servicename') Servicename:
-        input(name='servicename', placeholder='Service name', value='')
-        br
-        label.service(id='serviceUUID', for='serviceUUID') Service UUID:
-        input(name='serviceuuid', placeholder="Service UUID", value='')
-        div#characteristic
-            input.add(type='button', value='Add Characteristic', id='add_characteristic')
-    span(id='serviceend')
-    input.add(type='button', value='Add Service', onclick='addService()')
-    br
-    input.send(type='submit' value='Send profile to server')
-    //form(action='/signup',method='post')    style='display: none')
-        div(data-role='fieldcontain')
-                fieldset(data-role='controlgroup')
-                    label(for='email') email
-                        input(id='email',type='text',value='',placeholder='@',name='email')
+
+    div
+        form(action='/profile',method='post')
+            label(for='serviceName') Service name:
+            input(id='serviceName', type='text', value='', placeholder='Service Name', name='serviceName')
+            br
+            label(for='serviceUUID') Service UUID:
+            input(id='serviceUUID', type='text', value='', placeholder='Service UUID', name='serviceUUID')
+            br
+            input(type='submit', value='Send profile')
+
+
