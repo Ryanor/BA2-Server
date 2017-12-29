@@ -4,16 +4,13 @@
       {
         "uuid": "00002a37-0000-1000-8000-00805f9b34fb",
         "value": null,
-        "properties": [
-          "read", "notify"
-        ],
+        "properties": [ "read", "notify"],
         "descriptors": [
           {
             "uuid": "00002901-0000-1000-8000-00805f9b34fb",
             "value": "Heart rate measurement in bpm"
           }
         ],
-
         "data" : "int",
         "precision" : 0,
         "interval" : 2000,
@@ -27,16 +24,13 @@
       {
         "uuid": "00002a38-0000-1000-8000-00805f9b34fb",
         "value": null,
-        "properties": [
-          "read"
-        ],
+        "properties": [ "read" ],
         "descriptors": [
           {
             "uuid": "00002901-0000-1000-8000-00805f9b34fb",
             "value":"Body sensor location"
           }
         ],
-
         "data" : "int",
         "precision" : 0,
         "interval" : 0,
@@ -44,6 +38,46 @@
         "base" : 0,
         "min" : 1,
         "max" : 7
+      }
+    ]
+  },
+  { "uuid": "0000181A-0000-1000-8000-00805f9b34fb",
+    "characteristics": [
+      {
+        "uuid": "00002A6F-0000-1000-8000-00805f9b34fb",
+        "value": null,
+        "properties": [ "read", "notify" ],
+        "descriptors": [
+          {
+            "uuid": "00002901-0000-1000-8000-00805f9b34fb",
+            "value": "Humidity level in %, values between 0 and 100%"
+          }
+        ],
+        "data" : "float",
+        "precision" : 2,
+        "interval" : 0,
+        "values" : [ ],
+        "base" : 50,
+        "min" : 0.01,
+        "max" : 0.1
+      },
+      {
+        "uuid": "00002A6D-0000-1000-8000-00805f9b34fb",
+        "value": null,
+        "properties": [ "read","notify" ],
+        "descriptors": [
+          {
+            "uuid": "00002901-0000-1000-8000-00805f9b34fb",
+            "value":"Pressure level in Pa, values between 165 and 108000 Pa"
+          }
+        ],
+        "data" : "float",
+        "precision" : 1,
+        "interval" : 0,
+        "values" : [ ],
+        "base" : 975000,
+        "min" : 0.1,
+        "max" : 1
       }
     ]
   }
