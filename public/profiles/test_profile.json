@@ -75,7 +75,7 @@
         ],
         "data" : "float",
         "precision" : 1,
-        "interval" : 0,
+        "interval" : 2000,
         "values" : [ ],
         "base" : 975000,
         "min" : 0.1,
