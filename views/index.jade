@@ -1,21 +1,41 @@
-doctype html
-html
+extends layout
+
+block content
+    h1 Welcome to #{title}
+    h3 Create your own device profile
+    p Add services, characteristics and descriptors to define your own device profile
+
+
+
+
+//doctype html
+//html
     head
         title= title
 
     body
-    h1= title
-    h3 Create your own device profile
-    p By adding services, characterists and descriptors you can define your own device profile
+        header
+            nav
+                ul
+                    li
+                        a(href="/") Home
+                    li
+                        a(href="/about") Create Profile
+                    li
+                        a(href="/contact") About
+    content
+        h1= title
+        h3 Create your own device profile
+        p By adding services, characterists and descriptors you can define your own device profile
 
-    div
-        form(action='/profile',method='post')
-            label(for='serviceName') Service name:
-            input(id='serviceName', type='text', value='', placeholder='Service Name', name='serviceName')
-            br
-            label(for='serviceUUID') Service UUID:
-            input(id='serviceUUID', type='text', value='', placeholder='Service UUID', name='serviceUUID')
-            br
-            input(type='submit', value='Send profile')
+        div
+            form(action='/profile',method='post')
+                label(for='serviceName') Service name:
+                input(id='serviceName', type='text', value='', placeholder='Service Name', name='serviceName')
+                br
+                label(for='serviceUUID') Service UUID:
+                input(id='serviceUUID', type='text', value='', placeholder='Service UUID', name='serviceUUID')
+                br
+                input(type='submit', value='Send profile')
 
 

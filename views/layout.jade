@@ -4,6 +4,16 @@ html
         title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
         script(src="/javascripts/dynamic_form.js")
+        script(src="/javascripts/serialize.js")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
     body
+        header
+            div#nav
+                ul
+                    li
+                        a(href="/") Home
+                    li
+                        a(href="/profile") Create Profile
+                    li
+                        a(href="/about") About
         block content
