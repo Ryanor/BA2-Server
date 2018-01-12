@@ -7,7 +7,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/profile', function (req, res) {
-    res.render('profile');
+    res.render('profile', {title: 'Bluetooth LE Profile Generator'});
+});
+
+router.get('/about', function (req, res) {
+   res.render('about', {title: 'Bluetooth LE Profile Generator'});
 });
 
 router.post('/profile', function (req, res) {
