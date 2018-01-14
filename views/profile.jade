@@ -1,12 +1,13 @@
 extends layout
 
 block content
+    script(src="/javascripts/dynamic_form.js")
     p Please be sure to fill in all values before submitting
         br
         div
             form(id="profile", action='/profile', method='post')
                 div(id="services")
                     h3 Profile
-                    input(type='button', name="add_service", value='Add Service', onclick='addService()')
+                    button(type='button', name="add_service", onclick='addService()') Add Service
                     br
-                input(type='button', id='submit_profile', value='Send profile', onclick='convertForm()')
+                input(type='submit', value ="Submit Profile", onclick='convertForm()')
