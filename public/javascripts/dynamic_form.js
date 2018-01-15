@@ -1,6 +1,12 @@
-var service = 1;
+var service = 0;
 var characteristic = 0;
 var descriptor = 0;
+
+function convertForm() {
+
+    var data = form2js('profile', '.', true);
+    console.log(JSON.stringify(data));
+}
 
 function addService() {
     // parent node
@@ -9,6 +15,8 @@ function addService() {
     var serviceDiv = document.createElement("div");
     serviceDiv.id = "service" + service;
     serviceDiv.className = "service";
+
+    var serviceNamePrefix = "services[" + service + "]";
 
     var labelService = document.createElement("label");
     labelService.innerHTML = "Service";
@@ -20,7 +28,7 @@ function addService() {
     var inputServiceDescription = document.createElement("input");
     inputServiceDescription.id = "service_description" + service;
     inputServiceDescription.className = "input";
-    inputServiceDescription.name = "service[" + service + "].name";
+    inputServiceDescription.name = serviceNamePrefix + ".name";
     inputServiceDescription.type = "service";
     inputServiceDescription.setAttribute("placeholder", "Service name for Service");
 
@@ -31,7 +39,7 @@ function addService() {
     var inputServiceUUID = document.createElement("input");
     inputServiceUUID.id = "service_uuid" + service;
     inputServiceUUID.className = "input";
-    inputServiceUUID.name = "service[" + service + "].uuid";
+    inputServiceUUID.name = serviceNamePrefix + ".uuid";
     inputServiceUUID.type = "service";
     inputServiceUUID.setAttribute("placeholder", "Enter Service UUID");
 
@@ -83,8 +91,10 @@ function addService() {
 
 
 function addCharacteristic(serviceDivID) {
-    characteristic++;
+
     var serviceNumber = retnum(serviceDivID);
+
+    var characteristicNamePrefix = "services[" + serviceNumber + "].characteristics[" + characteristic + "]";
 
     // parent node
     var characteristicContainer = document.getElementById("characteristics_service" + serviceNumber);
@@ -101,7 +111,7 @@ function addCharacteristic(serviceDivID) {
     var inputCharacteristicDescription = document.createElement("input");
     inputCharacteristicDescription.id = "characteristic_description" + characteristic;
     inputCharacteristicDescription.className = "input";
-    inputCharacteristicDescription.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].name";
+    inputCharacteristicDescription.name = characteristicNamePrefix + ".name";
     inputCharacteristicDescription.type = "characteristic";
     inputCharacteristicDescription.setAttribute("placeholder", "Enter name for characteristic");
 
@@ -112,7 +122,7 @@ function addCharacteristic(serviceDivID) {
     var inputCharacteristicUUID = document.createElement("input");
     inputCharacteristicUUID.id = "characteristic_uuid" + characteristic;
     inputCharacteristicUUID.className = "input";
-    inputCharacteristicUUID.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].uuid";
+    inputCharacteristicUUID.name = characteristicNamePrefix + ".uuid";
     inputCharacteristicUUID.type = "characteristic";
     inputCharacteristicUUID.setAttribute("placeholder", "Enter Characteristic UUID");
 
@@ -122,11 +132,10 @@ function addCharacteristic(serviceDivID) {
     // Characteristic type checkboxes
     var arrayRadioButton = document.createElement('input');
     arrayRadioButton.type = "radio";
-    arrayRadioButton.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].array";
+    arrayRadioButton.name = characteristicNamePrefix + ".type";
+    arrayRadioButton.value = "array";
     arrayRadioButton.id = "array" + characteristic;
     arrayRadioButton.onclick = function () {
-        rangeRadioButton.checked = false;
-        baseRadioButton.checked = false;
 
         characteristicValuesArrayLabel.style.display = 'inline';
         characteristicValuesArrayLabel.style.visibility = '';
@@ -148,12 +157,11 @@ function addCharacteristic(serviceDivID) {
     };
 
     var rangeRadioButton = document.createElement('input');
-    rangeRadioButton.type = "radio";
-    rangeRadioButton.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].range";
+    rangeRadioButton.setAttribute('type', 'radio');
+    rangeRadioButton.setAttribute('name', characteristicNamePrefix + ".type");
+    rangeRadioButton.setAttribute('value', "range");
     rangeRadioButton.id = "range" + characteristic;
     rangeRadioButton.onclick = function () {
-        arrayRadioButton.checked = false;
-        baseRadioButton.checked = false;
 
         characteristicValuesArrayLabel.style.display = 'none';
         characteristicValuesArrayLabel.style.visibility = 'hidden';
@@ -176,11 +184,10 @@ function addCharacteristic(serviceDivID) {
 
     var baseRadioButton = document.createElement('input');
     baseRadioButton.type = "radio";
-    baseRadioButton.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].base";
-    baseRadioButton.id = "base" + characteristic;
+    baseRadioButton.name = characteristicNamePrefix + ".type";
+    baseRadioButton.value = "base";
+    baseRadioButton.id = "basetype" + characteristic;
     baseRadioButton.onclick = function () {
-        arrayRadioButton.checked = false;
-        rangeRadioButton.checked = false;
 
         characteristicValuesArrayLabel.style.display = 'none';
         characteristicValuesArrayLabel.style.visibility = 'hidden';
@@ -217,15 +224,18 @@ function addCharacteristic(serviceDivID) {
     // checkboxes for the properties
     var readCheckbox = document.createElement('input');
     readCheckbox.type = "checkbox";
-    readCheckbox.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].read";
+    readCheckbox.name = characteristicNamePrefix + ".properties[]";
+    readCheckbox.value = "read";
     readCheckbox.id = "read" + characteristic;
     var writeCheckbox = document.createElement('input');
     writeCheckbox.type = "checkbox";
-    writeCheckbox.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].write";
+    writeCheckbox.name = characteristicNamePrefix + ".properties[]";
+    writeCheckbox.value = "write";
     writeCheckbox.id = "write" + characteristic;
     var notifyCheckbox = document.createElement('input');
     notifyCheckbox.type = "checkbox";
-    notifyCheckbox.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].notify";
+    notifyCheckbox.name = characteristicNamePrefix + ".properties[]";
+    notifyCheckbox.value = "notify";
     notifyCheckbox.id = "notify" + characteristic;
     var readLabel = document.createElement('label');
     readLabel.setAttribute("for", "read" + characteristic);
@@ -243,34 +253,34 @@ function addCharacteristic(serviceDivID) {
     characteristicValueLabel.innerHTML = "Value:";
     var characteristicValue = document.createElement('input');
     characteristicValue.id = 'value' + characteristic;
-    characteristicValue.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].value";
+    characteristicValue.name = characteristicNamePrefix + ".value";
     characteristicValue.className = "input";
 
     // Characteristic data type
     var characteristicDataTypeLabel = document.createElement('label');
-    characteristicDataTypeLabel.setAttribute("for", "type" + characteristic);
-    characteristicDataTypeLabel.innerHTML = "Data type:";
+    characteristicDataTypeLabel.setAttribute("for", "datatype" + characteristic);
+    characteristicDataTypeLabel.innerHTML = "Type of value data:";
     var characteristicDataType = document.createElement('input');
-    characteristicDataType.id = 'type' + characteristic;
-    characteristicDataType.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].type";
+    characteristicDataType.id = 'datatype' + characteristic;
+    characteristicDataType.name = characteristicNamePrefix + ".datatype";
     characteristicDataType.className = "input";
 
     // Characteristic precision
-    var characteristicPrecisionLabel = document.createElement('label');
-    characteristicPrecisionLabel.setAttribute("for", "type" + characteristic);
-    characteristicPrecisionLabel.innerHTML = "Precision:";
-    var characteristicPrecision = document.createElement('input');
-    characteristicPrecision.id = 'precision' + characteristic;
-    characteristicPrecision.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].precision";
-    characteristicPrecision.className = "input";
+    var characteristicOffsetLabel = document.createElement('label');
+    characteristicOffsetLabel.setAttribute("for", "offset" + characteristic);
+    characteristicOffsetLabel.innerHTML = "Offset:";
+    var characteristicOffset = document.createElement('input');
+    characteristicOffset.id = 'offset' + characteristic;
+    characteristicOffset.name = characteristicNamePrefix + ".offset";
+    characteristicOffset.className = "input";
 
     // Characteristic interval
     var characteristicIntervalLabel = document.createElement('label');
-    characteristicIntervalLabel.setAttribute("for", "type" + characteristic);
+    characteristicIntervalLabel.setAttribute("for", "interval" + characteristic);
     characteristicIntervalLabel.innerHTML = "Interval:";
     var characteristicInterval = document.createElement('input');
     characteristicInterval.id = 'interval' + characteristic;
-    characteristicInterval.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].interval";
+    characteristicInterval.name = characteristicNamePrefix + ".interval";
     characteristicInterval.className = "input";
 
     // Characteristic values array
@@ -279,7 +289,7 @@ function addCharacteristic(serviceDivID) {
     characteristicValuesArrayLabel.innerHTML = "Array of values:";
     var characteristicValuesArray = document.createElement('input');
     characteristicValuesArray.id = 'values' + characteristic;
-    characteristicValuesArray.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].values";
+    characteristicValuesArray.name = characteristicNamePrefix + ".values";
     characteristicValuesArray.className = "input";
 
     // Characteristic base value for random stepping values
@@ -288,7 +298,7 @@ function addCharacteristic(serviceDivID) {
     characteristicBaseValueLabel.innerHTML = "Base value:";
     var characteristicBaseValue = document.createElement('input');
     characteristicBaseValue.id = 'base' + characteristic;
-    characteristicBaseValue.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].base";
+    characteristicBaseValue.name = characteristicNamePrefix + ".base";
     characteristicBaseValue.className = "input";
 
     // Characteristic min value for range or step
@@ -297,7 +307,7 @@ function addCharacteristic(serviceDivID) {
     characteristicMinValueLabel.innerHTML = "Minimum value:";
     var characteristicMinValue = document.createElement('input');
     characteristicMinValue.id = 'min' + characteristic;
-    characteristicMinValue.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].min";
+    characteristicMinValue.name = characteristicNamePrefix + ".min";
     characteristicMinValue.className = "input";
 
     // Characteristic max value for range or step
@@ -306,7 +316,7 @@ function addCharacteristic(serviceDivID) {
     characteristicMaxValueLabel.innerHTML = "Maximum value:";
     var characteristicMaxValue = document.createElement('input');
     characteristicMaxValue.id = 'max' + characteristic;
-    characteristicMaxValue.name = "service[" + serviceNumber + "]characteristic[" + characteristic + "].max";
+    characteristicMaxValue.name = characteristicNamePrefix + ".max";
     characteristicMaxValue.className = "input";
 
     // button to add new Descriptor
@@ -315,7 +325,7 @@ function addCharacteristic(serviceDivID) {
     inputAddDescriptor.type = "button";
     inputAddDescriptor.textContent = "Add Descriptor";
     inputAddDescriptor.onclick = function () {
-        addDescriptor(characteristicDiv.id);
+        addDescriptor(serviceDivID, characteristicDiv.id);
     };
 
     // Descriptor container
@@ -378,8 +388,8 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(characteristicIntervalLabel);
     characteristicDiv.appendChild(characteristicInterval);
     characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicPrecisionLabel);
-    characteristicDiv.appendChild(characteristicPrecision);
+    characteristicDiv.appendChild(characteristicOffsetLabel);
+    characteristicDiv.appendChild(characteristicOffset);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicValuesArrayLabel);
     characteristicDiv.appendChild(characteristicValuesArray);
@@ -400,14 +410,20 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(removeCharacteristic);
 
+    characteristic++;
+
     // add characteristic to characteristic container of service
     characteristicContainer.appendChild(characteristicDiv);
 }
 
-function addDescriptor(characteristicDivID) {
-    descriptor++;
+function addDescriptor(serviceDivID, characteristicDivID) {
 
     var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
+
+    var serviceNumber = retnum(serviceDivID);
+    var characteristicNumber = retnum(characteristicDivID);
+
+    var descriptorNamePrefix = "services[" + serviceNumber + "].characteristics[" + characteristicNumber + "].descriptors[" + descriptor + "]";
 
     // create new descriptor node
     var descriptorDiv = document.createElement("div");
@@ -421,8 +437,8 @@ function addDescriptor(characteristicDivID) {
     var inputDescriptorDescription = document.createElement("input");
     inputDescriptorDescription.id = "descriptor_name" + descriptor;
     inputDescriptorDescription.className = "input";
-    inputDescriptorDescription.name = "descriptor[" + descriptor + "].name";
-    inputDescriptorDescription.type = "descriptor";
+    inputDescriptorDescription.name = descriptorNamePrefix + ".name";
+    //inputDescriptorDescription.type = "descriptor";
     inputDescriptorDescription.setAttribute("placeholder", "Enter Descriptor name");
 
     //  Descriptor UUID
@@ -432,9 +448,32 @@ function addDescriptor(characteristicDivID) {
     var inputDescriptorUUID = document.createElement("input");
     inputDescriptorUUID.id = "descriptor_uuid" + descriptor;
     inputDescriptorUUID.className = "input";
-    inputDescriptorUUID.name = "descriptor[" + descriptor + "].uuid";
-    inputDescriptorUUID.type = "descriptor";
+    inputDescriptorUUID.name = descriptorNamePrefix + ".uuid";
+    //inputDescriptorUUID.type = "descriptor";
     inputDescriptorUUID.setAttribute("placeholder", "Enter Descriptor UUID");
+
+    // value data type
+    var labelDescriptorValueType = document.createElement("label");
+    labelDescriptorValueType.innerHTML = "Value type:";
+    // radio buttons for the value data type
+    var stringRadioButton = document.createElement('input');
+    stringRadioButton.type = "radio";
+    stringRadioButton.name = descriptorNamePrefix + ".datatype";
+    stringRadioButton.value = "string";
+    stringRadioButton.id = "descriptor_datatype_string" + descriptor;
+
+    var bufferRadioButton = document.createElement('input');
+    bufferRadioButton.type = "radio";
+    bufferRadioButton.name = descriptorNamePrefix + ".datatype";
+    bufferRadioButton.value = "buffer";
+    bufferRadioButton.id = "descriptor_datatype_buffer" + descriptor;
+
+    var stringRadioButtonLabel = document.createElement('label');
+    stringRadioButtonLabel.setAttribute("for", "descriptor_datatype_string" + descriptor);
+    stringRadioButtonLabel.innerHTML = "STRING";
+    var bufferRadioButtonLabel = document.createElement('label');
+    bufferRadioButtonLabel.setAttribute("for", "descriptor_datatype_buffer" + descriptor);
+    bufferRadioButtonLabel.innerHTML = "BUFFER";;
 
     //  Descriptor value
     var labelDescriptorValue = document.createElement("label");
@@ -443,20 +482,9 @@ function addDescriptor(characteristicDivID) {
     var inputDescriptorValue = document.createElement("input");
     inputDescriptorValue.id = "descriptor_value" + descriptor;
     inputDescriptorValue.className = "input";
-    inputDescriptorValue.name = "descriptor[" + descriptor + "].value";
-    inputDescriptorValue.type = "descriptorValue";
+    inputDescriptorValue.name = descriptorNamePrefix + ".value";
+    //inputDescriptorValue.type = "descriptorValue";
     inputDescriptorValue.setAttribute("placeholder", "Enter value for descriptor");
-
-    //  Descriptor value
-    var labelDescriptorValueType = document.createElement("label");
-    labelDescriptorValueType.setAttribute("for", "DescriptorValueType" + descriptor);
-    labelDescriptorValueType.innerHTML = "Type of descriptor value:";
-    var inputDescriptorValueType = document.createElement("input");
-    inputDescriptorValueType.id = "descriptor_value" + descriptor;
-    inputDescriptorValueType.className = "input";
-    inputDescriptorValueType.name = "descriptor[" + descriptor + "].data";
-    inputDescriptorValueType.type = "descriptorValueType";
-    inputDescriptorValueType.setAttribute("placeholder", "Enter type of value");
 
     // button to remove descriptor container
     var removeDescriptor = document.createElement("button");
@@ -475,15 +503,22 @@ function addDescriptor(characteristicDivID) {
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(inputDescriptorUUID);
     descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(labelDescriptorValueType);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(stringRadioButtonLabel);
+    descriptorDiv.appendChild(stringRadioButton);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(bufferRadioButtonLabel);
+    descriptorDiv.appendChild(bufferRadioButton);
+    descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(labelDescriptorValue);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(inputDescriptorValue);
     descriptorDiv.appendChild(document.createElement("br"));
-    descriptorDiv.appendChild(labelDescriptorValueType);
-    descriptorDiv.appendChild(document.createElement("br"));
-    descriptorDiv.appendChild(inputDescriptorValueType);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(removeDescriptor);
+
+    descriptor++;
 
     // add descriptor to characteristic
     descriptorContainer.appendChild(descriptorDiv);
@@ -509,4 +544,4 @@ function retnum(str) {
 
 window.onload = function () {
     addService();
-}
+};
