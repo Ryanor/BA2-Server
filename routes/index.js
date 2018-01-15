@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 /* GET homepage. */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.render('index', {title: 'Bluetooth LE Profile Generator'});
 });
 
@@ -24,41 +24,94 @@ router.post('/profile', function (req, res) {
 
     // Logic goes here
     console.log(req.body);
-    var profile = [{}];
+    var profile = convertForm(req);
 
-    // get input form by id
-    var form = document.getElementById('profile');
+    if(profile === null) {
+        res.status(400);
+    } else {
+        console.log(JSON.stringify(profile));
+        res.send(req.body);
+    }
+});
 
-    // get child divs of services
-    var childDivs = document.getElementById('services').getElementsByTagName('div');
+function convertForm(request) {
+    var profileString = "[";
 
+    // get amount of services
     var amountOfServices = document.getElementsByClassName('service');
-    var amountOfCharacteristics = document.getElementsByClassName('characteristic');
-    var amountOfDescriptors = document.getElementsByClassName('descriptor');
+    //var amountOfCharacteristics = document.getElementsByClassName('characteristic');
+    //var amountOfDescriptors = document.getElementsByClassName('descriptor');
 
-    // parse
+    // parse only if service is available
     if(amountOfServices !== 0) {
         for (var i = 0; i < amountOfServices.length; i++) {
             var service = {};
             var currentService = amountOfServices[i];
 
             // get all input and select elements from currentService
-            var elements = service.querySelectorAll("input, select");
+            var serviceElements = currentService.querySelectorAll("input, select");
 
-            for (var i = 0; i < elements.length; i++) {
-                var element = elements[i];
-                var id = element.id;
+            for (var j = 0; j < serviceElements.length; j++) {
+                var sElement = serviceElements[j];
 
-                var key = element.name;
-                var value = element.value;
-                service[key] = value;
+                if(sElement.key) {
+                    service[sElement.name] = sElement.value;
+                }
             }
-            profile["service"] = service;
-        }
-    }
+            profileString += '{' + service + '"characteristics" : [';
 
+            // get all nested characteristic elements from currentService
+            var characteristicElements = currentService.getElementsByClassName('characteristic');
+            if(characteristicElements.length !== 0) {
+                for (var k = 0; k < characteristicElements.length; k++) {
+                    var characteristic = {};
+                    var cElement = characteristicElements[k];
+
+                    if(cElement.key) {
+
+                    }
+                }
+            } else {
+                profileString += ']';
+            }
+        }
+    } else {
+        return null;
+    }
+    var profile = JSON.parse(profileString);
     console.log(JSON.stringify(profile));
-    res.send(req.body);
-});
+    /*
+    // iterate over all selected elements of the input form
+    for (var i = 0; i < elements.length; i++) {
+        // current element, either of type input of select
+        var element = elements[i];
+        var id = element.id;
+
+        var key = element.name;
+        var value = element.value;
+
+        if(id.indexOf('descriptor') !== -1) {
+            // add key value pair to object
+            if (key) {
+                descriptors[key] = value;
+            }
+        } else if(id.indexOf('characteristic') !== -1) {
+            if (key) {
+                characteristics[key] = value;
+            }
+        } else {
+            if (key) {
+                services[key] = value;
+            }
+        }
+
+    }*/
+
+    /*
+    console.log(JSON.stringify(services));
+    console.log(JSON.stringify(characteristics));
+    console.log(JSON.stringify(descriptors));
+    */
+}
 
 module.exports = router;
