@@ -62,6 +62,7 @@ router.post('/profile', function (req, res) {
             res.status(200).send("Data written to database!");
             console.log("Record added as " + record);
         });
+        db.close();
 
     });
 });
