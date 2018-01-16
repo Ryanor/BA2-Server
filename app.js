@@ -28,6 +28,13 @@ app.use('/profile', profile);
 app.use('/submit', submit);
 
 
+/*
+ * This method is used to make our database use able in the routes
+
+app.use(function(req, res, next) {
+   req.db =
+});
+*/
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

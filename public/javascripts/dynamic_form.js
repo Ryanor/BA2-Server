@@ -2,12 +2,6 @@ var service = 0;
 var characteristic = 0;
 var descriptor = 0;
 
-function convertForm() {
-
-    var data = form2js('profile', '.', true);
-    console.log(JSON.stringify(data));
-}
-
 function addService() {
     // parent node
     var parentNode = document.getElementById("services");
@@ -473,7 +467,7 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     stringRadioButtonLabel.innerHTML = "STRING";
     var bufferRadioButtonLabel = document.createElement('label');
     bufferRadioButtonLabel.setAttribute("for", "descriptor_datatype_buffer" + descriptor);
-    bufferRadioButtonLabel.innerHTML = "BUFFER";;
+    bufferRadioButtonLabel.innerHTML = "BUFFER";
 
     //  Descriptor value
     var labelDescriptorValue = document.createElement("label");
@@ -540,6 +534,38 @@ function showCharacteristicTypeBase(characteristicDiv) {
 function retnum(str) {
 
     return str.replace(/[^0-9]/g, '');
+}
+
+function convertForm() {
+    var data = form2js('profile', '.', true);
+    console.log(JSON.stringify(data));
+    transferData(data);
+}
+
+function transferData(data) {
+    var xhr = new XMLHttpRequest();
+
+    //Call a function when the state changes.
+    xhr.onreadystatechange = function() {
+        console.log(xhr.readyState);
+        console.log(xhr.status);
+        if(xhr.readyState === 4 && xhr.status === 200) {
+            // Request finished. Do processing here.
+
+            alert(xhr.responseText + "   ...redirecting to start page");
+
+            document.location.href = '/';
+        }
+        if(xhr.readyState === 4 && xhr.status === 500) {
+            alert(xhr.responseText + "   ...redirecting to start page");
+            document.location.href = '/';
+        }
+    };
+    xhr.open("POST", "/profile", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    console.log(xhr.readyState);
+    console.log(xhr.status);
+    xhr.send(JSON.stringify(data));
 }
 
 window.onload = function () {
