@@ -66,10 +66,8 @@ function deleteProfile(event) {
         }).done(function( response ) {
 
             // Check for a successful (blank) response
-            if (response.msg === '') {
-                alert('Success: Removed profile from database');
-            }
-            else {
+            if (response.msg !== '') {
+
                 alert('Error: ' + response.msg);
             }
 
