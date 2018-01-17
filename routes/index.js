@@ -1,19 +1,76 @@
 var express = require('express');
 var router = express.Router();
-var mongodb = require('mongodb');
 
-
-/* GET homepage. */
+/**
+ *  GET routes
+ */
+// get start page
 router.get('/', function (req, res) {
     res.render('index', {title: 'Bluetooth LE Profile Generator'});
 });
 
+// route to get a profile form file
 router.get('/profile', function (req, res) {
     res.render('profile', {title: 'Bluetooth LE Profile Generator'});
 });
 
+// route to information page
 router.get('/about', function (req, res) {
-    res.render('about', {title: 'Bluetooth LE Profile Generator'});
+    //res.render('about', {title: 'Bluetooth LE Profile Generator'});
+});
+
+router.get('/profilelist', function (req, res) {
+   res.render('profilelist', {title: 'Bluetooth LE Profile Generator'});
+});
+
+// load all profiles from database
+router.get('/loadprofiles', function (req, res) {
+    var db = req.db;
+
+    db.collection('profiles').find({}).toArray( function(err, docs){
+        if(err) {
+            throw err;
+        }
+        res.json(docs);
+    });
+});
+
+// delete a single profile from database using ID
+router.get('/deleteprofile/:id', function (req, res) {
+    var db = req.db;
+
+    var userToDelete = req.params.id;
+    db.collection('profiles').remove({ '_id' : userToDelete }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
+
+
+
+
+/**
+ *  POST routes
+ */
+// post route to store a profile to the database
+router.post('/profile', function (req, res) {
+    var db = req.db;
+    var data = req.body;
+
+    // insert POST request to database
+    if(db != null) {
+        db.collection("profiles").insertOne(data, function (err, record) {
+            if (err) {
+                res.status(500).send("Database write error!");
+                throw err;
+            }
+            res.status(201).send("Data written to database!");
+            console.log("Record added as " + record);
+        });
+    } else {
+        res.status(500).send("Database not found!");
+        console.log("Database not found!");
+    }
 });
 
 router.post('/submit', function (req, res) {
@@ -21,51 +78,5 @@ router.post('/submit', function (req, res) {
     res.send(req.body);
 });
 
-router.post('/profile', function (req, res) {
-    var db = null;
-    var data = req.body;
-
-    mongodb.MongoClient.connect('mongodb://localhost:27017/', function (err, database) {
-
-        if (err) {
-            console.log(err);
-            process.exit(1);
-        }
-
-        db = database.db("BLEProfiles");
-        if (db !== null) {
-            console.log("Database connection ready");
-        } else {
-            console.log("Database not connected!");
-        }
-
-        db.listCollections({name: 'profiles'}).next(function (err, collinfo) {
-            if (collinfo) {
-                console.log("Collection exists");
-            } else {
-                db.createCollection("profiles", function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-
-                    console.log("Collection created!");
-                });
-            }
-        });
-
-        // insert POST request to database
-        db.collection("profiles").insertOne(data, function (err, record) {
-            if (err) {
-                res.status(500).send("Database write error!");
-                throw err;
-            }
-            res.status(200).send("Data written to database!");
-            console.log("Record added as " + record);
-        });
-        db.close();
-
-    });
-});
-
-
+// export all functions from router to the express application
 module.exports = router;

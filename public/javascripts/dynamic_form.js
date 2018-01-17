@@ -1,7 +1,22 @@
+
+/**
+ * This javascrpt file contains the code to dynamically input fields to the profile form.
+ * All elements are programmatically added and need therefore unique identifiers ID´s.
+ * The data of the filled form is converted to a JSON object using a javascript library called form2js.
+ * The JSON object will be transferred to the server REST API.
+ */
+
+
+/* Global variables service, characteristic and descriptor are used to get an
+   unique identifier (ID) for all elements used in the form. */
 var service = 0;
 var characteristic = 0;
 var descriptor = 0;
 
+/**
+ * Function adds a new service to the profile form. The service itself is a
+ * container for its name, uuid and additional characteristics.
+ */
 function addService() {
     // parent node
     var parentNode = document.getElementById("services");
@@ -83,7 +98,12 @@ function addService() {
     parentNode.appendChild(serviceDiv);
 }
 
-
+/**
+ * Function creates a new characteristic appended to a parent service.
+ * The characteristic itself can be the parent for appended descriptors.
+ * It is also possible to select different types of a characteristic depending of its usage.
+ * @param serviceDivID Contains the parents service identifier e.g. service1
+ */
 function addCharacteristic(serviceDivID) {
 
     var serviceNumber = retnum(serviceDivID);
@@ -518,56 +538,67 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorContainer.appendChild(descriptorDiv);
 }
 
-/*
-function showCharacteristicTypeArray(characteristicDiv) {
-
-}
-
-function showCharacteristicTypeRange(characteristicDiv) {
-
-}
-
-function showCharacteristicTypeBase(characteristicDiv) {
-
-}
-*/
+/**
+ * Function returns the numbers inside a string
+ * @param str String which may include numbers
+ * @returns {void|string} Included numbers as string
+ */
 function retnum(str) {
 
     return str.replace(/[^0-9]/g, '');
 }
 
+/**
+ * Function converts all data from the profile form into a json object.
+ * It uses a external library for this parsing process, which scans all possible input
+ * field for a name and corresponding value attribute.
+ * These attributes are stored as key value pairs to the json object.
+ * The library uses the special format of the name to generate a correct json format structure
+ * including arrays of values.
+ */
 function convertForm() {
     var data = form2js('profile', '.', true);
     console.log(JSON.stringify(data));
     transferData(data);
 }
 
+/**
+ * Function generates a HTTP POST request and transfers the json object to the web server
+ * using the correct REST API ressources.
+ * @param data JSON object containing data from the profile form
+ */
 function transferData(data) {
     var xhr = new XMLHttpRequest();
 
-    //Call a function when the state changes.
+    // React on state changes from the request
     xhr.onreadystatechange = function() {
         console.log(xhr.readyState);
         console.log(xhr.status);
-        if(xhr.readyState === 4 && xhr.status === 200) {
+        if(xhr.readyState === 4 && xhr.status === 201) {
             // Request finished. Do processing here.
-
             alert(xhr.responseText + "   ...redirecting to start page");
-
-            document.location.href = '/';
+            //document.location.href = '/';
         }
+
         if(xhr.readyState === 4 && xhr.status === 500) {
+            // Request error on server. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
-            document.location.href = '/';
+            //document.location.href = '/';
         }
     };
+    // prepare a POST request to REST API resource
     xhr.open("POST", "/profile", true);
+    // set content of the request to JSON
     xhr.setRequestHeader('Content-Type', 'application/json');
     console.log(xhr.readyState);
     console.log(xhr.status);
+    // transfer data
     xhr.send(JSON.stringify(data));
 }
 
+/**
+ * After page is loaded start function addService()
+ */
 window.onload = function () {
     addService();
 };
