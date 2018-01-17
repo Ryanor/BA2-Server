@@ -67,6 +67,7 @@ function deleteProfile(event) {
 
             // Check for a successful (blank) response
             if (response.msg === '') {
+                alert('Success: Removed profile from database');
             }
             else {
                 alert('Error: ' + response.msg);
@@ -74,15 +75,10 @@ function deleteProfile(event) {
 
             // Update the table
             populateTable();
-
         });
-
     }
     else {
-
         // If they said no to the confirm, do nothing
         return false;
-
     }
-
 };

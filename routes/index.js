@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var mongodb = require('mongodb');
 
 /**
  *  GET routes
@@ -22,31 +23,6 @@ router.get('/about', function (req, res) {
 router.get('/profilelist', function (req, res) {
    res.render('profilelist', {title: 'Bluetooth LE Profile Generator'});
 });
-
-// load all profiles from database
-router.get('/loadprofiles', function (req, res) {
-    var db = req.db;
-
-    db.collection('profiles').find({}).toArray( function(err, docs){
-        if(err) {
-            throw err;
-        }
-        res.json(docs);
-    });
-});
-
-// delete a single profile from database using ID
-router.get('/deleteprofile/:id', function (req, res) {
-    var db = req.db;
-
-    var userToDelete = req.params.id;
-    db.collection('profiles').remove({ '_id' : userToDelete }, function(err) {
-        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
-    });
-});
-
-
-
 
 
 /**
@@ -76,6 +52,31 @@ router.post('/profile', function (req, res) {
 router.post('/submit', function (req, res) {
     console.log("Submit called form index.js via post");
     res.send(req.body);
+});
+
+/**
+ * REST API routes
+ */
+// load all profiles from database
+router.get('/loadprofiles', function (req, res) {
+    var db = req.db;
+
+    db.collection('profiles').find({}).toArray( function(err, docs){
+        if(err) {
+            throw err;
+        }
+        res.json(docs);
+    });
+});
+
+// delete a single profile from database using ID
+router.delete('/deleteprofile/:id', function (req, res) {
+    var db = req.db;
+
+    var profile = req.params.id;
+    db.collection('profiles').deleteOne({_id: new mongodb.ObjectID(profile) }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
 });
 
 // export all functions from router to the express application
