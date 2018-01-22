@@ -69,6 +69,16 @@ router.get('/loadprofiles', function (req, res) {
     });
 });
 
+// load a single profile from the database using its ID
+router.get('/loadprofile/:id', function (req, res){
+    var db = req.db;
+
+    var profile = req.params.id;
+    db.collection('profiles').findOne({_id: new mongodb.ObjectID(profile) }, function(err, profile){
+        res.send((err === null) ? profile : {msg:'error: ' + err })
+    });
+});
+
 // delete a single profile from database using ID
 router.delete('/deleteprofile/:id', function (req, res) {
     var db = req.db;
