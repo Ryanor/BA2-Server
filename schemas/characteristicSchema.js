@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var descriptorSchema = mongoose.model('descriptorSchema');
+var Descriptor = require('./descriptorSchema');
+var descriptorSchema = mongoose.model('Descriptor').schema;
 
 /**
  * Characteristic schema containing data for:
@@ -32,4 +33,4 @@ var characteristicSchema = new Schema({
 });
 
 // Export model as Mongoose Schema
-module.exports = mongoose.model('characteristicSchema', characteristicSchema);
+module.exports = mongoose.model('Characteristic', characteristicSchema);

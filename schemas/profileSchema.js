@@ -5,7 +5,9 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var serviceSchema = mongoose.model('serviceSchema');
+var Service = require('./serviceSchema');
+var serviceSchema = mongoose.model('Service').schema;
+
 
 /**
  * Profile schema containing data for an array of services
@@ -16,4 +18,4 @@ var profileSchema = new Schema({
 });
 
 // Export model as Mongoose Schema
-module.exports = mongoose.model('profileSchema', profileSchema);
+module.exports = mongoose.model('Profile', profileSchema);

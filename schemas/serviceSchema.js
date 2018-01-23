@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var characteristicSchema = mongoose.model('characteristicSchema');
+var Characteristic = require('./characteristicSchema');
+var characteristicSchema = mongoose.model('Characteristic').schema;
 
 /**
  * Service schema containing data for
@@ -21,4 +22,4 @@ var serviceSchema = new Schema({
 });
 
 // Export model as Mongoose Schema
-module.exports = mongoose.model('serviceSchema', serviceSchema);
+module.exports = mongoose.model('Service', serviceSchema);

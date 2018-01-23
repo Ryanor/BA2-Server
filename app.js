@@ -13,10 +13,7 @@ var bodyParser = require('body-parser');
  * Manually added requirements
  */
 // load module for mongodb
-var mongodb = require('mongodb');
-
-// global variable to store database connection, used to use it in our routes
-var db = null;
+var mongoose = require('mongoose');
 
 /**
  *  Routes leading to our web pages which are used for navigation
@@ -45,44 +42,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  *  Establish connection to mongodb and store connection to global variable db
  */
-mongodb.MongoClient.connect('mongodb://localhost:27017/', function (err, database) {
-
-    if (err) {
-        console.log(err);
-        process.exit(1);
-    }
-
-    db = database.db("BLEProfiles");
-    if (db !== null) {
-        console.log("Database connection ready");
-    } else {
-        console.log("Database not connected!");
-    }
-
-    db.listCollections({name: 'profiles'}).next(function (err, collinfo) {
-        if (collinfo) {
-            console.log("Collection exists");
-        } else {
-            db.createCollection("profiles", function (err, res) {
-                if (err) {
-                    throw err;
-                }
-
-                console.log("Collection created!");
-            });
-        }
-    });
+var mongoDB = 'mongodb://localhost:27017/BLEProfiles';
+mongoose.connect(mongoDB, {
+    useMongoClient: true
 });
 
+mongoose.Promise = global.Promise;
 
-/**
- * This method is used to make our database accessible in the routes.
- * It must be placed before the routes are set.
- */
-app.use(function(req, res, next) {
-   req.db = db;
-   next();
-});
+var db = mongoose.connection;
+
+//Bind connection to connected and error event (to get notification of connection errors)
+db.on('connected', function () {
+    console.log('MongoDB connection successful!'); })
+  .on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 /**
  * Set routes for our web pages

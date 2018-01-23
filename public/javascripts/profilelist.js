@@ -8,7 +8,7 @@
 var profiles = [];
 
 // DOM Ready =============================================================
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Populate the user table on initial page load
     console.log("Entered profile list page on document ready function");
@@ -30,12 +30,12 @@ function populateTable() {
     var tableContent = '';
 
     // jQuery AJAX call for JSON
-    $.getJSON('/loadprofiles', function( data ) {
+    $.getJSON('/loadprofiles', function (data) {
 
         profiles = data;
 
         // For each item in our JSON, add a table row and cells to the content string
-        $.each(data, function(){
+        $.each(data, function () {
             console.log("Populate table with " + this._id);
             tableContent += '<tr>';
             tableContent += '<td>' + this._id + '</td>';
@@ -63,14 +63,9 @@ function deleteProfile(event) {
         $.ajax({
             type: 'DELETE',
             url: '/deleteprofile/' + $(this).attr('rel')
-        }).done(function( response ) {
-
-            // Check for a successful (blank) response
-            if (response.msg !== '') {
-
-                alert('Error: ' + response.msg);
-            }
-
+        }).done(function (response) {
+            // alert message if success
+            alert(response.msg);
             // Update the table
             populateTable();
         });
@@ -79,4 +74,4 @@ function deleteProfile(event) {
         // If they said no to the confirm, do nothing
         return false;
     }
-};
+}
