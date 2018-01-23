@@ -1,9 +1,9 @@
 
 /**
- * This javascrpt file contains the code to dynamically input fields to the profile form.
+ * This javascript file contains the code to dynamically create input fields to the profile form.
  * All elements are programmatically added and need therefore unique identifiers ID´s.
  * The data of the filled form is converted to a JSON object using a javascript library called form2js.
- * The JSON object will be transferred to the server REST API.
+ * The JSON object will be transferred to the server´s REST API.
  */
 
 
@@ -304,7 +304,7 @@ function addCharacteristic(serviceDivID) {
     var characteristicValuesArray = document.createElement('input');
     characteristicValuesArray.id = 'values' + characteristic;
     characteristicValuesArray.name = characteristicNamePrefix + ".values";
-    characteristicValuesArray.className = "input";
+    characteristicValuesArray.className = "values_array";
 
     // Characteristic base value for random stepping values
     var characteristicBaseValueLabel = document.createElement('label');
@@ -557,9 +557,58 @@ function retnum(str) {
  * including arrays of values.
  */
 function convertForm() {
+
+    buildInputFieldsForValuesArray();
     var data = form2js('profile', '.', true);
     console.log(JSON.stringify(data));
     transferData(data);
+}
+
+function buildInputFieldsForValuesArray() {
+    // get collection of all elements which are arrays of values
+    var values_arrays = document.getElementsByClassName('values_array');
+
+    for(var i=0; i < values_arrays.length; i++) {
+        // get next array from the collection
+        var array = values_arrays[i];
+        // get the array value which is a comma separated string
+        var value = array.value;
+
+        // get id of the element
+        var id = array.id;
+        // get name of the element
+        var name = array.name;
+        // split string at commas to get all single values from the input field
+        var numbers = value.split(',');
+        // set current node to append new element to the array node
+        var currentNode = array;
+        // if more than 1 number is available
+        if(numbers.length > 0) {
+            // create a new element which contains a single value
+            for(var k = 0; k < numbers.length; k++) {
+                // first element gets overwritten
+                if( k === 0) {
+                    array.name = name + "[]";
+                    array.value = numbers[k];
+                } else {
+                    // create new element for the other values
+                    var characteristicValuesArray = document.createElement('input');
+                    // with own unique id
+                    characteristicValuesArray.id = id + '_' + k; //values' + characteristic;
+                    // the same name with array brackets for the library
+                    characteristicValuesArray.name = name + "[]"; //characteristicNamePrefix + ".values";
+                    // the same class name
+                    characteristicValuesArray.className = "values_array";
+                    // and most important the new value
+                    characteristicValuesArray.value = numbers[k];
+                    // append as sibling
+                    currentNode.insertAdjacentElement("afterend", characteristicValuesArray);
+                    // set new current node
+                    currentNode = characteristicValuesArray;
+                }
+            }
+        }
+    }
 }
 
 /**
