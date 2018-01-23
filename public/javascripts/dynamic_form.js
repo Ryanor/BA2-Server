@@ -597,8 +597,6 @@ function buildInputFieldsForValuesArray() {
                     characteristicValuesArray.id = id + '_' + k; //values' + characteristic;
                     // the same name with array brackets for the library
                     characteristicValuesArray.name = name + "[]"; //characteristicNamePrefix + ".values";
-                    // the same class name
-                    characteristicValuesArray.className = "values_array";
                     // and most important the new value
                     characteristicValuesArray.value = numbers[k];
                     // append as sibling

@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var mongodb = require('mongodb');
+var mongoose = require('mongoose');
+var Profile = require('../schemas/profileSchema');
+var profile = mongoose.model('Profile');
 
 /**
  *  GET routes
@@ -30,23 +32,14 @@ router.get('/profilelist', function (req, res) {
  */
 // post route to store a profile to the database
 router.post('/profile', function (req, res) {
-    var db = req.db;
-    var data = req.body;
 
-    // insert POST request to database
-    if(db != null) {
-        db.collection("profiles").insertOne(data, function (err, record) {
-            if (err) {
-                res.status(500).send("Database write error!");
-                throw err;
-            }
-            res.status(201).send("Data written to database!");
-            console.log("Record added as " + record);
-        });
-    } else {
-        res.status(500).send("Database not found!");
-        console.log("Database not found!");
-    }
+   profile.create(req.body, function (err, profile) {
+       if (err) {
+           res.status(500).send("Database write error!");
+       } else {
+           res.status(201).send("Data written to database with ID: " + profile._id);
+       }
+   });
 });
 
 router.post('/submit', function (req, res) {
@@ -58,34 +51,35 @@ router.post('/submit', function (req, res) {
  * REST API routes
  */
 // load all profiles from database
-router.get('/loadprofiles', function (req, res) {
-    var db = req.db;
+router.get('/loadprofiles', function (req, res, next) {
 
-    db.collection('profiles').find({}).toArray( function(err, docs){
-        if(err) {
-            throw err;
+    profile.find(function (err, profile) {
+        if (err) {
+            return next(err);
         }
-        res.json(docs);
+        res.json(profile);
     });
 });
 
 // load a single profile from the database using its ID
-router.get('/loadprofile/:id', function (req, res){
-    var db = req.db;
+router.get('/loadprofile/:id', function (req, res, next){
 
-    var profile = req.params.id;
-    db.collection('profiles').findOne({_id: new mongodb.ObjectID(profile) }, function(err, profile){
-        res.send((err === null) ? profile : {msg:'error: ' + err })
+    profile.findById(req.params.id, function (err, profile) {
+        if (err) {
+            return next(err);
+        }
+        res.json(profile);
     });
 });
 
 // delete a single profile from database using ID
-router.delete('/deleteprofile/:id', function (req, res) {
-    var db = req.db;
+router.delete('/deleteprofile/:id', function (req, res, next) {
 
-    var profile = req.params.id;
-    db.collection('profiles').deleteOne({_id: new mongodb.ObjectID(profile) }, function(err) {
-        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    profile.remove({_id : req.params.id} , function (err, profile) {
+        if (err) {
+            return next(err);
+        }
+        res.send({ msg: 'Profile with ID: ' + req.params.id + ' removed!' });
     });
 });
 

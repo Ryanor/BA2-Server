@@ -21,4 +21,4 @@ var descriptorSchema = new Schema({
 });
 
 // Export model as Mongoose Schema
-module.exports = mongoose.model('descriptorSchema', descriptorSchema);
+module.exports = mongoose.model('Descriptor', descriptorSchema);
