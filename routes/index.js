@@ -30,28 +30,17 @@ router.get('/profilelist', function (req, res) {
 /**
  *  POST routes
  */
-// post route to store a profile to the database
-router.post('/profile', function (req, res) {
-
-   profile.create(req.body, function (err, profile) {
-       if (err) {
-           res.status(500).send("Database write error!");
-       } else {
-           res.status(201).send("Data written to database with ID: " + profile._id);
-       }
-   });
-});
-
 router.post('/submit', function (req, res) {
     console.log("Submit called form index.js via post");
     res.send(req.body);
 });
 
+
 /**
  * REST API routes
  */
 // load all profiles from database
-router.get('/loadprofiles', function (req, res, next) {
+router.get('/profile/all', function (req, res, next) {
 
     profile.find(function (err, profile) {
         if (err) {
@@ -61,8 +50,20 @@ router.get('/loadprofiles', function (req, res, next) {
     });
 });
 
+// post route to create a new profile in the database
+router.post('/profile', function (req, res) {
+
+    profile.create(req.body, function (err, profile) {
+        if (err) {
+            res.status(500).send("Database write error!");
+        } else {
+            res.status(201).send("Data written to database with ID: " + profile._id);
+        }
+    });
+});
+
 // load a single profile from the database using its ID
-router.get('/loadprofile/:id', function (req, res, next){
+router.get('/profile/:id', function (req, res, next){
 
     profile.findById(req.params.id, function (err, profile) {
         if (err) {
@@ -73,7 +74,7 @@ router.get('/loadprofile/:id', function (req, res, next){
 });
 
 // delete a single profile from database using ID
-router.delete('/deleteprofile/:id', function (req, res, next) {
+router.delete('/profile/:id', function (req, res, next) {
 
     profile.remove({_id : req.params.id} , function (err, profile) {
         if (err) {

@@ -30,7 +30,7 @@ function populateTable() {
     var tableContent = '';
 
     // jQuery AJAX call for JSON
-    $.getJSON('/loadprofiles', function (data) {
+    $.getJSON('/profile/all', function (data) {
 
         profiles = data;
 
@@ -62,7 +62,7 @@ function deleteProfile(event) {
         // If they did, do our delete
         $.ajax({
             type: 'DELETE',
-            url: '/deleteprofile/' + $(this).attr('rel')
+            url: '/profile/' + $(this).attr('rel')
         }).done(function (response) {
             // alert message if success
             alert(response.msg);

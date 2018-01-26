@@ -624,13 +624,13 @@ function transferData(data) {
         if(xhr.readyState === 4 && xhr.status === 201) {
             // Request finished. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
-            //document.location.href = '/';
+            document.location.href = '/';
         }
 
         if(xhr.readyState === 4 && xhr.status === 500) {
             // Request error on server. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
-            //document.location.href = '/';
+            document.location.href = '/';
         }
     };
     // prepare a POST request to REST API resource
