@@ -469,25 +469,24 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     // value data type
     var labelDescriptorValueType = document.createElement("label");
     labelDescriptorValueType.innerHTML = "Value type:";
+
     // radio buttons for the value data type
+    var stringRadioButtonLabel = document.createElement('label');
+    stringRadioButtonLabel.setAttribute("for", "descriptor_datatype_string" + descriptor);
+    stringRadioButtonLabel.innerHTML = "STRING";
     var stringRadioButton = document.createElement('input');
     stringRadioButton.type = "radio";
     stringRadioButton.name = descriptorNamePrefix + ".datatype";
     stringRadioButton.value = "string";
     stringRadioButton.id = "descriptor_datatype_string" + descriptor;
-
+    var bufferRadioButtonLabel = document.createElement('label');
+    bufferRadioButtonLabel.setAttribute("for", "descriptor_datatype_buffer" + descriptor);
+    bufferRadioButtonLabel.innerHTML = "BUFFER";
     var bufferRadioButton = document.createElement('input');
     bufferRadioButton.type = "radio";
     bufferRadioButton.name = descriptorNamePrefix + ".datatype";
     bufferRadioButton.value = "buffer";
     bufferRadioButton.id = "descriptor_datatype_buffer" + descriptor;
-
-    var stringRadioButtonLabel = document.createElement('label');
-    stringRadioButtonLabel.setAttribute("for", "descriptor_datatype_string" + descriptor);
-    stringRadioButtonLabel.innerHTML = "STRING";
-    var bufferRadioButtonLabel = document.createElement('label');
-    bufferRadioButtonLabel.setAttribute("for", "descriptor_datatype_buffer" + descriptor);
-    bufferRadioButtonLabel.innerHTML = "BUFFER";
 
     //  Descriptor value
     var labelDescriptorValue = document.createElement("label");
