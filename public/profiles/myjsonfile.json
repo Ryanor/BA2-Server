@@ -1,0 +1,69 @@
+[
+    {"uuid":"180F",
+     "characteristics":[
+         {"uuid":"2A19",
+          "properties":["read"],
+          "secure":[],
+          "value":null,
+          "descriptors":[
+              {"uuid":"2901",
+               "value":"Battery level between 0 and 100 percent"
+              }],
+          "_events":{},
+          "_eventsCount":6
+         }]
+    },
+    {"uuid":"180D",
+     "characteristics":[
+         {"uuid":"2A37",
+          "properties":["notify"],
+          "secure":[],
+          "value":null,
+          "descriptors":[
+              {"uuid":"2901",
+               "value":"Heart rate measurement between 0 and 240 bpm"
+              }],
+          "_events":{},
+          "_eventsCount":6
+         },
+         {"uuid":"2A38",
+          "properties":["read"],
+          "secure":[],
+          "value":null,
+          "descriptors":[
+              {"uuid":"2901",
+               "value":"Body sensor location"
+              }],
+          "_events":{},
+          "_eventsCount":6
+         }]
+    },
+    {"uuid":"34AB",
+     "characteristics":[
+         {"uuid":"34CD",
+          "properties":["read","write"],
+          "secure":[],
+          "value":null,
+          "descriptors":[
+              {"uuid":"2901",
+               "value":"Actual IP-Address of the slave"
+              }],
+          "_events":{},
+          "_eventsCount":6
+         }]
+    },
+    {"uuid":"1809",
+     "characteristics":[
+         {"uuid":"2A1C",
+          "properties":["notify"],
+          "secure":[],
+          "value":null,
+          "descriptors":[
+              {"uuid":"2901",
+               "value":"Temperature measurement in degree Celsius"
+              }],
+          "_events":{},
+          "_eventsCount":6
+         }]
+    }
+]
