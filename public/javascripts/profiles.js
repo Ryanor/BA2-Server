@@ -22,6 +22,7 @@ $(document).ready(function () {
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
+    $("#body").on('click', 'td a.select', startSimulator);
 
 });
 
@@ -38,6 +39,7 @@ function populateTable() {
         $.each(data, function () {
             console.log("Populate table with " + this._id);
             tableContent += '<tr>';
+            tableContent += '<td><a href="#" class="select" rel="' + this._id + '">select</a></td>';
             tableContent += '<td>' + this._id + '</td>';
             tableContent += '<td><a href="#" class="delete" rel="' + this._id + '">delete</a></td>';
             tableContent += '</tr>';
@@ -63,6 +65,33 @@ function deleteProfile(event) {
         $.ajax({
             type: 'DELETE',
             url: '/profile/' + $(this).attr('rel')
+        }).done(function (response) {
+            // alert message if success
+            alert(response.msg);
+            // Update the table
+            populateTable();
+        });
+    }
+    else {
+        // If they said no to the confirm, do nothing
+        return false;
+    }
+}
+
+// start simulator with selected profile
+function startSimulator(event) {
+    event.preventDefault();
+
+    // Pop up a confirmation dialog
+    var confirmation = confirm('Are you sure you want to start simulator with selected profile?');
+
+    // Check and make sure the user confirmed
+    if (confirmation === true) {
+
+        // If they did, do our delete
+        $.ajax({
+            type: 'POST',
+            url: '/startSimulator/' + $(this).attr('rel')
         }).done(function (response) {
             // alert message if success
             alert(response.msg);

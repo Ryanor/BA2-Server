@@ -31,9 +31,11 @@ router.get('/profiles', function (req, res) {
 /**
  *  POST routes
  */
-router.post('/submit', function (req, res) {
-    console.log("Submit called form index.js via post");
-    res.send(req.body);
+
+// TODO post route to start simulator with argument id for the correct profile using nodejs
+router.post('/startSimulator/:id', function (req, res) {
+    console.log("Start simulator with selected profile id as argument");
+    res.send({ msg: 'Starting simulator with ID: ' + req.params.id});
 });
 
 
