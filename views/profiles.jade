@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    h1 Welcome to #{title}
+    h3 Manage existing profiles
+    script(src="/jquery/jquery.js")
+    script(src="/javascripts/profiles.js")
+
+    #wrapper
+        h2 Profile List
+        #profiles
+        table
+            thead
+                th Profile ID
+                th Delete?
+            tbody#body

@@ -7,12 +7,12 @@ var profile = mongoose.model('Profile');
 /**
  *  GET routes
  */
-// get start page
+// get index page
 router.get('/', function (req, res) {
     res.render('index', {title: 'Bluetooth LE Profile Generator'});
 });
 
-// route to get a profile form file
+// route for page create new profile
 router.get('/profile', function (req, res) {
     res.render('profile', {title: 'Bluetooth LE Profile Generator'});
 });
@@ -22,8 +22,9 @@ router.get('/about', function (req, res) {
     //res.render('about', {title: 'Bluetooth LE Profile Generator'});
 });
 
-router.get('/profilelist', function (req, res) {
-   res.render('profilelist', {title: 'Bluetooth LE Profile Generator'});
+// route for existing profiles page
+router.get('/profiles', function (req, res) {
+   res.render('profiles', {title: 'Bluetooth LE Profile Generator'});
 });
 
 

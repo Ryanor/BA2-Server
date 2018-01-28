@@ -41,7 +41,7 @@ body {
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
-    background-color: bisque;
+    background-color: #e6e2d3;
 }
 
 .service {
@@ -51,7 +51,7 @@ body {
     padding: 20px;
     border-width: 1px;
     border-style: solid;
-    background-color: mediumorchid;
+    background-color: #f7786b;
 }
 
 .characteristic {
@@ -59,7 +59,7 @@ body {
     padding: 20px;
     border-width: 1px;
     border-style: solid;
-    background-color: darkcyan;
+    background-color: #80ced6;
 }
 
 .characteristicsRoot {
@@ -71,7 +71,7 @@ body {
     margin-top: 10px;
     border-width: 1px;
     border-style: solid;
-    background-color: khaki;
+    background-color: #fefbd8;
 }
 
 .descriptorsRoot {
@@ -108,7 +108,7 @@ a {
 #profiles table tbody {
     padding:0; margin:0;
     border-collapse:collapse;
-    border-spacing:0px;
+    border-spacing:0;
 }
 #profiles table td {
     background:#FFF;

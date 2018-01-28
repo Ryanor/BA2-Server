@@ -21,7 +21,6 @@ var mongoose = require('mongoose');
  */
 var index = require('./routes/index');
 var profile = require('./routes/profile');
-var submit = require('./routes/submit');
 
 // set express application variable
 var app = express();
@@ -62,7 +61,6 @@ db.on('connected', function () {
  */
 app.use('/', index);
 app.use('/profile', profile);
-app.use('/submit', submit);
 
 
 /**
