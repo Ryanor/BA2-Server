@@ -1,3 +1,6 @@
+var process = require('child_process');
+var path = require('path');
+var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
@@ -33,9 +36,12 @@ router.get('/profiles', function (req, res) {
  */
 
 // TODO post route to start simulator with argument id for the correct profile using nodejs
-router.post('/startSimulator/:id', function (req, res) {
-    console.log("Start simulator with selected profile id as argument");
-    res.send({ msg: 'Starting simulator with ID: ' + req.params.id});
+router.post('/startSimulator/', function (req, res) {
+    var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
+    console.log(req.body);
+    fs.writeFileSync(file, req.body);
+    process.execFile('node',['--version']); //'/home/pi/project/BA-Simulator/main.js']);
+    res.send({ msg: 'Simulator started...'});
 });
 
 

@@ -17,7 +17,7 @@ var descriptorSchema = new Schema({
 
     // extra values defined for the exchange format
     name : String,
-    datatype : {type:String, enum : ["string", "buffer"]}
+    datatype : {type:String, enum : ["string", "bytes"]}
 });
 
 // Export model as Mongoose Schema

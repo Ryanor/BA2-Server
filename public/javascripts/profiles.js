@@ -88,10 +88,18 @@ function startSimulator(event) {
     // Check and make sure the user confirmed
     if (confirmation === true) {
 
-        // If they did, do our delete
+        // get json data from id
+        var profile = getJSONById($(this).attr('rel'));
+
+        // start simulator with profile data as argument
         $.ajax({
             type: 'POST',
-            url: '/startSimulator/' + $(this).attr('rel')
+            url: '/startSimulator/',
+            data: profile,
+            processData: false,
+            error: function( jqXhr, textStatus, errorThrown ){
+                console.log( errorThrown );
+            }
         }).done(function (response) {
             // alert message if success
             alert(response.msg);
@@ -102,5 +110,14 @@ function startSimulator(event) {
     else {
         // If they said no to the confirm, do nothing
         return false;
+    }
+}
+
+function getJSONById(id) {
+    console.log(profiles.length);
+    for(var i = 0; i < profiles.length; i++) {
+        if (profiles[i]._id === id) {
+            return profiles[i];
+        }
     }
 }
