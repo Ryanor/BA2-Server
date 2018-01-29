@@ -96,8 +96,8 @@ function startSimulator(event) {
         $.ajax({
             type: 'POST',
             url: '/startSimulator/',
-            data: profile,
-            processData: false
+           // data: profile,
+           // processData: false
         }).done(function (response) {
             // alert message if success
             alert(response.msg);
