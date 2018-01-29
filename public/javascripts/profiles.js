@@ -90,16 +90,14 @@ function startSimulator(event) {
 
         // get json data from id
         var profile = getJSONById($(this).attr('rel'));
-
+        console.log(JSON.stringify(profile, null, 2));
         // start simulator with profile data as argument
+        console.log("Post profile");
         $.ajax({
             type: 'POST',
             url: '/startSimulator/',
             data: profile,
-            processData: false,
-            error: function( jqXhr, textStatus, errorThrown ){
-                console.log( errorThrown );
-            }
+            processData: false
         }).done(function (response) {
             // alert message if success
             alert(response.msg);
@@ -114,7 +112,6 @@ function startSimulator(event) {
 }
 
 function getJSONById(id) {
-    console.log(profiles.length);
     for(var i = 0; i < profiles.length; i++) {
         if (profiles[i]._id === id) {
             return profiles[i];

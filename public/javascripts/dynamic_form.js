@@ -521,8 +521,8 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorDiv.appendChild(stringRadioButtonLabel);
     descriptorDiv.appendChild(stringRadioButton);
     descriptorDiv.appendChild(document.createElement("br"));
-    descriptorDiv.appendChild(bufferRadioButtonLabel);
-    descriptorDiv.appendChild(bufferRadioButton);
+    descriptorDiv.appendChild(bytesRadioButtonLabel);
+    descriptorDiv.appendChild(bytesRadioButton);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(labelDescriptorValue);
     descriptorDiv.appendChild(document.createElement("br"));
