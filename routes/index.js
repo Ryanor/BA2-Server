@@ -66,7 +66,7 @@ router.post('/profile', function (req, res) {
         if (err) {
             res.status(500).send("Database write error!");
         } else {
-            res.status(201).send(JSON.stringify({id : profile._id});
+            res.status(201).send(JSON.stringify({id : profile._id}));
         }
     });
 });
