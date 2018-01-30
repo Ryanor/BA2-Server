@@ -22,7 +22,7 @@ $(document).ready(function () {
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
-    $("#body").on('click', 'td a.select', startSimulator);
+    $("#body").on('click', 'td a.select', selectProfile);
 
 });
 
@@ -79,7 +79,7 @@ function deleteProfile(event) {
 }
 
 // start simulator with selected profile
-function startSimulator(event) {
+function selectProfile(event) {
     event.preventDefault();
 
     // Pop up a confirmation dialog
@@ -90,20 +90,34 @@ function startSimulator(event) {
 
         // get json data from id
         var profile = getJSONById($(this).attr('rel'));
-        console.log(JSON.stringify(profile, null, 2));
+        profile = JSON.stringify(profile, null, 2);
         // start simulator with profile data as argument
         console.log("Post profile");
-        $.ajax({
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("POST", "/selectProfile");
+        xhr.setRequestHeader("cache-control", "no-cache");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.send(profile);
+        /*$.ajax({
             type: 'POST',
-            url: '/startSimulator/',
-           // data: profile,
-           // processData: false
+            url: '/selectProfile',
+            dataType: "json",
+            contentType: 'application/json',
+            data: profile
         }).done(function (response) {
             // alert message if success
             alert(response.msg);
             // Update the table
             populateTable();
-        });
+        });*/
     }
     else {
         // If they said no to the confirm, do nothing

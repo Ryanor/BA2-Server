@@ -36,12 +36,12 @@ router.get('/profiles', function (req, res) {
  */
 
 // TODO post route to start simulator with argument id for the correct profile using nodejs
-router.post('/startSimulator/', function (req, res) {
-   // var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
-   // console.log("Received data: " + req.body);
-   // fs.writeFileSync(file, req.body);
-    process.execFile('node'); //'/home/pi/project/BA-Simulator/main.js']);
-    res.send({ msg: 'Simulator started...'});
+router.post('/selectProfile', function (req, res) {
+   var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
+   console.log("Received data: " + JSON.stringify(req.body));
+   fs.writeFileSync(file, JSON.stringify(req.body));
+   // process.execFile('node'); //'/home/pi/project/BA-Simulator/main.js']);
+   res.send({ msg: 'Profile saved and ready for use.'});
 });
 
 

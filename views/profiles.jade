@@ -11,7 +11,13 @@ block content
         #profiles
         table
             thead
-                th Start Simulator
+                th Select
                 th Profile ID
                 th Delete?
             tbody#body
+
+    div#simulator
+
+    footer
+    p Selected profile will be used on next simulator start.
+    p Delete will remove the profile from the database. If deleted profile was the last selected profile for the simulator it will still be used until a new profile is selected.
