@@ -55,50 +55,42 @@ function deleteProfile(event) {
 
     event.preventDefault();
 
-    // Pop up a confirmation dialog
     var confirmation = confirm('Are you sure you want to delete this profile?');
 
-    // Check and make sure the user confirmed
     if (confirmation === true) {
-
-        // If they did, do our delete
+        // send post request with id as param to delete profile from database
         $.ajax({
             type: 'DELETE',
             url: '/profile/' + $(this).attr('rel')
         }).done(function (response) {
-            // alert message if success
             alert(response.msg);
-            // Update the table
             populateTable();
         });
     }
     else {
-        // If they said no to the confirm, do nothing
         return false;
     }
 }
 
-// start simulator with selected profile
+// save profile for next simulator start
 function selectProfile(event) {
     event.preventDefault();
 
-    // Pop up a confirmation dialog
     var confirmation = confirm('Are you sure you want to start simulator with selected profile?');
 
-    // Check and make sure the user confirmed
     if (confirmation === true) {
 
-        // get json data from id
         var profile = getJSONById($(this).attr('rel'));
         profile = JSON.stringify(profile, null, 2);
-        // start simulator with profile data as argument
-        console.log("Post profile");
 
+        // send post request and save selected profile for next simulator start
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                console.log(this.responseText);
+                alert(this.responseText);
+            } else {
+                alert("Error saving selected profile!");
             }
         });
 
@@ -106,21 +98,8 @@ function selectProfile(event) {
         xhr.setRequestHeader("cache-control", "no-cache");
         xhr.setRequestHeader("content-type", "application/json");
         xhr.send(profile);
-        /*$.ajax({
-            type: 'POST',
-            url: '/selectProfile',
-            dataType: "json",
-            contentType: 'application/json',
-            data: profile
-        }).done(function (response) {
-            // alert message if success
-            alert(response.msg);
-            // Update the table
-            populateTable();
-        });*/
     }
     else {
-        // If they said no to the confirm, do nothing
         return false;
     }
 }
