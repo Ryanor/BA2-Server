@@ -17,8 +17,8 @@ $(document).ready(function () {
     // Username link click
     //$('#profiles table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 
-    // Add User button click
-    //$('#btnAddUser').on('click', addUser);
+    // Add Start Simulator button
+    $('#simulator').on('click', startSimulator);
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
@@ -98,6 +98,34 @@ function selectProfile(event) {
         xhr.setRequestHeader("cache-control", "no-cache");
         xhr.setRequestHeader("content-type", "application/json");
         xhr.send(profile);
+    }
+    else {
+        return false;
+    }
+}
+
+function startSimulator(event) {
+    event.preventDefault();
+
+    var confirmation = confirm('Are you sure you want to start the simulator?');
+
+    if (confirmation === true) {
+
+        // send post request and save selected profile for next simulator start
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                alert(this.responseText);
+            } else {
+                alert("Error starting simulator!");
+            }
+        });
+
+        xhr.open("POST", "/startSimulator");
+        xhr.setRequestHeader("cache-control", "no-cache");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.send("Start");
     }
     else {
         return false;
