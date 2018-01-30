@@ -20,11 +20,6 @@ router.get('/profile', function (req, res) {
     res.render('profile', {title: 'Bluetooth LE Profile Generator'});
 });
 
-// route to information page
-router.get('/about', function (req, res) {
-    //res.render('about', {title: 'Bluetooth LE Profile Generator'});
-});
-
 // route for existing profiles page
 router.get('/profiles', function (req, res) {
    res.render('profiles', {title: 'Bluetooth LE Profile Generator'});
@@ -34,13 +29,10 @@ router.get('/profiles', function (req, res) {
 /**
  *  POST routes
  */
-
-// TODO post route to start simulator with argument id for the correct profile using nodejs
 router.post('/selectProfile', function (req, res) {
    var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
    console.log("Received data: " + JSON.stringify(req.body));
    fs.writeFileSync(file, JSON.stringify(req.body));
-   // process.execFile('node'); //'/home/pi/project/BA-Simulator/main.js']);
    res.send({ msg: 'Profile saved and ready for use.'});
 });
 

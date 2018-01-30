@@ -57,7 +57,7 @@ db.on('connected', function () {
 
 
 /**
- * Set routes for our web pages
+ * Set routes for the webservice pages
  */
 app.use('/', index);
 app.use('/profile', profile);
