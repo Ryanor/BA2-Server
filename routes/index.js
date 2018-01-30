@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var Profile = require('../schemas/profileSchema');
 var profile = mongoose.model('Profile');
 
+var child;
+var childPID;
 /**
  *  GET routes
  */
@@ -37,13 +39,29 @@ router.post('/selectProfile', function (req, res) {
 });
 
 router.post('/startSimulator', function (req, res) {
+
     var status = req.body.msg;
     if(status === "Start") {
         console.log("Received data: " + JSON.stringify(req.body));
-        res.send({msg: 'Simulator started'});
+        child = process.exec('node',['/home/pi/project/BA2-Simulator/main.js']);
+        childPID = child.pid;
+        res.send({msg: 'Simulator started with PID: ' + childPID});
     } else  {
         console.log("Received data: " + JSON.stringify(req.body));
-        res.send({msg: 'Simulator stopped'});
+        if(childPID !== 0) {
+            console.log("Process " + childPID + " will be stopped");
+            child.stdin.pause();
+            var script = process.exec(path.join(__dirname, '../','stopSimulator.sh'), [childPID]);
+            script.stdout.on('data',function(data){
+                console.log(data); // process output will be displayed here
+            });
+            script.stderr.on('data',function(data){
+                console.log(data); // process error output will be displayed here
+            });
+            res.send({msg: 'Simulator stopped'});
+        } else {
+            res.send({msg: 'Simulator not running!'});
+        }
     }
 });
 
