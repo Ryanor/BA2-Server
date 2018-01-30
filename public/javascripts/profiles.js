@@ -6,19 +6,15 @@
 
 // create empty array for the data
 var profiles = [];
+var start_stop = true;
+var button;
 
 // DOM Ready =============================================================
 $(document).ready(function () {
+    button = document.getElementById('simulator');
 
-    // Populate the user table on initial page load
-    console.log("Entered profile list page on document ready function");
+    // Populate the existing profile table on initial page load
     populateTable();
-
-    // Username link click
-    //$('#profiles table tbody').on('click', 'td a.linkshowuser', showUserInfo);
-
-    // Add User button click
-    //$('#btnAddUser').on('click', addUser);
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
@@ -89,8 +85,9 @@ function selectProfile(event) {
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
                 alert(this.responseText);
-            } else {
-                alert("Error saving selected profile!");
+            }
+            if (xhr.status === 500) {
+                alert("Error saving profile");
             }
         });
 
@@ -104,8 +101,74 @@ function selectProfile(event) {
     }
 }
 
+function startStop() {
+    if (start_stop) {
+        start_stop = false;
+        button.value = "Stop Simulator";
+        button.className = "stop";
+        startSimulator();
+    } else {
+        start_stop = true;
+        button.value = "Start Simulator";
+        button.className = "start";
+        stopSimulator();
+    }
+}
+
+function startSimulator() {
+    var confirmation = confirm('Are you sure you want to start the simulator?');
+
+    if (confirmation === true) {
+
+        // send post request and save selected profile for next simulator start
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.open("POST", "/startSimulator");
+        xhr.setRequestHeader("cache-control", "no-cache");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                alert(this.responseText);
+            }
+            if (xhr.status === 500) {
+                alert("Error starting the simulator");
+            }
+        });
+        xhr.send(JSON.stringify({"msg": "Start"}));
+    }
+    else {
+        return false;
+    }
+}
+
+function stopSimulator() {
+    var confirmation = confirm('Are you sure you want to stop the simulator?');
+
+    if (confirmation === true) {
+        // send post request and save selected profile for next simulator start
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.open("POST", "/startSimulator");
+        xhr.setRequestHeader("cache-control", "no-cache");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                alert(this.responseText);
+            }
+            if (xhr.status === 500) {
+                alert("Error stopping the simulator");
+            }
+        });
+
+        xhr.send(JSON.stringify({"msg": "Stop"}));
+    }
+    else {
+        return false;
+    }
+}
+
 function getJSONById(id) {
-    for(var i = 0; i < profiles.length; i++) {
+    for (var i = 0; i < profiles.length; i++) {
         if (profiles[i]._id === id) {
             return profiles[i];
         }

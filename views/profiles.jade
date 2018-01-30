@@ -16,8 +16,7 @@ block content
                 th Delete?
             tbody#body
 
-    div#simulator
-
+    input#simulator(class='start', type='button', name='start_stop', value='Start Simulator', onclick='startStop()')
     footer
     p Selected profile will be used on next simulator start.
     p Delete will remove the profile from the database. If deleted profile was the last selected profile for the simulator it will still be used until a new profile is selected.

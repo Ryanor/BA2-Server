@@ -20,7 +20,7 @@ var mongoose = require('mongoose');
  *  and rest api calls
  */
 var index = require('./routes/index');
-var profile = require('./routes/profile');
+var startProfile = require('./routes/startProfile');
 
 // set express application variable
 var app = express();
@@ -60,7 +60,7 @@ db.on('connected', function () {
  * Set routes for the webservice pages
  */
 app.use('/', index);
-app.use('/profile', profile);
+app.use('/startProfile', startProfile);
 
 
 /**
