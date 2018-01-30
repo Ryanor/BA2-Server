@@ -479,14 +479,14 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     stringRadioButton.name = descriptorNamePrefix + ".datatype";
     stringRadioButton.value = "string";
     stringRadioButton.id = "descriptor_datatype_string" + descriptor;
-    var bufferRadioButtonLabel = document.createElement('label');
-    bufferRadioButtonLabel.setAttribute("for", "descriptor_datatype_buffer" + descriptor);
-    bufferRadioButtonLabel.innerHTML = "BUFFER";
-    var bufferRadioButton = document.createElement('input');
-    bufferRadioButton.type = "radio";
-    bufferRadioButton.name = descriptorNamePrefix + ".datatype";
-    bufferRadioButton.value = "buffer";
-    bufferRadioButton.id = "descriptor_datatype_buffer" + descriptor;
+    var bytesRadioButtonLabel = document.createElement('label');
+    bytesRadioButtonLabel.setAttribute("for", "descriptor_datatype_bytes" + descriptor);
+    bytesRadioButtonLabel.innerHTML = "BYTES";
+    var bytesRadioButton = document.createElement('input');
+    bytesRadioButton.type = "radio";
+    bytesRadioButton.name = descriptorNamePrefix + ".datatype";
+    bytesRadioButton.value = "bytes";
+    bytesRadioButton.id = "descriptor_datatype_bytes" + descriptor;
 
     //  Descriptor value
     var labelDescriptorValue = document.createElement("label");
@@ -521,8 +521,8 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorDiv.appendChild(stringRadioButtonLabel);
     descriptorDiv.appendChild(stringRadioButton);
     descriptorDiv.appendChild(document.createElement("br"));
-    descriptorDiv.appendChild(bufferRadioButtonLabel);
-    descriptorDiv.appendChild(bufferRadioButton);
+    descriptorDiv.appendChild(bytesRadioButtonLabel);
+    descriptorDiv.appendChild(bytesRadioButton);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(labelDescriptorValue);
     descriptorDiv.appendChild(document.createElement("br"));

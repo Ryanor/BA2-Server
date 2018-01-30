@@ -1,3 +1,6 @@
+var process = require('child_process');
+var path = require('path');
+var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
@@ -17,11 +20,6 @@ router.get('/profile', function (req, res) {
     res.render('profile', {title: 'Bluetooth LE Profile Generator'});
 });
 
-// route to information page
-router.get('/about', function (req, res) {
-    //res.render('about', {title: 'Bluetooth LE Profile Generator'});
-});
-
 // route for existing profiles page
 router.get('/profiles', function (req, res) {
    res.render('profiles', {title: 'Bluetooth LE Profile Generator'});
@@ -31,9 +29,11 @@ router.get('/profiles', function (req, res) {
 /**
  *  POST routes
  */
-router.post('/submit', function (req, res) {
-    console.log("Submit called form index.js via post");
-    res.send(req.body);
+router.post('/selectProfile', function (req, res) {
+   var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
+   console.log("Received data: " + JSON.stringify(req.body));
+   fs.writeFileSync(file, JSON.stringify(req.body));
+   res.send({ msg: 'Profile saved and ready for use.'});
 });
 
 
@@ -58,7 +58,7 @@ router.post('/profile', function (req, res) {
         if (err) {
             res.status(500).send("Database write error!");
         } else {
-            res.status(201).send("Data written to database with ID: " + profile._id);
+            res.status(201).send(JSON.stringify({id : profile._id}));
         }
     });
 });

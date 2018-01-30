@@ -22,6 +22,7 @@ $(document).ready(function () {
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
+    $("#body").on('click', 'td a.select', selectProfile);
 
 });
 
@@ -38,6 +39,7 @@ function populateTable() {
         $.each(data, function () {
             console.log("Populate table with " + this._id);
             tableContent += '<tr>';
+            tableContent += '<td><a href="#" class="select" rel="' + this._id + '">select</a></td>';
             tableContent += '<td>' + this._id + '</td>';
             tableContent += '<td><a href="#" class="delete" rel="' + this._id + '">delete</a></td>';
             tableContent += '</tr>';
@@ -53,25 +55,59 @@ function deleteProfile(event) {
 
     event.preventDefault();
 
-    // Pop up a confirmation dialog
     var confirmation = confirm('Are you sure you want to delete this profile?');
 
-    // Check and make sure the user confirmed
     if (confirmation === true) {
-
-        // If they did, do our delete
+        // send post request with id as param to delete profile from database
         $.ajax({
             type: 'DELETE',
             url: '/profile/' + $(this).attr('rel')
         }).done(function (response) {
-            // alert message if success
             alert(response.msg);
-            // Update the table
             populateTable();
         });
     }
     else {
-        // If they said no to the confirm, do nothing
         return false;
+    }
+}
+
+// save profile for next simulator start
+function selectProfile(event) {
+    event.preventDefault();
+
+    var confirmation = confirm('Are you sure you want to start simulator with selected profile?');
+
+    if (confirmation === true) {
+
+        var profile = getJSONById($(this).attr('rel'));
+        profile = JSON.stringify(profile, null, 2);
+
+        // send post request and save selected profile for next simulator start
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                alert(this.responseText);
+            } else {
+                alert("Error saving selected profile!");
+            }
+        });
+
+        xhr.open("POST", "/selectProfile");
+        xhr.setRequestHeader("cache-control", "no-cache");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.send(profile);
+    }
+    else {
+        return false;
+    }
+}
+
+function getJSONById(id) {
+    for(var i = 0; i < profiles.length; i++) {
+        if (profiles[i]._id === id) {
+            return profiles[i];
+        }
     }
 }
