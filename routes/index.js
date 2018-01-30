@@ -43,7 +43,7 @@ router.post('/startSimulator', function (req, res) {
     var status = req.body.msg;
     if(status === "Start") {
         console.log("Received data: " + JSON.stringify(req.body));
-        child = process.exec('node',['/home/pi/project/BA2-Simulator/main.js']);
+        child = process.execFile('node',['/home/pi/project/BA2-Simulator/main.js']);
         childPID = child.pid;
         res.send({msg: 'Simulator started with PID: ' + childPID});
     } else  {
@@ -51,7 +51,7 @@ router.post('/startSimulator', function (req, res) {
         if(childPID !== 0) {
             console.log("Process " + childPID + " will be stopped");
             child.stdin.pause();
-            var script = process.exec(path.join(__dirname, '../','stopSimulator.sh'), [childPID]);
+            var script = process.execFile(path.join(__dirname, '../','stopSimulator.sh'), [childPID]);
             script.stdout.on('data',function(data){
                 console.log(data); // process output will be displayed here
             });
