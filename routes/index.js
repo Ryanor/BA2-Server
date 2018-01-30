@@ -36,6 +36,16 @@ router.post('/selectProfile', function (req, res) {
    res.send({ msg: 'Profile saved and ready for use.'});
 });
 
+router.post('/startSimulator', function (req, res) {
+    var status = req.body.msg;
+    if(status === "Start") {
+        console.log("Received data: " + JSON.stringify(req.body));
+        res.send({msg: 'Simulator started'});
+    } else  {
+        console.log("Received data: " + JSON.stringify(req.body));
+        res.send({msg: 'Simulator stopped'});
+    }
+});
 
 /**
  * REST API routes
