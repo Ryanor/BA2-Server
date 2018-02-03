@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Script running with params $1 and $2";
 
 for PID in $(pidof $1); do
         COM_ARGU=$(xargs -0 < /proc/$PID/cmdline);
