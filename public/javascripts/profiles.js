@@ -48,15 +48,22 @@ function populateTable() {
 }
 
 function checkSimulatorRunning() {
-    $.ajax({
-        type: 'GET',
-        url: '/checkSimulator'
-    }).done(function (response) {
-        if(response.msg === 'running') {
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
             start_stop = true;
         }
-        start_stop = false;
+        if (xhr.status === 500) {
+            alert("Error checking simulator");
+            start_stop = false;
+        }
     });
+
+    xhr.open("GET", "/checkSimulator");
+    xhr.setRequestHeader("cache-control", "no-cache");
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send();
 }
 
 // Delete profile
