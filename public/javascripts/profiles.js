@@ -6,7 +6,7 @@
 
 // create empty array for the data
 var profiles = [];
-var start_stop = true;
+var start_stop;
 var button;
 
 // DOM Ready =============================================================
@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     // Populate the existing profile table on initial page load
     populateTable();
-    checkSimulatorRunning();
+    checkSimulatorRunning() ? start_stop = 1 : start_stop = false;
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
@@ -48,21 +48,7 @@ function populateTable() {
 }
 
 function checkSimulatorRunning() {
-    $.ajax({
-        type: 'GET',
-        url: '/checkSimulator'
-    }).done(function (response) {
-        if(response.msg === 'running') {
-            start_stop = true;
-        } else {
-            start_stop = false;
-        }
-    });
-    /*
-    $.getJSON('/checkSimulator', function (data) {
-        if( data === )
-    });
-    */
+    return $.getJSON('/checkSimulator');
 }
 
 // Delete profile
