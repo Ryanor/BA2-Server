@@ -52,6 +52,8 @@ function checkSimulatorRunning() {
     xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4 && xhr.status === 200 && xhr.responseText === 'running') {
             start_stop = false;
+            button.value = "Stop Simulator";
+            button.className = "stop";
         } else {
             start_stop = true;
         }
