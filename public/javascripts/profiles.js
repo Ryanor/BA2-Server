@@ -63,7 +63,7 @@ function checkSimulatorRunning() {
     xhr.open("GET", "/checkSimulator");
     xhr.setRequestHeader("cache-control", "no-cache");
     xhr.setRequestHeader("content-type", "application/json");
-    xhr.send("");
+    xhr.send({"msg":"check"});
 }
 
 // Delete profile
