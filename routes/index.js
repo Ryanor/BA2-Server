@@ -37,13 +37,13 @@ router.get('/checkSimulator', function (req, res) {
     running.stdout.on('data',function(data){
         console.log(data); // process output will be displayed here
         if(data === 1) {
-            res.json({msg: 'running'});
+            res.send({msg: 'running'});
         }
     });
     running.stderr.on('data',function(data){
         console.log(data); // process error output will be displayed here
         if(data === 1) {
-            res.json({msg: 'running'});
+            res.send({msg: 'running'});
         }
     });
 });
