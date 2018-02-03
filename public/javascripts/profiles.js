@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     // Populate the existing profile table on initial page load
     populateTable();
-    checkSimulatorRunning() ? start_stop = 1 : start_stop = false;
+    checkSimulatorRunning();
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
@@ -48,7 +48,12 @@ function populateTable() {
 }
 
 function checkSimulatorRunning() {
-    return $.getJSON('/checkSimulator');
+    $.getJSON('/checkSimulator', function(data) {
+        if(data.msg === 'running') {
+            start_stop = true;
+        }
+        start_stop = false;
+    });
 }
 
 // Delete profile
@@ -108,14 +113,8 @@ function selectProfile(event) {
 
 function startStop() {
     if (start_stop) {
-        start_stop = false;
-        button.value = "Stop Simulator";
-        button.className = "stop";
         startSimulator();
     } else {
-        start_stop = true;
-        button.value = "Start Simulator";
-        button.className = "start";
         stopSimulator();
     }
 }
@@ -124,7 +123,9 @@ function startSimulator() {
     var confirmation = confirm('Are you sure you want to start the simulator?');
 
     if (confirmation === true) {
-
+        start_stop = false;
+        button.value = "Stop Simulator";
+        button.className = "stop";
         // send post request and save selected profile for next simulator start
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
@@ -150,6 +151,9 @@ function stopSimulator() {
     var confirmation = confirm('Are you sure you want to stop the simulator?');
 
     if (confirmation === true) {
+        start_stop = true;
+        button.value = "Start Simulator";
+        button.className = "start";
         // send post request and save selected profile for next simulator start
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
