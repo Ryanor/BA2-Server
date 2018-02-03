@@ -33,10 +33,16 @@ router.get('/profiles', function (req, res) {
  */
 router.get('/checkSimulator', function (req, res) {
     console.log("Checking for running simulator...");
-    var running = process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
-    running.on('close', function( code) {
-        console.log(code);
+    process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js'] , function(err, stdout, stderr) {
+        // Node.js will invoke this callback when the
+        if(err) {
+            console.log(err);
+            throw err;
+        }
+        console.log(stdout);
+        console.log(stderr);
     });
+    res.status(200).send("dfada");
 });
 
 router.post('/selectProfile', function (req, res) {
