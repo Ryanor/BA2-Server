@@ -52,9 +52,9 @@ function checkSimulatorRunning() {
     xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4 && xhr.status === 200) {
             if(xhr.responseText === 'running') {
-                start_stop = true;
-            }
                 start_stop = false;
+            }
+                start_stop = true;
         }
     });
     xhr.open("GET", "/checkSimulator", true);

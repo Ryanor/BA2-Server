@@ -36,8 +36,10 @@ router.get('/checkSimulator', function (req, res) {
     var running = process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
     running.on('close', function (code) {
         if(code === 1) {
+            console.log("Simulator running");
             res.status(200).send("running");
         } else {
+            console.log("Simulator not running");
             res.status(200).send("not running");
         }
     });
