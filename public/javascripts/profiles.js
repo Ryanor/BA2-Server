@@ -48,8 +48,11 @@ function populateTable() {
 }
 
 function checkSimulatorRunning() {
-    $.getJSON('/checkSimulator', function(data) {
-        if(data.msg === 'running') {
+    $.ajax({
+        type: 'GET',
+        url: '/checkSimulator'
+    }).done(function (response) {
+        if(response.msg === 'running') {
             start_stop = true;
         }
         start_stop = false;

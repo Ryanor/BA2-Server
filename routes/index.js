@@ -32,6 +32,7 @@ router.get('/profiles', function (req, res) {
  *  POST routes
  */
 router.get('/checkSimulator', function (req, res) {
+    console.log("Checking for running simulator...");
     var running = process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
     running.stdout.on('data',function(data){
         console.log(data); // process output will be displayed here
