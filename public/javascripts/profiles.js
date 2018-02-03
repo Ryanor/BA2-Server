@@ -49,21 +49,14 @@ function populateTable() {
 
 function checkSimulatorRunning() {
     var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
     xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
+        if (this.readyState === 4 && xhr.status === 200) {
             start_stop = true;
         }
-        if (this.readyState === 4 && xhr.status === 500) {
-            alert("Error checking simulator");
             start_stop = false;
-        }
     });
-
-    xhr.open("GET", "/checkSimulator");
-    xhr.setRequestHeader("cache-control", "no-cache");
-    xhr.setRequestHeader("content-type", "application/json");
-    xhr.send({"msg":"check"});
+    xhr.open("GET", "/checkSimulator", true);
+    xhr.send(null);
 }
 
 // Delete profile
