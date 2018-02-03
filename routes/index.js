@@ -33,13 +33,13 @@ router.get('/profiles', function (req, res) {
  */
 router.get('/checkSimulator', function (req, res) {
     var running = process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
-    script.stdout.on('data',function(data){
+    running.stdout.on('data',function(data){
         console.log(data); // process output will be displayed here
         if(data === 1) {
             res.json({msg: 'running'});
         }
     });
-    script.stderr.on('data',function(data){
+    running.stderr.on('data',function(data){
         console.log(data); // process error output will be displayed here
         if(data === 1) {
             res.json({msg: 'running'});
