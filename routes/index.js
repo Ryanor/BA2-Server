@@ -31,6 +31,22 @@ router.get('/profiles', function (req, res) {
 /**
  *  POST routes
  */
+router.get('/checkSimulator', function (req, res) {
+    var running = process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
+    script.stdout.on('data',function(data){
+        console.log(data); // process output will be displayed here
+        if(data === 1) {
+            res.send({msg: 'running'});
+        }
+    });
+    script.stderr.on('data',function(data){
+        console.log(data); // process error output will be displayed here
+        if(data === 1) {
+            res.send({msg: 'running'});
+        }
+    });
+});
+
 router.post('/selectProfile', function (req, res) {
    var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
    console.log("Received data: " + JSON.stringify(req.body));

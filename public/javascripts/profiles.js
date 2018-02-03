@@ -15,6 +15,7 @@ $(document).ready(function () {
 
     // Populate the existing profile table on initial page load
     populateTable();
+    checkSimulatorRunning();
 
     //Delete profile link click
     $("#body").on('click', 'td a.delete', deleteProfile);
@@ -44,6 +45,24 @@ function populateTable() {
         // Inject the whole content string into our existing HTML table
         $("#body").html(tableContent);
     });
+}
+
+function checkSimulatorRunning() {
+    $.ajax({
+        type: 'GET',
+        url: '/checkSimulator'
+    }).done(function (response) {
+        if(response.msg === 'running') {
+            start_stop = true;
+        } else {
+            start_stop = false;
+        }
+    });
+    /*
+    $.getJSON('/checkSimulator', function (data) {
+        if( data === )
+    });
+    */
 }
 
 // Delete profile
