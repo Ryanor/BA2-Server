@@ -54,7 +54,7 @@ function checkSimulatorRunning() {
         if (this.readyState === 4) {
             start_stop = true;
         }
-        if (xhr.status === 500) {
+        if (this.readyState === 4 && xhr.status === 500) {
             alert("Error checking simulator");
             start_stop = false;
         }
