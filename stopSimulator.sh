@@ -1,7 +1,10 @@
 #!/bin/bash
 
-#first argument is process id from server child
-PID=$1;
-echo "$PID";
-#kill process
-kill -9 $PID;
+for PID in $(pidof $1); do
+        COM_ARGU=$(xargs -0 < /proc/$PID/cmdline);
+        if [[ "$COM_ARGU" == "$1 $2" ]]; then
+                kill -9 $PID;
+                exit 0;
+        fi
+done
+exit 1;

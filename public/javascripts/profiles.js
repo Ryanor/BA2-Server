@@ -146,7 +146,7 @@ function startSimulator() {
                 alert("Error starting the simulator");
             }
         });
-        xhr.send(JSON.stringify({"msg": "Start"}));
+        xhr.send(null);
     }
     else {
         return false;
@@ -163,7 +163,7 @@ function stopSimulator() {
         // send post request and save selected profile for next simulator start
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
-        xhr.open("POST", "/startSimulator");
+        xhr.open("POST", "/stopSimulator");
         xhr.setRequestHeader("cache-control", "no-cache");
         xhr.setRequestHeader("content-type", "application/json");
         xhr.addEventListener("readystatechange", function () {
@@ -175,7 +175,7 @@ function stopSimulator() {
             }
         });
 
-        xhr.send(JSON.stringify({"msg": "Stop"}));
+        xhr.send(null);
     }
     else {
         return false;

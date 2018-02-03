@@ -7,8 +7,6 @@ var mongoose = require('mongoose');
 var Profile = require('../schemas/profileSchema');
 var profile = mongoose.model('Profile');
 
-var child;
-var childPID;
 /**
  *  GET routes
  */
@@ -24,7 +22,7 @@ router.get('/profile', function (req, res) {
 
 // route for existing profiles page
 router.get('/profiles', function (req, res) {
-   res.render('profiles', {title: 'Bluetooth LE Profile Generator'});
+    res.render('profiles', {title: 'Bluetooth LE Profile Generator'});
 });
 
 
@@ -33,9 +31,9 @@ router.get('/profiles', function (req, res) {
  */
 router.get('/checkSimulator', function (req, res) {
     console.log("Checking for running simulator...");
-    var running = process.execFile(path.join(__dirname, '../','isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
+    var running = process.execFile(path.join(__dirname, '../', 'isSimulatorRunning.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
     running.on('close', function (code) {
-        if(code === 1) {
+        if (code === 0) {
             console.log("Simulator running");
             res.status(200).send("running");
         } else {
@@ -46,37 +44,30 @@ router.get('/checkSimulator', function (req, res) {
 });
 
 router.post('/selectProfile', function (req, res) {
-   var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
-   console.log("Received data: " + JSON.stringify(req.body));
-   fs.writeFileSync(file, JSON.stringify(req.body));
-   res.send({ msg: 'Profile saved and ready for use.'});
+    var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
+    console.log("Received data: " + JSON.stringify(req.body));
+    fs.writeFileSync(file, JSON.stringify(req.body));
+    res.send({msg: 'Profile saved and ready for use.'});
 });
 
 router.post('/startSimulator', function (req, res) {
 
-    var status = req.body.msg;
-    if(status === "Start") {
-        console.log("Received data: " + JSON.stringify(req.body));
-        child = process.execFile('/usr/bin/node',['/home/pi/project/BA2-Simulator/main.js']);
-        childPID = child.pid;
-        res.send({msg: 'Simulator started with PID: ' + childPID});
-    } else  {
-        console.log("Received data: " + JSON.stringify(req.body));
-        if(childPID !== 0) {
-            console.log("Process " + childPID + " will be stopped");
-            child.stdin.pause();
-            var script = process.execFile(path.join(__dirname, '../','stopSimulator.sh'), [childPID]);
-            script.stdout.on('data',function(data){
-                console.log(data); // process output will be displayed here
-            });
-            script.stderr.on('data',function(data){
-                console.log(data); // process error output will be displayed here
-            });
-            res.send({msg: 'Simulator stopped'});
-        } else {
-            res.send({msg: 'Simulator not running!'});
-        }
-    }
+    console.log("Simulator will start up...");
+    var starting = process.execFile('/usr/bin/node', ['/home/pi/project/BA2-Simulator/main.js']);
+    starting.on('error', function (error) {
+       console.log(error);
+    });
+    res.send({msg: 'Simulator started'});
+
+});
+
+router.post('/stopSimulator', function (req, res) {
+    console.log("Simulator will be stopped...");
+    var stopping = process.execFile(path.join(__dirname, '../', 'stopSimulator.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
+    stopping.on('close', function (code) {
+        console.log(code);
+    });
+    res.send({msg: 'Simulator stopped'});
 });
 
 /**
@@ -100,13 +91,13 @@ router.post('/profile', function (req, res) {
         if (err) {
             res.status(500).send("Database write error!");
         } else {
-            res.status(201).send(JSON.stringify({id : profile._id}));
+            res.status(201).send(JSON.stringify({id: profile._id}));
         }
     });
 });
 
 // load a single profile from the database using its ID
-router.get('/profile/:id', function (req, res, next){
+router.get('/profile/:id', function (req, res, next) {
 
     profile.findById(req.params.id, function (err, profile) {
         if (err) {
@@ -119,11 +110,11 @@ router.get('/profile/:id', function (req, res, next){
 // delete a single profile from database using ID
 router.delete('/profile/:id', function (req, res, next) {
 
-    profile.remove({_id : req.params.id} , function (err, profile) {
+    profile.remove({_id: req.params.id}, function (err, profile) {
         if (err) {
             return next(err);
         }
-        res.send({ msg: 'Profile with ID: ' + req.params.id + ' removed!' });
+        res.send({msg: 'Profile with ID: ' + req.params.id + ' removed!'});
     });
 });
 
