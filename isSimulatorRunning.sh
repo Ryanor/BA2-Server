@@ -6,5 +6,4 @@ for PID in $(pidof $1); do
                 exit 0;
         fi
 done
-
 exit 1;
