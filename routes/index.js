@@ -63,7 +63,7 @@ router.post('/startSimulator', function (req, res) {
     var status = req.body.msg;
     if(status === "Start") {
         console.log("Received data: " + JSON.stringify(req.body));
-        child = process.execFile('node',['/home/pi/project/BA2-Simulator/main.js']);
+        child = process.execFile('/usr/bin/node',['/home/pi/project/BA2-Simulator/main.js']);
         childPID = child.pid;
         res.send({msg: 'Simulator started with PID: ' + childPID});
     } else  {
