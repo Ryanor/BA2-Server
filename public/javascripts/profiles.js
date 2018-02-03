@@ -50,11 +50,10 @@ function populateTable() {
 function checkSimulatorRunning() {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4 && xhr.status === 200) {
-            if(xhr.responseText === 'running') {
-                start_stop = false;
-            }
-                start_stop = true;
+        if (this.readyState === 4 && xhr.status === 200 && xhr.responseText === 'running') {
+            start_stop = false;
+        } else {
+            start_stop = true;
         }
     });
     xhr.open("GET", "/checkSimulator", true);
