@@ -51,9 +51,11 @@ function checkSimulatorRunning() {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4 && xhr.status === 200) {
-            start_stop = true;
+            if(xhr.responseText === 'running') {
+                start_stop = true;
+            }
+                start_stop = false;
         }
-            start_stop = false;
     });
     xhr.open("GET", "/checkSimulator", true);
     xhr.send(null);
