@@ -1,7 +1,12 @@
 body {
-    align-self: center;
-    padding: 50px;
+    max-width: 1200px;
+    background: gray;
+    margin: auto;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#content {
+    padding: 10px;
 }
 
 #nav ul {
@@ -37,46 +42,81 @@ body {
 }
 
 #profile {
-    padding-top: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 10px;
+    width : 100%;
+    padding : 15px;
     background-color: #e6e2d3;
 }
 
-.service {
-    margin-top: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding: 20px;
-    border-width: 1px;
-    border-style: solid;
+.submit {
+    margin-top : 15px;
+    background-color: lightgreen;
+}
+
+.submit_top {
+    float : right;
+    margin-right : 20px;
+    background-color: lightgreen;
+}
+
+.addService {
     background-color: #f7786b;
 }
 
-.characteristic {
-    margin-top: 10px;
-    padding: 20px;
-    border-width: 1px;
-    border-style: solid;
+.removeService {
+    color: white;
+    background-color: darkred;
+}
+
+.service {
+    width : 95%;
+    margin: auto;
+    padding-left : 15px;
+    padding-right : 15px;
+    border : 1px solid;
+    background-color: #f7786b;
+}
+
+.addCharacteristic {
     background-color: #80ced6;
 }
 
-.characteristicsRoot {
-    padding: 20px;
+.removeCharacteristic {
+    color: white;
     background-color: darkcyan;
 }
 
-.descriptor {
-    margin-top: 10px;
-    border-width: 1px;
-    border-style: solid;
+.characteristicsRoot {
+    width : 95%;
+    margin : auto;
+    padding : 15px;
+    background-color: darkcyan;
+}
+
+.characteristic {
+    border : 1px solid;
+    padding : 15px;
+    background-color: #80ced6;
+}
+
+.addDescriptor {
     background-color: #fefbd8;
 }
 
-.descriptorsRoot {
-    padding: 20px;
+.removeDescriptor {
     background-color: khaki;
+}
+
+.descriptorsRoot {
+    width : 95%;
+    margin : auto;
+    padding : 15px;
+    background-color: khaki;
+}
+
+.descriptor {
+    border : 1px solid;
+    padding : 15px;
+    background-color: #fefbd8;
 }
 
 a {
