@@ -8,13 +8,12 @@ block content
             br
             div
                 form(id="profile", action='/profile', method='post')
+                    h4 Profile
+                    input(type="profile", id="name", name="name", placeholder="Profile name")
+                    br
+                    br
                     div(id="services")
-                        h4 Profile
-                        input(type="text", name="profile_name", placeholder="Profile name")
-                        br
-                        br
                         button(type='button', class="addService", name="add_service", onclick='addService()') Add Service
-                        button(type='button', class="submit_top", name ="send_profile", onclick='convertForm()') Send Profile
+                        button(type='button', class="submit_top", name ="submit_top_profile", onclick='convertForm()') Send Profile
                         br
-                        br
-                    button(type='button', class="submit", name ="send_profile", onclick='convertForm()') Send Profile
+                button(type='button', class="submit", name ="submit_bottom_profile", onclick='convertForm()') Send Profile

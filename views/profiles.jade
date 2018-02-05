@@ -6,18 +6,22 @@ block content
         h3 Manage existing profiles
         script(src="/jquery/jquery.js")
         script(src="/javascripts/profiles.js")
-
+        script(src="/javascripts/jstoform.js")
         #wrapper
             h2 Profile List
             #profiles
             table
                 thead
-                    th Select
+                    th Select for simulator
+                    th Profile name
                     th Profile ID
                     th Delete?
                 tbody#body
 
-        input#simulator(class='start', type='button', name='start_stop', value='Start Simulator', onclick='startStop()')
-        footer
         p Selected profile will be used on next simulator start.
         p Delete will remove the profile from the database. If deleted profile was the last selected profile for the simulator it will still be used until a new profile is selected.
+        br
+        input#simulator(class='start', type='button', name='start_stop', value='Start Simulator', onclick='startStop()')
+        br
+        #populate
+            form(id="profile", action='/profile', method="update")

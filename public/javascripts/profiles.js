@@ -8,18 +8,26 @@
 var profiles = [];
 var start_stop;
 var button;
+var populate;
+var form;
 
 // DOM Ready =============================================================
 $(document).ready(function () {
     button = document.getElementById('simulator');
+    form = document.getElementById('profile');
+    populate = document.getElementById('populate');
 
     // Populate the existing profile table on initial page load
     populateTable();
+    // check if simulator is running and switch start/stop simulator button
     checkSimulatorRunning();
 
-    //Delete profile link click
-    $("#body").on('click', 'td a.delete', deleteProfile);
+    // Select profile for simulator
     $("#body").on('click', 'td a.select', selectProfile);
+    // Watch profile
+    $("#body").on('click', 'td a.watch', watchProfile);
+    // Delete profile from database
+    $("#body").on('click', 'td a.delete', deleteProfile);
 
 });
 
@@ -34,9 +42,9 @@ function populateTable() {
 
         // For each item in our JSON, add a table row and cells to the content string
         $.each(data, function () {
-            console.log("Populate table with " + this._id);
             tableContent += '<tr>';
             tableContent += '<td><a href="#" class="select" rel="' + this._id + '">select</a></td>';
+            tableContent += '<td><a href="#" class="watch" rel="' + this._id + '">' + this.name + '</a></td>';
             tableContent += '<td>' + this._id + '</td>';
             tableContent += '<td><a href="#" class="delete" rel="' + this._id + '">delete</a></td>';
             tableContent += '</tr>';
@@ -116,6 +124,34 @@ function selectProfile(event) {
         return false;
     }
 }
+
+function watchProfile(event) {
+    event.preventDefault();
+
+    removeChilds(form);
+
+    var profile = getJSONById($(this).attr('rel'));
+
+    js2form(form, profile, '.', function(name, value) {
+        console.log('adding field named ' + name + ' with value of ' + value);
+        if(name !== '__v') {
+            var label = document.createElement("label");
+            label.innerHTML = name + ":";
+            form.appendChild(label);
+            var input = document.createElement("input");
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+            form.appendChild(document.createElement('br'));
+            form.appendChild(document.createElement('br'));
+        }
+    });
+}
+
+var removeChilds = function (node) {
+    var last;
+    while (last = node.lastChild) node.removeChild(last);
+};
 
 function startStop() {
     if (start_stop) {

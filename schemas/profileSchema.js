@@ -14,7 +14,8 @@ var serviceSchema = mongoose.model('Service').schema;
  * Each service can contains its own characteristics and their descriptors
  */
 var profileSchema = new Schema({
-    services : [serviceSchema]
+    services : [serviceSchema],
+    name : { type : String, default : null }
 });
 
 // Export model as Mongoose Schema

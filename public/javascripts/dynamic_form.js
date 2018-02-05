@@ -93,8 +93,9 @@ function addService() {
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(characteristicsDiv);
     serviceDiv.appendChild(document.createElement("br"));
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(removeService);
-
+    serviceDiv.appendChild(document.createElement("br"));
     // increase number of services
     service++;
     // append service to parent
@@ -425,8 +426,9 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(characteristicMaxValueLabel);
     characteristicDiv.appendChild(characteristicMaxValue);
     characteristicDiv.appendChild(document.createElement("br"));
-
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputAddDescriptor);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(descriptorsDiv);
     characteristicDiv.appendChild(document.createElement("br"));

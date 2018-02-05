@@ -13,7 +13,7 @@ var bodyParser = require('body-parser');
  * Manually added requirements
  */
 // load module for mongodb
-//var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 /**
  *  Routes leading to our web pages which are used for navigation
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /**
  *  Establish connection to mongodb and store connection to global variable db
  */
-/*var mongoDB = 'mongodb://localhost:27017/BLEProfiles';
+var mongoDB = 'mongodb://localhost:27017/BLEProfiles';
 mongoose.connect(mongoDB, {
     useMongoClient: true
 });
@@ -54,7 +54,7 @@ var db = mongoose.connection;
 db.on('connected', function () {
     console.log('MongoDB connection successful!'); })
   .on('error', console.error.bind(console, 'MongoDB connection error:'));
-*/
+
 
 /**
  * Set routes for the webservice pages
