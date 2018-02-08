@@ -228,7 +228,7 @@ function removeChild(fromNode) {
 /*
 function populateForm(nodeName, nodeValue) {
     if (nodeName !== '__v') {
-
+/*
         if (nodeName.indexOf('services') !== -1) {
             var serviceDiv = document.createElement("div");
             serviceDiv.id = name;
@@ -263,37 +263,43 @@ function populateForm(nodeName, nodeValue) {
 
 function populateFormFromJson(parentNode, jsonProfile) {
     var first = true;
+    var oldParentNode;
     for (var elem in jsonProfile) {
+       if(parentNode.parentNode === 'descriptors') {
+           first = false;
+       }
+
         if(elem === 'descriptors') {
             console.log("Element: " + elem);
         }
-
-
+        
         if (jsonProfile[elem] instanceof Array) {
 
             if (first) {
                 switch (elem) {
                     case 'descriptors':
                         createDivElement(parentNode, 'descriptors', 'descriptors');
+                        oldParentNode = parentNode;
                         parentNode = document.getElementById('descriptors');
 
                         break;
 
                     case 'characteristics':
                         createDivElement(parentNode, 'characteristics', 'characteristics');
+                        oldParentNode = parentNode;
                         parentNode = document.getElementById('characteristics');
 
                         break;
 
                     case 'services' :
                         createDivElement(parentNode, 'services', 'services');
+                        oldParentNode = parentNode;
                         parentNode = document.getElementById('services');
 
                         break;
 
                     default:
                 }
-                first = false;
             }
 
             if (elem !== ('values' || 'properties')) {
@@ -316,6 +322,7 @@ function populateFormFromJson(parentNode, jsonProfile) {
 
             for (var i = 0; i < jsonProfile[elem].length; i++) {
                 populateFormFromJson(parentNode, jsonProfile[elem][i]);
+                parentNode = oldParentNode;
             }
 
         }
