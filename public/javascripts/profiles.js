@@ -10,6 +10,10 @@ var start_stop;
 var button;
 var populate;
 var form;
+var serviceCount = 0;
+var characteristicCount = 0;
+var descriptorCount = 0;
+
 
 // DOM Ready =============================================================
 $(document).ready(function () {
@@ -69,89 +73,6 @@ function checkSimulatorRunning() {
     xhr.open("GET", "/checkSimulator", true);
     xhr.send(null);
 }
-
-// Delete profile
-function deleteProfile(event) {
-
-    event.preventDefault();
-
-    var confirmation = confirm('Are you sure you want to delete this profile?');
-
-    if (confirmation === true) {
-        // send post request with id as param to delete profile from database
-        $.ajax({
-            type: 'DELETE',
-            url: '/profile/' + $(this).attr('rel')
-        }).done(function (response) {
-            alert(response.msg);
-            populateTable();
-        });
-    }
-    else {
-        return false;
-    }
-}
-
-// save profile for next simulator start
-function selectProfile(event) {
-    event.preventDefault();
-
-    var confirmation = confirm('Are you sure you want to start simulator with selected profile?');
-
-    if (confirmation === true) {
-
-        var profile = getJSONById($(this).attr('rel'));
-        profile = JSON.stringify(profile, null, 2);
-
-        // send post request and save selected profile for next simulator start
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                alert(this.responseText);
-            }
-            if (xhr.status === 500) {
-                alert("Error saving profile");
-            }
-        });
-
-        xhr.open("POST", "/selectProfile");
-        xhr.setRequestHeader("cache-control", "no-cache");
-        xhr.setRequestHeader("content-type", "application/json");
-        xhr.send(profile);
-    }
-    else {
-        return false;
-    }
-}
-
-function watchProfile(event) {
-    event.preventDefault();
-
-    removeChilds(form);
-
-    var profile = getJSONById($(this).attr('rel'));
-
-    js2form(form, profile, '.', function(name, value) {
-        console.log('adding field named ' + name + ' with value of ' + value);
-        if(name !== '__v') {
-            var label = document.createElement("label");
-            label.innerHTML = name + ":";
-            form.appendChild(label);
-            var input = document.createElement("input");
-            input.name = name;
-            input.value = value;
-            form.appendChild(input);
-            form.appendChild(document.createElement('br'));
-            form.appendChild(document.createElement('br'));
-        }
-    });
-}
-
-var removeChilds = function (node) {
-    var last;
-    while (last = node.lastChild) node.removeChild(last);
-};
 
 function startStop() {
     if (start_stop) {
@@ -218,10 +139,216 @@ function stopSimulator() {
     }
 }
 
+// Delete profile
+function deleteProfile(event) {
+
+    event.preventDefault();
+
+    var confirmation = confirm('Are you sure you want to delete this profile?');
+
+    if (confirmation === true) {
+        // send post request with id as param to delete profile from database
+        $.ajax({
+            type: 'DELETE',
+            url: '/profile/' + $(this).attr('rel')
+        }).done(function (response) {
+            alert(response.msg);
+            populateTable();
+        });
+    }
+    else {
+        return false;
+    }
+}
+
+// save profile for next simulator start
+function selectProfile(event) {
+    event.preventDefault();
+
+    var confirmation = confirm('Are you sure you want to start simulator with selected profile?');
+
+    if (confirmation === true) {
+
+        var profile = getJSONById($(this).attr('rel'));
+        profile = JSON.stringify(profile, null, 2);
+
+        // send post request and save selected profile for next simulator start
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                alert(this.responseText);
+            }
+            if (xhr.status === 500) {
+                alert("Error saving profile");
+            }
+        });
+
+        xhr.open("POST", "/selectProfile");
+        xhr.setRequestHeader("cache-control", "no-cache");
+        xhr.setRequestHeader("content-type", "application/json");
+        xhr.send(profile);
+    }
+    else {
+        return false;
+    }
+}
+
+function watchProfile(event) {
+    event.preventDefault();
+
+    removeChild(form);
+
+    var profile = getJSONById($(this).attr('rel'));
+    console.log(profile);
+    populateFormFromJson(form, profile);
+
+    /* js2form(form, profile, '.', function (name, value) {
+         console.log('adding field named ' + name + ' with value of ' + value);
+         //populateForm(name, value);
+
+     }); */
+}
+
 function getJSONById(id) {
     for (var i = 0; i < profiles.length; i++) {
         if (profiles[i]._id === id) {
             return profiles[i];
         }
+    }
+}
+
+function removeChild(fromNode) {
+    var last;
+    while (last = fromNode.lastChild) {
+        fromNode.removeChild(last);
+    }
+}
+
+/*
+function populateForm(nodeName, nodeValue) {
+    if (nodeName !== '__v') {
+
+        if (nodeName.indexOf('services') !== -1) {
+            var serviceDiv = document.createElement("div");
+            serviceDiv.id = name;
+            serviceDiv.className = 'service';
+            form.appendChild(serviceDiv);
+
+            var services = document.getElementsByClassName('service');
+            var last = services[services.length - 1];
+            var label = document.createElement("label");
+            label.innerHTML = nodeName + ":";
+            last.appendChild(label);
+            var input = document.createElement("input");
+            input.name = nodeName;
+            input.value = nodeValue;
+            last.appendChild(input);
+            last.appendChild(document.createElement('br'));
+            last.appendChild(document.createElement('br'));
+        } else {
+            var label = document.createElement("label");
+            label.innerHTML = nodeName + ":";
+            form.appendChild(label);
+            var input = document.createElement("input");
+            input.name = nodeName;
+            input.value = nodeValue;
+            form.appendChild(input);
+            form.appendChild(document.createElement('br'));
+            form.appendChild(document.createElement('br'));
+        }
+    }
+}
+*/
+
+function populateFormFromJson(parentNode, jsonProfile) {
+    var first = true;
+    for (var elem in jsonProfile) {
+        if(elem === 'descriptors') {
+            console.log("Element: " + elem);
+        }
+
+
+        if (jsonProfile[elem] instanceof Array) {
+
+            if (first) {
+                switch (elem) {
+                    case 'descriptors':
+                        createDivElement(parentNode, 'descriptors', 'descriptors');
+                        parentNode = document.getElementById('descriptors');
+
+                        break;
+
+                    case 'characteristics':
+                        createDivElement(parentNode, 'characteristics', 'characteristics');
+                        parentNode = document.getElementById('characteristics');
+
+                        break;
+
+                    case 'services' :
+                        createDivElement(parentNode, 'services', 'services');
+                        parentNode = document.getElementById('services');
+
+                        break;
+
+                    default:
+                }
+                first = false;
+            }
+
+            if (elem !== ('values' || 'properties')) {
+                if (parentNode.id === 'services') {
+                    createDivElement(parentNode, 'service' + serviceCount, 'service');
+                    parentNode = document.getElementById('service' + serviceCount);
+                    serviceCount++;
+                }
+                if (parentNode.id === 'characteristics') {
+                    createDivElement(parentNode, 'characteristic' + characteristicCount, 'characteristic');
+                    parentNode = document.getElementById('characteristic' + characteristicCount);
+                    characteristicCount++;
+                }
+                if (parentNode.id === 'descriptors') {
+                    createDivElement(parentNode, 'descriptor' + descriptorCount, 'descriptor');
+                    parentNode = document.getElementById('descriptor' + descriptorCount);
+                    descriptorCount++;
+                }
+            }
+
+            for (var i = 0; i < jsonProfile[elem].length; i++) {
+                populateFormFromJson(parentNode, jsonProfile[elem][i]);
+            }
+
+        }
+
+        /*var services = form.getElementsByClassName('service');
+        if (services.length > 0) {
+            createInputElement(services[services.length - 1], elem, jsonProfile[elem]);
+        } else {
+
+        }*/
+        createInputElement(parentNode, elem, jsonProfile[elem]);
+    }
+    return null;
+}
+
+function createDivElement(parent, id, name) {
+    var div = document.createElement("div");
+    div.id = id;
+    div.className = name;
+    parent.appendChild(div);
+    console.log("Appended element: " + id + " on parent node: " + parent.id);
+}
+
+function createInputElement(parentNode, key, value) {
+    if (key !== ('__v' || 'services' || 'characteristics' || 'descriptors')) {
+        var label = document.createElement("label");
+        label.innerHTML = key + ":";
+        parentNode.appendChild(label);
+        var input = document.createElement("input");
+        input.name = key;
+        input.value = value;
+        parentNode.appendChild(input);
+        parentNode.appendChild(document.createElement('br'));
+        //parentNode.appendChild(document.createElement('br'));
     }
 }
