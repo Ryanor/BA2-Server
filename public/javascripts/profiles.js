@@ -203,11 +203,6 @@ function watchProfile(event) {
     console.log(profile);
     populateFormFromJson(form, profile);
 
-    /* js2form(form, profile, '.', function (name, value) {
-         console.log('adding field named ' + name + ' with value of ' + value);
-         //populateForm(name, value);
-
-     }); */
 }
 
 function getJSONById(id) {
@@ -225,100 +220,57 @@ function removeChild(fromNode) {
     }
 }
 
-/*
-function populateForm(nodeName, nodeValue) {
-    if (nodeName !== '__v') {
-/*
-        if (nodeName.indexOf('services') !== -1) {
-            var serviceDiv = document.createElement("div");
-            serviceDiv.id = name;
-            serviceDiv.className = 'service';
-            form.appendChild(serviceDiv);
-
-            var services = document.getElementsByClassName('service');
-            var last = services[services.length - 1];
-            var label = document.createElement("label");
-            label.innerHTML = nodeName + ":";
-            last.appendChild(label);
-            var input = document.createElement("input");
-            input.name = nodeName;
-            input.value = nodeValue;
-            last.appendChild(input);
-            last.appendChild(document.createElement('br'));
-            last.appendChild(document.createElement('br'));
-        } else {
-            var label = document.createElement("label");
-            label.innerHTML = nodeName + ":";
-            form.appendChild(label);
-            var input = document.createElement("input");
-            input.name = nodeName;
-            input.value = nodeValue;
-            form.appendChild(input);
-            form.appendChild(document.createElement('br'));
-            form.appendChild(document.createElement('br'));
-        }
-    }
-}
-*/
-
 function populateFormFromJson(parentNode, jsonProfile) {
-    var first = true;
-    var oldParentNode;
-    for (var elem in jsonProfile) {
-       if(parentNode.parentNode === 'descriptors') {
-           first = false;
-       }
 
-        if(elem === 'descriptors') {
-            console.log("Element: " + elem);
-        }
-        
+    var oldParentNode;
+
+    for (var elem in jsonProfile) {
+
         if (jsonProfile[elem] instanceof Array) {
 
-            if (first) {
-                switch (elem) {
-                    case 'descriptors':
-                        createDivElement(parentNode, 'descriptors', 'descriptors');
-                        oldParentNode = parentNode;
-                        parentNode = document.getElementById('descriptors');
+            switch (elem) {
+                case 'descriptors':
+                    createDivElement(parentNode, 'descriptors', 'descriptors');
+                    oldParentNode = parentNode;
+                    parentNode = document.getElementById('descriptors');
 
-                        break;
+                    break;
 
-                    case 'characteristics':
-                        createDivElement(parentNode, 'characteristics', 'characteristics');
-                        oldParentNode = parentNode;
-                        parentNode = document.getElementById('characteristics');
+                case 'characteristics':
+                    createDivElement(parentNode, 'characteristics', 'characteristics');
+                    oldParentNode = parentNode;
+                    parentNode = document.getElementById('characteristics');
 
-                        break;
+                    break;
 
-                    case 'services' :
-                        createDivElement(parentNode, 'services', 'services');
-                        oldParentNode = parentNode;
-                        parentNode = document.getElementById('services');
+                case 'services' :
+                    createDivElement(parentNode, 'services', 'services');
+                    oldParentNode = parentNode;
+                    parentNode = document.getElementById('services');
 
-                        break;
+                    break;
 
-                    default:
-                }
+                default:
             }
 
             if (elem !== ('values' || 'properties')) {
-                if (parentNode.id === 'services') {
+                if (parentNode.id === 'services' || oldParentNode.id === 'services') {
                     createDivElement(parentNode, 'service' + serviceCount, 'service');
                     parentNode = document.getElementById('service' + serviceCount);
                     serviceCount++;
                 }
-                if (parentNode.id === 'characteristics') {
+                if (parentNode.id === 'characteristics' || oldParentNode.id === 'characteristics') {
                     createDivElement(parentNode, 'characteristic' + characteristicCount, 'characteristic');
                     parentNode = document.getElementById('characteristic' + characteristicCount);
                     characteristicCount++;
                 }
-                if (parentNode.id === 'descriptors') {
+                if (parentNode.id === 'descriptors' || oldParentNode.id === 'descriptors') {
                     createDivElement(parentNode, 'descriptor' + descriptorCount, 'descriptor');
                     parentNode = document.getElementById('descriptor' + descriptorCount);
                     descriptorCount++;
                 }
             }
+
 
             for (var i = 0; i < jsonProfile[elem].length; i++) {
                 populateFormFromJson(parentNode, jsonProfile[elem][i]);
@@ -326,14 +278,8 @@ function populateFormFromJson(parentNode, jsonProfile) {
             }
 
         }
-
-        /*var services = form.getElementsByClassName('service');
-        if (services.length > 0) {
-            createInputElement(services[services.length - 1], elem, jsonProfile[elem]);
-        } else {
-
-        }*/
         createInputElement(parentNode, elem, jsonProfile[elem]);
+
     }
     return null;
 }
