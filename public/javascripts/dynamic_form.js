@@ -27,7 +27,7 @@ function addService() {
 
     var serviceNamePrefix = "services[" + service + "]";
 
-    var labelService = document.createElement("label");
+    var labelService = document.createElement("H4");
     labelService.innerHTML = "Service";
 
     // Service description for user, for reusing service later on
@@ -57,6 +57,7 @@ function addService() {
     inputAddCharacteristic.id = "addCharacteristic" + serviceDiv.id;
     inputAddCharacteristic.type = "button";
     inputAddCharacteristic.textContent = "Add Characteristic";
+    inputAddCharacteristic.className = "addCharacteristic";
     inputAddCharacteristic.onclick = function () {
         addCharacteristic(serviceDiv.id);
     };
@@ -71,13 +72,13 @@ function addService() {
     removeService.id = "removeService" + service;
     removeService.type = "button";
     removeService.textContent = "Remove Service";
+    removeService.className = "removeService";
     removeService.onclick = function () {
         parentNode.removeChild(serviceDiv);
     };
 
     // append labels, buttons and input fields
     serviceDiv.appendChild(labelService);
-    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(labelServiceDescription);
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputServiceDescription);
@@ -86,12 +87,15 @@ function addService() {
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputServiceUUID);
     serviceDiv.appendChild(document.createElement("br"));
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputAddCharacteristic);
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(characteristicsDiv);
     serviceDiv.appendChild(document.createElement("br"));
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(removeService);
-
+    serviceDiv.appendChild(document.createElement("br"));
     // increase number of services
     service++;
     // append service to parent
@@ -119,6 +123,8 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.className = "characteristic";
 
     // Characteristic description for reuse
+    var labelCharacteristic = document.createElement("H4");
+    labelCharacteristic.innerHTML ="Characteristic";
     var labelCharacteristicDescription = document.createElement("label");
     labelCharacteristicDescription.setAttribute("for", "CharacteristicDescription" + characteristic);
     labelCharacteristicDescription.innerHTML = "Characteristic description:";
@@ -338,6 +344,7 @@ function addCharacteristic(serviceDivID) {
     inputAddDescriptor.id = "addDescriptor" + characteristic;
     inputAddDescriptor.type = "button";
     inputAddDescriptor.textContent = "Add Descriptor";
+    inputAddDescriptor.className = "addDescriptor";
     inputAddDescriptor.onclick = function () {
         addDescriptor(serviceDivID, characteristicDiv.id);
     };
@@ -352,11 +359,13 @@ function addCharacteristic(serviceDivID) {
     removeCharacteristic.id = "removeCharacteristic" + characteristic;
     removeCharacteristic.type = "button";
     removeCharacteristic.textContent = "Remove Characteristic";
+    removeCharacteristic.className = "removeCharacteristic";
     removeCharacteristic.onclick = function () {
         characteristicContainer.removeChild(characteristicDiv);
     };
 
     // append all labels, buttons and input fields to characteristic div
+    characteristicDiv.appendChild(labelCharacteristic);
     characteristicDiv.appendChild(labelCharacteristicDescription);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputCharacteristicDescription);
@@ -417,8 +426,9 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(characteristicMaxValueLabel);
     characteristicDiv.appendChild(characteristicMaxValue);
     characteristicDiv.appendChild(document.createElement("br"));
-
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputAddDescriptor);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(descriptorsDiv);
     characteristicDiv.appendChild(document.createElement("br"));
@@ -445,6 +455,8 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorDiv.className = "descriptor";
 
     // description for Descriptor for later reuse
+    var labelDescriptor = document.createElement("H4");
+    labelDescriptor.innerHTML ="Descriptor";
     var labelDescriptorDescription = document.createElement("label");
     labelDescriptorDescription.setAttribute("for", "DescriptorDescription" + descriptor);
     labelDescriptorDescription.innerHTML = "Descriptor name:";
@@ -504,10 +516,12 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     removeDescriptor.id = "removeDescriptor" + descriptor;
     removeDescriptor.type = "button";
     removeDescriptor.textContent = "Remove Descriptor";
+    removeDescriptor.className = "removeDescriptor";
     removeDescriptor.onclick = function () {
         descriptorContainer.removeChild(descriptorDiv);
     };
 
+    descriptorDiv.appendChild(labelDescriptor);
     descriptorDiv.appendChild(labelDescriptorDescription);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(inputDescriptorDescription);
