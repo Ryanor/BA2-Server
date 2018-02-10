@@ -10,9 +10,10 @@ var start_stop;
 var button;
 var populate;
 var form;
-var serviceCount = 0;
-var characteristicCount = 0;
-var descriptorCount = 0;
+var descriptorRoot = null;
+var serviceCount;
+var characteristicCount;
+var descriptorCount;
 
 
 // DOM Ready =============================================================
@@ -20,6 +21,7 @@ $(document).ready(function () {
     button = document.getElementById('simulator');
     form = document.getElementById('profile');
     populate = document.getElementById('populate');
+    $("#populate").hide();
 
     // Populate the existing profile table on initial page load
     populateTable();
@@ -198,6 +200,11 @@ function watchProfile(event) {
     event.preventDefault();
 
     removeChild(form);
+    $("#populate").show();
+
+    serviceCount = 0;
+    characteristicCount = 0;
+    descriptorCount = 0;
 
     var profile = getJSONById($(this).attr('rel'));
     console.log(profile);
@@ -222,8 +229,6 @@ function removeChild(fromNode) {
 
 function populateFormFromJson(parentNode, jsonProfile) {
 
-    var oldParentNode;
-
     // iterate over elements in json profile
     for (var elem in jsonProfile) {
 
@@ -232,15 +237,14 @@ function populateFormFromJson(parentNode, jsonProfile) {
             if (elem === 'services') {
                 appendNewDivElement(parentNode, 'services', 'services');
                 var services = document.getElementsByClassName('services');
-                oldParentNode = services[services.length - 1];
+                parentNode = services[services.length - 1];
                 for (var k = 0; k < jsonProfile[elem].length; k++) {
-                    appendNewDivElement(oldParentNode, 'service' + serviceCount, 'service');
+                    appendNewDivElement(parentNode, 'service' + serviceCount, 'service');
                     parentNode = document.getElementById('service' + serviceCount);
                     serviceCount++;
                     populateService(parentNode, jsonProfile[elem][k]);
                 }
             }
-
         } else {
             createInputElement(parentNode, elem, jsonProfile[elem]);
         }
@@ -252,9 +256,9 @@ function populateService(parentNode, service) {
     for (var elem in service) {
         if (service[elem] instanceof Array) {
             if (elem === 'characteristics') {
-                appendNewDivElement(parentNode, 'characteristics', 'characteristics');
+                appendNewDivElement(parentNode, 'characteristics', 'characteristicsRoot');
                 // get characteristics of parent service
-                var characteristics = document.getElementsByClassName('characteristics');
+                var characteristics = document.getElementsByClassName('characteristicsRoot');
                 var oldParentNode = characteristics[characteristics.length - 1];
                 for (var k = 0; k < service[elem].length; k++) {
                     appendNewDivElement(oldParentNode, 'characteristic' + characteristicCount, 'characteristic');
@@ -264,7 +268,9 @@ function populateService(parentNode, service) {
                 }
             }
         } else {
-            createInputElement(currentNode, elem, service[elem]);
+            createInputElement(currentNode,
+                "service[" + (serviceCount - 1) + "]." + elem,
+                service[elem]);
         }
     }
     return null;
@@ -272,33 +278,45 @@ function populateService(parentNode, service) {
 
 function populateCharacteristic(parentNode, characteristic) {
     var currentNode = parentNode;
+    var oldParentNode;
     for (var elem in characteristic) {
+
         if (characteristic[elem] instanceof Array) {
+
             if (elem === 'descriptors') {
-                appendNewDivElement(parentNode, 'descriptors', 'descriptors');
+                appendNewDivElement(parentNode, 'descriptors', 'descriptorsRoot');
                 // get descriptors of parent characteristic
-                var descriptors = document.getElementsByClassName('descriptors');
-                var oldParentNode = descriptors[descriptors.length - 1];
+                var descriptors = document.getElementsByClassName('descriptorsRoot');
+                oldParentNode = descriptors[descriptors.length - 1];
                 for (var k = 0; k < characteristic[elem].length; k++) {
                     appendNewDivElement(oldParentNode, 'descriptor' + descriptorCount, 'descriptor');
                     parentNode = document.getElementById('descriptor' + descriptorCount);
                     descriptorCount++;
                     populateDescriptor(parentNode, characteristic[elem][k]);
                 }
-            } else {
-                createInputElement(currentNode, elem, characteristic[elem]);
-
+                descriptorRoot = oldParentNode;
+            }
+            else {
+                createInputElement(currentNode,
+                    "service[" + (serviceCount - 1) + "].characteristic[" + (characteristicCount - 1) + "]." + elem,
+                    characteristic[elem]);
             }
         } else {
-            createInputElement(currentNode, elem, characteristic[elem]);
+            console.log(descriptorRoot);
+            createInputElement(currentNode,
+                "service[" + (serviceCount - 1) + "].characteristic[" + (characteristicCount - 1) + "]." + elem,
+                characteristic[elem]);
         }
     }
+    descriptorRoot = null;
     return null;
 }
 
 function populateDescriptor(parentNode, descriptor) {
     for (var elem in descriptor) {
-        createInputElement(parentNode, elem, descriptor[elem]);
+        createInputElement(parentNode,
+            "service[" + (serviceCount - 1) + "].characteristic[" + (characteristicCount - 1) + "].descriptor[" + (descriptorCount - 1) + "]." + elem,
+            descriptor[elem]);
     }
     return null;
 }
@@ -308,18 +326,25 @@ function appendNewDivElement(parent, id, name) {
     div.id = id;
     div.className = name;
     parent.appendChild(div);
-    console.log("Appended element: " + id + " on parent node: " + parent.id);
 }
 
 function createInputElement(parentNode, key, value) {
-    if (key !== ('__v' || 'services' || 'characteristics' || 'descriptors')) {
+    //if (key !== ('__v' || 'services' || 'characteristics' || 'descriptors')) {
         var label = document.createElement("label");
         label.innerHTML = key + ":";
-        parentNode.appendChild(label);
+
         var input = document.createElement("input");
         input.name = key;
         input.value = value;
-        parentNode.appendChild(input);
-        parentNode.appendChild(document.createElement('br'));
-    }
+        if (descriptorRoot !== null) {
+            parentNode.insertBefore(label, descriptorRoot);
+            parentNode.insertBefore(input, descriptorRoot);
+            parentNode.insertBefore(document.createElement('br'), descriptorRoot);
+        } else {
+            parentNode.appendChild(label);
+            parentNode.appendChild(input);
+            parentNode.appendChild(document.createElement('br'));
+        }
+        console.log("Appended: " + input.value);
+   // }
 }
