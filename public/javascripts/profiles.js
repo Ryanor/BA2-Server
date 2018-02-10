@@ -224,67 +224,86 @@ function populateFormFromJson(parentNode, jsonProfile) {
 
     var oldParentNode;
 
+    // iterate over elements in json profile
     for (var elem in jsonProfile) {
 
         if (jsonProfile[elem] instanceof Array) {
 
-            switch (elem) {
-                case 'descriptors':
-                    createDivElement(parentNode, 'descriptors', 'descriptors');
-                    oldParentNode = parentNode;
-                    parentNode = document.getElementById('descriptors');
-
-                    break;
-
-                case 'characteristics':
-                    createDivElement(parentNode, 'characteristics', 'characteristics');
-                    oldParentNode = parentNode;
-                    parentNode = document.getElementById('characteristics');
-
-                    break;
-
-                case 'services' :
-                    createDivElement(parentNode, 'services', 'services');
-                    oldParentNode = parentNode;
-                    parentNode = document.getElementById('services');
-
-                    break;
-
-                default:
-            }
-
-            if (elem !== ('values' || 'properties')) {
-                if (parentNode.id === 'services' || oldParentNode.id === 'services') {
-                    createDivElement(parentNode, 'service' + serviceCount, 'service');
+            if (elem === 'services') {
+                appendNewDivElement(parentNode, 'services', 'services');
+                var services = document.getElementsByClassName('services');
+                oldParentNode = services[services.length - 1];
+                for (var k = 0; k < jsonProfile[elem].length; k++) {
+                    appendNewDivElement(oldParentNode, 'service' + serviceCount, 'service');
                     parentNode = document.getElementById('service' + serviceCount);
                     serviceCount++;
+                    populateService(parentNode, jsonProfile[elem][k]);
                 }
-                if (parentNode.id === 'characteristics' || oldParentNode.id === 'characteristics') {
-                    createDivElement(parentNode, 'characteristic' + characteristicCount, 'characteristic');
+            }
+
+        } else {
+            createInputElement(parentNode, elem, jsonProfile[elem]);
+        }
+    }
+}
+
+function populateService(parentNode, service) {
+    var currentNode = parentNode;
+    for (var elem in service) {
+        if (service[elem] instanceof Array) {
+            if (elem === 'characteristics') {
+                appendNewDivElement(parentNode, 'characteristics', 'characteristics');
+                // get characteristics of parent service
+                var characteristics = document.getElementsByClassName('characteristics');
+                var oldParentNode = characteristics[characteristics.length - 1];
+                for (var k = 0; k < service[elem].length; k++) {
+                    appendNewDivElement(oldParentNode, 'characteristic' + characteristicCount, 'characteristic');
                     parentNode = document.getElementById('characteristic' + characteristicCount);
                     characteristicCount++;
-                }
-                if (parentNode.id === 'descriptors' || oldParentNode.id === 'descriptors') {
-                    createDivElement(parentNode, 'descriptor' + descriptorCount, 'descriptor');
-                    parentNode = document.getElementById('descriptor' + descriptorCount);
-                    descriptorCount++;
+                    populateCharacteristic(parentNode, service[elem][k]);
                 }
             }
-
-
-            for (var i = 0; i < jsonProfile[elem].length; i++) {
-                populateFormFromJson(parentNode, jsonProfile[elem][i]);
-                parentNode = oldParentNode;
-            }
-
+        } else {
+            createInputElement(currentNode, elem, service[elem]);
         }
-        createInputElement(parentNode, elem, jsonProfile[elem]);
-
     }
     return null;
 }
 
-function createDivElement(parent, id, name) {
+function populateCharacteristic(parentNode, characteristic) {
+    var currentNode = parentNode;
+    for (var elem in characteristic) {
+        if (characteristic[elem] instanceof Array) {
+            if (elem === 'descriptors') {
+                appendNewDivElement(parentNode, 'descriptors', 'descriptors');
+                // get descriptors of parent characteristic
+                var descriptors = document.getElementsByClassName('descriptors');
+                var oldParentNode = descriptors[descriptors.length - 1];
+                for (var k = 0; k < characteristic[elem].length; k++) {
+                    appendNewDivElement(oldParentNode, 'descriptor' + descriptorCount, 'descriptor');
+                    parentNode = document.getElementById('descriptor' + descriptorCount);
+                    descriptorCount++;
+                    populateDescriptor(parentNode, characteristic[elem][k]);
+                }
+            } else {
+                createInputElement(currentNode, elem, characteristic[elem]);
+
+            }
+        } else {
+            createInputElement(currentNode, elem, characteristic[elem]);
+        }
+    }
+    return null;
+}
+
+function populateDescriptor(parentNode, descriptor) {
+    for (var elem in descriptor) {
+        createInputElement(parentNode, elem, descriptor[elem]);
+    }
+    return null;
+}
+
+function appendNewDivElement(parent, id, name) {
     var div = document.createElement("div");
     div.id = id;
     div.className = name;
@@ -302,6 +321,5 @@ function createInputElement(parentNode, key, value) {
         input.value = value;
         parentNode.appendChild(input);
         parentNode.appendChild(document.createElement('br'));
-        //parentNode.appendChild(document.createElement('br'));
     }
 }
