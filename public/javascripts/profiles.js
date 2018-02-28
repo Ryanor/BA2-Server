@@ -15,6 +15,12 @@ var serviceCount;
 var characteristicCount;
 var descriptorCount;
 
+/* Global variables service, characteristic and descriptor are used to get an
+   unique identifier (ID) for all elements used in the form. */
+var service = 0;
+var characteristic = 0;
+var descriptor = 0;
+
 
 // DOM Ready =============================================================
 $(document).ready(function () {
