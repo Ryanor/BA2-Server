@@ -467,9 +467,9 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(characteristicTypeContainer);
 
     // additional characteristic input fields to differ which kind of characteristic is used
-    characteristicDiv.appendChild(characteristicValueLabel);
+   /* characteristicDiv.appendChild(characteristicValueLabel);
     characteristicDiv.appendChild(characteristicValue);
-    characteristicDiv.appendChild(document.createElement("br"));
+    characteristicDiv.appendChild(document.createElement("br")); */
 
     /*
     characteristicDiv.appendChild(arrayRadioLabel);
@@ -482,7 +482,7 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(baseRadioButton);
     characteristicDiv.appendChild(document.createElement("br")); */
 
-    characteristicDiv.appendChild(characteristicDataTypeLabel);
+   /* characteristicDiv.appendChild(characteristicDataTypeLabel);
     characteristicDiv.appendChild(characteristicDataType);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicIntervalLabel);
@@ -501,7 +501,7 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(characteristicMinValue);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicMaxValueLabel);
-    characteristicDiv.appendChild(characteristicMaxValue);
+    characteristicDiv.appendChild(characteristicMaxValue);*/
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputAddDescriptor);
