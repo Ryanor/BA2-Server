@@ -1,14 +1,20 @@
 /**
  * Schema for the Descriptor database model.
  * Used to store descriptor data into the database collection as correct schema.
- * @type {*|Mongoose}
+ *
+ * @class descriptorSchema
+ * @type Mongoose Schema
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 /**
- * Descriptor schema containing data for
- * uuid, value, name and data of types defined in the exchange format.
+ * Descriptor schema used to store descriptor data in form of the exchange format.
+ * Fields defined by the SIG standard:
+ * uuid and value
+ *
+ * Additional fields:
+ * name and datatype of value
  */
 var descriptorSchema = new Schema({
     // values defined and used by the the SIG standard

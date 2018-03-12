@@ -335,7 +335,8 @@ function appendNewDivElement(parent, id, name) {
 }
 
 function createInputElement(parentNode, key, value) {
-    //if (key !== ('__v' || 'services' || 'characteristics' || 'descriptors')) {
+    console.log("Key: " + key);
+    if ( (key.indexOf('__v') === -1) && ( key.indexOf('_id') === -1)) { //services' || 'characteristics' || 'descriptors')) {
         var label = document.createElement("label");
         label.innerHTML = key + ":";
 
@@ -352,5 +353,5 @@ function createInputElement(parentNode, key, value) {
             parentNode.appendChild(document.createElement('br'));
         }
         console.log("Appended: " + input.value);
-   // }
+   }
 }

@@ -1,4 +1,3 @@
-
 /**
  * This javascript file contains the code to dynamically create input fields to the profile form.
  * All elements are programmatically added and need therefore unique identifiers ID´s.
@@ -12,6 +11,7 @@
 var service = 0;
 var characteristic = 0;
 var descriptor = 0;
+var linefeedCounter = 0;
 
 /**
  * Function adds a new service to the profile form. The service itself is a
@@ -114,6 +114,12 @@ function addCharacteristic(serviceDivID) {
     var isReadOnly = false;
     var isNotifying = false;
 
+    var typeSingle;
+    var typeArray;
+    var typeBase;
+    var typeRandom;
+    var type;
+
     var serviceNumber = retnum(serviceDivID);
 
     var characteristicNamePrefix = "services[" + serviceNumber + "].characteristics[" + characteristic + "]";
@@ -128,7 +134,7 @@ function addCharacteristic(serviceDivID) {
 
     // Characteristic description in a user friendly form
     var labelCharacteristic = document.createElement("H4");
-    labelCharacteristic.innerHTML ="Characteristic";
+    labelCharacteristic.innerHTML = "Characteristic";
     var labelCharacteristicDescription = document.createElement("label");
     labelCharacteristicDescription.setAttribute("for", "CharacteristicDescription" + characteristic);
     labelCharacteristicDescription.innerHTML = "Characteristic name:";
@@ -152,7 +158,7 @@ function addCharacteristic(serviceDivID) {
 
     // Container for different kinds of characteristic attributes defined by properties and characteristic type
     var characteristicTypeContainer = document.createElement("div");
-    characteristicTypeContainer.id = characteristicTypeContainer + characteristic;
+    characteristicTypeContainer.id = "characteristicTypeContainer" + characteristic;
     characteristicTypeContainer.className = "characteristic";
 
     // Characteristic properties
@@ -180,16 +186,17 @@ function addCharacteristic(serviceDivID) {
     readCheckbox.id = "read" + characteristic;
     readCheckbox.onclick = function () {
 
-        if(readCheckbox.checked === true) {
-            isReadOnly = true;
-
-            if(!isNotifying) {
-                characteristicTypeContainer.appendChild(characteristicValueLabel);
-                characteristicTypeContainer.appendChild(characteristicValue);
-            }
-        } else {
-            isReadOnly = false;
-            removeChild(characteristicTypeContainer);
+        if (singleRadioButton.checked === true) {
+            singleRadioButton.click();
+        }
+        if (arrayRadioButton.checked === true) {
+            arrayRadioButton.click();
+        }
+        if (baseRadioButton.checked === true) {
+            baseRadioButton.click();
+        }
+        if (rangeRadioButton.checked === true) {
+            rangeRadioButton.click();
         }
     };
 
@@ -204,35 +211,60 @@ function addCharacteristic(serviceDivID) {
     notifyCheckbox.id = "notify" + characteristic;
     notifyCheckbox.onclick = function () {
 
-        if(notifyCheckbox.checked === true) {
+        if (notifyCheckbox.checked === true) {
             isNotifying = true;
-            if(isReadOnly) {
-                removeChild(characteristicTypeContainer);
-            }
+
 
             addCCCDescriptor(serviceDivID, characteristicDiv.id);
         } else {
             isNotifying = false;
-            if(isReadOnly) {
-                characteristicTypeContainer.appendChild(characteristicValueLabel);
-                characteristicTypeContainer.appendChild(characteristicValue);
-            }
+
             removeCCCDescriptor(serviceDivID, characteristicDiv.id);
+        }
+
+        if (singleRadioButton.checked === true) {
+            singleRadioButton.click();
+        }
+        if (arrayRadioButton.checked === true) {
+            arrayRadioButton.click();
+        }
+        if (baseRadioButton.checked === true) {
+            baseRadioButton.click();
+        }
+        if (rangeRadioButton.checked === true) {
+            rangeRadioButton.click();
         }
     };
 
 
     // Checkboxes for different characteristic types
     var labelCharacteristicType = document.createElement("label");
-    labelCharacteristicType.innerHTML = "Type of characteristic:";
+    labelCharacteristicType.innerHTML = "Characteristic type:";
     // Characteristic type checkboxes
     var singleRadioButton = document.createElement('input');
     singleRadioButton.type = "radio";
     singleRadioButton.name = characteristicNamePrefix + ".type";
     singleRadioButton.value = "single";
     singleRadioButton.id = "single" + characteristic;
+    singleRadioButton.defaultChecked = true;
     singleRadioButton.onclick = function () {
 
+        if (singleRadioButton.checked === true) {
+
+            removeChild(characteristicTypeContainer);
+
+            characteristicTypeContainer.appendChild(characteristicValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            if (isNotifying) {
+
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
     };
     var arrayRadioButton = document.createElement('input');
     arrayRadioButton.type = "radio";
@@ -241,23 +273,22 @@ function addCharacteristic(serviceDivID) {
     arrayRadioButton.id = "array" + characteristic;
     arrayRadioButton.onclick = function () {
 
-        characteristicValuesArrayLabel.style.display = 'inline';
-        characteristicValuesArrayLabel.style.visibility = '';
-        characteristicValuesArray.style.display = 'inline';
-        characteristicValuesArray.style.visibility = '';
+        if (arrayRadioButton.checked === true) {
 
-        characteristicBaseValueLabel.style.display = 'none';
-        characteristicBaseValueLabel.style.visibility = 'hidden';
-        characteristicBaseValue.style.display = 'none';
-        characteristicBaseValue.style.visibility = 'hidden';
-        characteristicMinValueLabel.style.display = 'none';
-        characteristicMinValueLabel.style.visibility = 'hidden';
-        characteristicMinValue.style.display = 'none';
-        characteristicMinValue.style.visibility = 'hidden';
-        characteristicMaxValueLabel.style.display = 'none';
-        characteristicMaxValueLabel.style.visibility = 'hidden';
-        characteristicMaxValue.style.display = 'none';
-        characteristicMaxValue.style.visibility = 'hidden';
+            removeChild(characteristicTypeContainer);
+            characteristicTypeContainer.appendChild(characteristicValuesArrayLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicValuesArray);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+
+            if (isNotifying) {
+
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
     };
 
     var rangeRadioButton = document.createElement('input');
@@ -267,23 +298,25 @@ function addCharacteristic(serviceDivID) {
     rangeRadioButton.id = "range" + characteristic;
     rangeRadioButton.onclick = function () {
 
-        characteristicValuesArrayLabel.style.display = 'none';
-        characteristicValuesArrayLabel.style.visibility = 'hidden';
-        characteristicValuesArray.style.display = 'none';
-        characteristicValuesArray.style.visibility = 'hidden';
-        characteristicBaseValueLabel.style.display = 'none';
-        characteristicBaseValueLabel.style.visibility = 'hidden';
-        characteristicBaseValue.style.display = 'none';
-        characteristicBaseValue.style.visibility = 'hidden';
+        if (rangeRadioButton.checked === true) {
+            removeChild(characteristicTypeContainer);
+            characteristicTypeContainer.appendChild(characteristicMinValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMinValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            if (isNotifying) {
 
-        characteristicMinValueLabel.style.display = 'inline';
-        characteristicMinValueLabel.style.visibility = '';
-        characteristicMinValue.style.display = 'inline';
-        characteristicMinValue.style.visibility = '';
-        characteristicMaxValueLabel.style.display = 'inline';
-        characteristicMaxValueLabel.style.visibility = '';
-        characteristicMaxValue.style.display = 'inline';
-        characteristicMaxValue.style.visibility = '';
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
+
     };
 
     var baseRadioButton = document.createElement('input');
@@ -293,23 +326,29 @@ function addCharacteristic(serviceDivID) {
     baseRadioButton.id = "basetype" + characteristic;
     baseRadioButton.onclick = function () {
 
-        characteristicValuesArrayLabel.style.display = 'none';
-        characteristicValuesArrayLabel.style.visibility = 'hidden';
-        characteristicValuesArray.style.display = 'none';
-        characteristicValuesArray.style.visibility = 'hidden';
+        if (baseRadioButton.checked === true) {
+            removeChild(characteristicTypeContainer);
+            characteristicTypeContainer.appendChild(characteristicBaseValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicBaseValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMinValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMinValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            if (isNotifying) {
 
-        characteristicBaseValueLabel.style.display = 'inline';
-        characteristicBaseValueLabel.style.visibility = '';
-        characteristicBaseValue.style.display = 'inline';
-        characteristicBaseValue.style.visibility = '';
-        characteristicMinValueLabel.style.display = 'inline';
-        characteristicMinValueLabel.style.visibility = '';
-        characteristicMinValue.style.display = 'inline';
-        characteristicMinValue.style.visibility = '';
-        characteristicMaxValueLabel.style.display = 'inline';
-        characteristicMaxValueLabel.style.visibility = '';
-        characteristicMaxValue.style.display = 'inline';
-        characteristicMaxValue.style.visibility = '';
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
+
     };
 
     var singleRadioLabel = document.createElement('label');
@@ -326,8 +365,6 @@ function addCharacteristic(serviceDivID) {
     baseRadioLabel.innerHTML = "BASE";
 
 
-
-
     // Characteristic value
     var characteristicValueLabel = document.createElement('label');
     characteristicValueLabel.setAttribute("for", "value" + characteristic);
@@ -340,7 +377,7 @@ function addCharacteristic(serviceDivID) {
     // Characteristic data type
     var characteristicDataTypeLabel = document.createElement('label');
     characteristicDataTypeLabel.setAttribute("for", "datatype" + characteristic);
-    characteristicDataTypeLabel.innerHTML = "Type of value data:";
+    characteristicDataTypeLabel.innerHTML = "Datatype of value:";
     var characteristicDataType = document.createElement('input');
     characteristicDataType.id = 'datatype' + characteristic;
     characteristicDataType.name = characteristicNamePrefix + ".datatype";
@@ -450,7 +487,6 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(labelCharacteristicType);
     characteristicDiv.appendChild(document.createElement("br"));
-
     characteristicDiv.appendChild(singleRadioButton);
     characteristicDiv.appendChild(singleRadioLabel);
     characteristicDiv.appendChild(document.createElement("br"));
@@ -464,44 +500,19 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(baseRadioLabel);
     characteristicDiv.appendChild(document.createElement("br"));
 
+    // contains type specific labels and input fields
     characteristicDiv.appendChild(characteristicTypeContainer);
-
-    // additional characteristic input fields to differ which kind of characteristic is used
-    characteristicDiv.appendChild(characteristicValueLabel);
-    characteristicDiv.appendChild(characteristicValue);
     characteristicDiv.appendChild(document.createElement("br"));
 
-    /*
-    characteristicDiv.appendChild(arrayRadioLabel);
-    characteristicDiv.appendChild(arrayRadioButton);
-
-    characteristicDiv.appendChild(rangeRadioLabel);
-    characteristicDiv.appendChild(rangeRadioButton);
-
-    characteristicDiv.appendChild(baseRadioLabel);
-    characteristicDiv.appendChild(baseRadioButton);
-    characteristicDiv.appendChild(document.createElement("br")); */
-
+    // common characteristic input fields used by all types
     characteristicDiv.appendChild(characteristicDataTypeLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicDataType);
     characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicIntervalLabel);
-    characteristicDiv.appendChild(characteristicInterval);
-    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicOffsetLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicOffset);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicValuesArrayLabel);
-    characteristicDiv.appendChild(characteristicValuesArray);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicBaseValueLabel);
-    characteristicDiv.appendChild(characteristicBaseValue);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicMinValueLabel);
-    characteristicDiv.appendChild(characteristicMinValue);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicMaxValueLabel);
-    characteristicDiv.appendChild(characteristicMaxValue);
+
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputAddDescriptor);
@@ -533,7 +544,7 @@ function addDescriptor(serviceDivID, characteristicDivID) {
 
     // description for Descriptor for later reuse
     var labelDescriptor = document.createElement("H4");
-    labelDescriptor.innerHTML ="Descriptor";
+    labelDescriptor.innerHTML = "Descriptor";
     var labelDescriptorDescription = document.createElement("label");
     labelDescriptorDescription.setAttribute("for", "DescriptorDescription" + descriptor);
     labelDescriptorDescription.innerHTML = "Descriptor name:";
@@ -628,6 +639,7 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorContainer.appendChild(descriptorDiv);
 }
 
+
 function addCCCDescriptor(serviceDivID, characteristicDivID) {
     var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
 
@@ -643,7 +655,7 @@ function addCCCDescriptor(serviceDivID, characteristicDivID) {
 
     // description for Descriptor for later reuse
     var labelDescriptor = document.createElement("H4");
-    labelDescriptor.innerHTML ="Descriptor";
+    labelDescriptor.innerHTML = "Descriptor";
     var labelDescriptorDescription = document.createElement("label");
     labelDescriptorDescription.setAttribute("for", "DescriptorDescription" + descriptor);
     labelDescriptorDescription.innerHTML = "Descriptor name:";
@@ -663,6 +675,26 @@ function addCCCDescriptor(serviceDivID, characteristicDivID) {
     inputDescriptorUUID.name = descriptorNamePrefix + ".uuid";
     inputDescriptorUUID.value = "2902";
 
+    // Descriptor value type
+    var labelDescriptorValueType = document.createElement('label');
+    labelDescriptorValueType.setAttribute("for", "descriptor_datatype_bytes" + descriptor);
+    labelDescriptorValueType.innerHTML = "Datatype of value:";
+    var inputDescriptorValueType = document.createElement('input');
+    inputDescriptorValueType.id = "descriptor_datatype_bytes" + descriptor;
+    inputDescriptorValueType.className = "input";
+    inputDescriptorValueType.name = descriptorNamePrefix + ".datatype";
+    inputDescriptorValueType.value = "bytes";
+
+
+    //  Descriptor value
+    var labelDescriptorValue = document.createElement("label");
+    labelDescriptorValue.setAttribute("for", "DescriptorValue" + descriptor);
+    labelDescriptorValue.innerHTML = "Descriptor value:";
+    var inputDescriptorValue = document.createElement("input");
+    inputDescriptorValue.id = "descriptor_value" + descriptor;
+    inputDescriptorValue.className = "input";
+    inputDescriptorValue.name = descriptorNamePrefix + ".value";
+    inputDescriptorValue.value = "0x00";
 
     descriptorDiv.appendChild(labelDescriptor);
     descriptorDiv.appendChild(labelDescriptorDescription);
@@ -672,9 +704,16 @@ function addCCCDescriptor(serviceDivID, characteristicDivID) {
     descriptorDiv.appendChild(labelDescriptorUUID);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(inputDescriptorUUID);
-
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(labelDescriptorValueType);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorValueType);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(labelDescriptorValue);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorValue);
     // add descriptor to characteristic
-    descriptorContainer.insertAdjacentElement('afterbegin',descriptorDiv);
+    descriptorContainer.insertAdjacentElement('afterbegin', descriptorDiv);
 }
 
 function removeCCCDescriptor(serviceDivID, characteristicDivID) {
@@ -715,7 +754,7 @@ function buildInputFieldsForValuesArray() {
     // get collection of all elements which are arrays of values
     var values_arrays = document.getElementsByClassName('values_array');
 
-    for(var i=0; i < values_arrays.length; i++) {
+    for (var i = 0; i < values_arrays.length; i++) {
         // get next array from the collection
         var array = values_arrays[i];
         // get the array value which is a comma separated string
@@ -730,11 +769,11 @@ function buildInputFieldsForValuesArray() {
         // set current node to append new element to the array node
         var currentNode = array;
         // if more than 1 number is available
-        if(numbers.length > 0) {
+        if (numbers.length > 0) {
             // create a new element which contains a single value
-            for(var k = 0; k < numbers.length; k++) {
+            for (var k = 0; k < numbers.length; k++) {
                 // first element gets overwritten
-                if( k === 0) {
+                if (k === 0) {
                     array.name = name + "[]";
                     array.value = numbers[k];
                 } else {
@@ -765,16 +804,16 @@ function transferData(data) {
     var xhr = new XMLHttpRequest();
 
     // React on state changes from the request
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         console.log(xhr.readyState);
         console.log(xhr.status);
-        if(xhr.readyState === 4 && xhr.status === 201) {
+        if (xhr.readyState === 4 && xhr.status === 201) {
             // Request finished. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
             document.location.href = '/';
         }
 
-        if(xhr.readyState === 4 && xhr.status === 500) {
+        if (xhr.readyState === 4 && xhr.status === 500) {
             // Request error on server. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
             document.location.href = '/';
@@ -790,10 +829,27 @@ function transferData(data) {
     xhr.send(JSON.stringify(data));
 }
 
+function addLinefeedElement() {
+
+    var linefeed = document.createElement("br");
+    linefeed.id = "linefeed" + linefeedCounter;
+    linefeedCounter++;
+    return linefeed;
+}
+
+
 function removeChild(fromNode) {
     var last;
     while (last = fromNode.lastChild) {
+        console.log(last);
         fromNode.removeChild(last);
+    }
+    var br = fromNode.getElementsByTagName("br");
+    console.log("br elements found: " + br.length);
+    if (br.length > 0) {
+        for (var elem  in br) {
+            fromNode.removeChild(elem);
+        }
     }
 }
 
