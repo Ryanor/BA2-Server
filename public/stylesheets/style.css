@@ -176,6 +176,10 @@ table td {
     background: red;
 }
 
+input {
+    width : 250px;
+}
+
 
 #populate #profile label {
     margin : 10px;
@@ -186,4 +190,3 @@ table td {
     text-align: left;
     width : 250px;
 }
-
