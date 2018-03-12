@@ -1,16 +1,24 @@
 /**
- * This javascript file populates the page with the current profiles stored in the database.
+ * This javascript file populates the page with the existing profiles stored in the database.
+ * The profiles are requested via REST routes.
  *
- * @type {Array}
+ * It is also used to control the simulator with a start/stop button.
+ * To set the actual button state on page access, a shell script is called via REST route.
+ * Start and stop functions are also calling shell scripts via REST routes.
+ *
+ * @class profiles
  */
 
 // create empty array for the data
 var profiles = [];
+// simulator state
 var start_stop;
+
 var button;
 var populate;
 var form;
 var descriptorRoot = null;
+// counters for the dynamic profile building
 var serviceCount;
 var characteristicCount;
 var descriptorCount;
@@ -31,12 +39,13 @@ $(document).ready(function () {
 
     // Populate the existing profile table on initial page load
     populateTable();
+
     // check if simulator is running and switch start/stop simulator button
     checkSimulatorRunning();
 
     // Select profile for simulator
     $("#body").on('click', 'td a.select', selectProfile);
-    // Watch profile
+    // Watch content of a selected profile
     $("#body").on('click', 'td a.watch', watchProfile);
     // Delete profile from database
     $("#body").on('click', 'td a.delete', deleteProfile);
