@@ -3,11 +3,19 @@
  * All elements are programmatically added and need therefore unique identifiers ID´s.
  * The data of the filled form is converted to a JSON object using a javascript library called form2js.
  * The JSON object will be transferred to the server´s REST API.
+ *
+ * @class dynamic_forms
+ * @uses form2js
+ *
+ * @author gwu
+ * @version 1.0
  */
 
 
-/* Global variables service, characteristic and descriptor are used to get an
-   unique identifier (ID) for all elements used in the form. */
+/**
+ *  Global variables service, characteristic and descriptor are used to get an
+ *  unique identifier (ID) for all elements used in the form.
+ */
 var service = 0;
 var characteristic = 0;
 var descriptor = 0;
@@ -16,6 +24,9 @@ var linefeedCounter = 0;
 /**
  * Function adds a new service to the profile form. The service itself is a
  * container for its name, uuid and additional characteristics.
+ *
+ * @method addService
+ * @for dynamic_forms
  */
 function addService() {
     // parent node to append service at
@@ -106,28 +117,26 @@ function addService() {
  * Function creates a new characteristic appended to a parent service.
  * The characteristic itself can be the parent for appended descriptors.
  * It is also possible to select different types of a characteristic depending of its usage.
- * @param serviceDivID Contains the parents service identifier e.g. service1
+ *
+ * @method addCharacteristic
+ * @param {String} serviceDivID Contains the parents service identifier e.g. service1
+ * @for dynamic_forms
  */
 function addCharacteristic(serviceDivID) {
 
     // local variables to define read only or notifying characteristic
-    var isReadOnly = false;
     var isNotifying = false;
 
-    var typeSingle;
-    var typeArray;
-    var typeBase;
-    var typeRandom;
-    var type;
-
+    // get the counter value out of the id-string
     var serviceNumber = retnum(serviceDivID);
 
+    // create unique name prefix for all elements
     var characteristicNamePrefix = "services[" + serviceNumber + "].characteristics[" + characteristic + "]";
 
-    // parent node
+    // parent node container for the all appending characteristics for that service
     var characteristicContainer = document.getElementById("characteristics_service" + serviceNumber);
 
-    // create new characteristic container for values, properties and descriptors
+    // create new characteristic container for all characteristic child elements
     var characteristicDiv = document.createElement("div");
     characteristicDiv.id = "characteristic" + characteristic;
     characteristicDiv.className = "characteristic";
@@ -185,7 +194,7 @@ function addCharacteristic(serviceDivID) {
     readCheckbox.value = "read";
     readCheckbox.id = "read" + characteristic;
     readCheckbox.onclick = function () {
-
+        // reload content of the characteristicTypeContainer
         if (singleRadioButton.checked === true) {
             singleRadioButton.click();
         }
@@ -221,7 +230,7 @@ function addCharacteristic(serviceDivID) {
 
             removeCCCDescriptor(serviceDivID, characteristicDiv.id);
         }
-
+        // reload content of the characteristicTypeContainer
         if (singleRadioButton.checked === true) {
             singleRadioButton.click();
         }
@@ -528,6 +537,14 @@ function addCharacteristic(serviceDivID) {
     characteristicContainer.appendChild(characteristicDiv);
 }
 
+/**
+ * Function creates a new descriptor appended to a parent characteristic.
+ *
+ * @method addDescriptor
+ * @param {String} serviceDivID Contains the parent characteristic parent service identifier e.g. service1
+ * @param {String} characteristicDivID Contains the parents characteristic identifier e.g characteristic1
+ * @for dynamic_forms
+ */
 function addDescriptor(serviceDivID, characteristicDivID) {
 
     var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
@@ -639,7 +656,15 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorContainer.appendChild(descriptorDiv);
 }
 
-
+/**
+ * Function adds a Client Characteristic Configuration Descriptor to a characteristic
+ * if the characteristic property notify is checked.
+ *
+ * @method addCCCDescriptor
+ * @param {String} serviceDivID Contains the parent characteristic parent service identifier e.g. service1
+ * @param {String} characteristicDivID Contains the parents characteristic identifier e.g characteristic1
+ * @for dynamic_forms
+ */
 function addCCCDescriptor(serviceDivID, characteristicDivID) {
     var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
 
@@ -716,6 +741,15 @@ function addCCCDescriptor(serviceDivID, characteristicDivID) {
     descriptorContainer.insertAdjacentElement('afterbegin', descriptorDiv);
 }
 
+/**
+ * Function removes an added Client Characteristic Configuration Descriptor from a characteristic
+ * if the characteristic property notify is unchecked.
+ *
+ * @method addCCCDescriptor
+ * @param {String} serviceDivID Contains the parent characteristic parent service identifier e.g. service1
+ * @param {String} characteristicDivID Contains the parents characteristic identifier e.g characteristic1
+ * @for dynamic_forms
+ */
 function removeCCCDescriptor(serviceDivID, characteristicDivID) {
     var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
     var cccd = document.getElementById(serviceDivID + characteristicDivID + 'cccd');
@@ -724,9 +758,12 @@ function removeCCCDescriptor(serviceDivID, characteristicDivID) {
 
 
 /**
- * Function returns the numbers inside a string
- * @param str String which may include numbers
- * @returns {void|string} Included numbers as string
+ * Function returns the numbers inside a string.
+ *
+ * @method retnum
+ * @param {String} str String which may include numbers
+ * @returns {String} number Included numbers as string
+ * @for dynamic_forms
  */
 function retnum(str) {
 
@@ -735,12 +772,16 @@ function retnum(str) {
 
 
 /**
- * Function converts all data from the profile form into a json object.
- * It uses a external library for this parsing process, which scans all possible input
+ * Function converts all data from the profile form into a json array.
+ * It uses an external library for this parsing process, which scans all possible input
  * field for a name and corresponding value attribute.
  * These attributes are stored as key value pairs to the json object.
  * The library uses the special format of the name to generate a correct json format structure
  * including arrays of values.
+ * Function is called when the submit button is clicked.
+
+ * @method convertForm
+ * @for dynamic_forms
  */
 function convertForm() {
 
@@ -750,6 +791,14 @@ function convertForm() {
     transferData(data);
 }
 
+/**
+ * Function creates for every comma separated value inside the array of values input field,
+ * an extra input field, with its own unique identifier, to get all values into an array
+ * inside the json object.
+ *
+ * @method buildInputFieldsForValuesArray
+ * @for dynamic_forms
+ */
 function buildInputFieldsForValuesArray() {
     // get collection of all elements which are arrays of values
     var values_arrays = document.getElementsByClassName('values_array');
@@ -796,9 +845,13 @@ function buildInputFieldsForValuesArray() {
 }
 
 /**
- * Function generates a HTTP POST request and transfers the json object to the web server
- * using the correct REST API ressources.
- * @param data JSON object containing data from the profile form
+ * Function generates a HTTP POST request and transfers the json object to the backend
+ * using the correct REST API resource.
+ * After transmitting the data an alert dialog is shown and the user gets redirected to the start page.
+ *
+ * @method transferData
+ * @param {Object} data JSON object containing data from the profile form
+ * @for dynamic_forms
  */
 function transferData(data) {
     var xhr = new XMLHttpRequest();
@@ -829,6 +882,14 @@ function transferData(data) {
     xhr.send(JSON.stringify(data));
 }
 
+/**
+ * Function creates DOM  "br" elements with an unique id.
+ * Otherwise the "br" elements could not be removed from an node appended at.
+ *
+ * @method addLineFeedElement
+ * @return {HTMLBRElement}
+ * @for dynamic_forms
+ */
 function addLinefeedElement() {
 
     var linefeed = document.createElement("br");
@@ -837,24 +898,27 @@ function addLinefeedElement() {
     return linefeed;
 }
 
-
+/**
+ * Function removes all child elements from an parent node.
+ *
+ * @method removeChild
+ * @param {Object} fromNode Node element
+ * @for dynamic_forms
+ */
 function removeChild(fromNode) {
     var last;
     while (last = fromNode.lastChild) {
         console.log(last);
         fromNode.removeChild(last);
     }
-    var br = fromNode.getElementsByTagName("br");
-    console.log("br elements found: " + br.length);
-    if (br.length > 0) {
-        for (var elem  in br) {
-            fromNode.removeChild(elem);
-        }
-    }
 }
 
 /**
- * After page is loaded start function addService()
+ * After page is loaded call function addService() to append the first
+ * service to the profile form.
+ *
+ * @method window.onload
+ * @for dynamic_forms
  */
 window.onload = function () {
     addService();

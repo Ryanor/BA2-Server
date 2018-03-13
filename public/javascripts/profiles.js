@@ -7,14 +7,22 @@
  * Start and stop functions are also calling shell scripts via REST routes.
  *
  * @class profiles
+ * @author gwu
+ * @version 1.0
  */
 
+/**
+ * Required global variables
+ */
 // create empty array for the data
 var profiles = [];
 // simulator state
 var start_stop;
 
+// DOM element start stop button for the simulator
 var button;
+
+// DOM elements for the profile form
 var populate;
 var form;
 var descriptorRoot = null;
@@ -22,9 +30,6 @@ var descriptorRoot = null;
 var serviceCount;
 var characteristicCount;
 var descriptorCount;
-
-/* Global variables service, characteristic and descriptor are used to get an
-   unique identifier (ID) for all elements used in the form. */
 var service = 0;
 var characteristic = 0;
 var descriptor = 0;
@@ -205,7 +210,7 @@ function stopSimulator() {
  * And repopulates the profile table which has changed.
  *
  * @method deleteProfile
- * @event event
+ * @param event jQuery event mouse clicked
  * @for profiles
  */
 function deleteProfile(event) {
@@ -233,7 +238,7 @@ function deleteProfile(event) {
  * Prints either a success or error dialog from the response message.
  *
  * @method selectProfile
- * @event event
+ * @param event jQuery event mouse clicked
  * @for profiles
  */
 function selectProfile(event) {
@@ -270,11 +275,13 @@ function selectProfile(event) {
  * Before the new form is created any existing old form is removed from the DOM.
  *
  * @method watchProfile
- * @event event
+ * @param event jQuery event mouse clicked
  * @for profiles
  */
 function watchProfile(event) {
+    console.log(event);
     event.preventDefault();
+
 
     removeChilds(form);
     $("#populate").show();

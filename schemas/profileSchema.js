@@ -4,6 +4,11 @@
  *
  * @class profileSchema
  * @type Mongoose Schema
+ * @constructor profileSchema
+ * @uses serviceSchema
+ *
+ * @author gwu
+ * @version 1.0
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
