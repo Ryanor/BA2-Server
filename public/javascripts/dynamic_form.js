@@ -1,39 +1,50 @@
-
 /**
  * This javascript file contains the code to dynamically create input fields to the profile form.
  * All elements are programmatically added and need therefore unique identifiers ID´s.
  * The data of the filled form is converted to a JSON object using a javascript library called form2js.
  * The JSON object will be transferred to the server´s REST API.
+ *
+ * @class dynamic_forms
+ * @uses form2js
+ *
+ * @author gwu
+ * @version 1.0
  */
 
 
-/* Global variables service, characteristic and descriptor are used to get an
-   unique identifier (ID) for all elements used in the form. */
+/**
+ *  Global variables service, characteristic and descriptor are used to get an
+ *  unique identifier (ID) for all elements used in the form.
+ */
 var service = 0;
 var characteristic = 0;
 var descriptor = 0;
+var linefeedCounter = 0;
 
 /**
  * Function adds a new service to the profile form. The service itself is a
  * container for its name, uuid and additional characteristics.
+ *
+ * @method addService
+ * @for dynamic_forms
  */
 function addService() {
-    // parent node
+    // parent node to append service at
     var parentNode = document.getElementById("services");
-    // create new service, containing Characteristics
+    // create new service, containing service attributes and characteristic root element
     var serviceDiv = document.createElement("div");
     serviceDiv.id = "service" + service;
     serviceDiv.className = "service";
 
     var serviceNamePrefix = "services[" + service + "]";
 
-    var labelService = document.createElement("label");
+    var labelService = document.createElement("H4");
     labelService.innerHTML = "Service";
 
-    // Service description for user, for reusing service later on
+    // Service description in a user friendly form
     var labelServiceDescription = document.createElement("label");
     labelServiceDescription.setAttribute("for", "ServiceDescription" + service);
-    labelServiceDescription.innerHTML = "Service name for reuse:";
+    labelServiceDescription.innerHTML = "Service name:";
     var inputServiceDescription = document.createElement("input");
     inputServiceDescription.id = "service_description" + service;
     inputServiceDescription.className = "input";
@@ -57,6 +68,7 @@ function addService() {
     inputAddCharacteristic.id = "addCharacteristic" + serviceDiv.id;
     inputAddCharacteristic.type = "button";
     inputAddCharacteristic.textContent = "Add Characteristic";
+    inputAddCharacteristic.className = "addCharacteristic";
     inputAddCharacteristic.onclick = function () {
         addCharacteristic(serviceDiv.id);
     };
@@ -71,13 +83,13 @@ function addService() {
     removeService.id = "removeService" + service;
     removeService.type = "button";
     removeService.textContent = "Remove Service";
+    removeService.className = "removeService";
     removeService.onclick = function () {
         parentNode.removeChild(serviceDiv);
     };
 
     // append labels, buttons and input fields
     serviceDiv.appendChild(labelService);
-    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(labelServiceDescription);
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputServiceDescription);
@@ -86,12 +98,15 @@ function addService() {
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputServiceUUID);
     serviceDiv.appendChild(document.createElement("br"));
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(inputAddCharacteristic);
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(characteristicsDiv);
     serviceDiv.appendChild(document.createElement("br"));
+    serviceDiv.appendChild(document.createElement("br"));
     serviceDiv.appendChild(removeService);
-
+    serviceDiv.appendChild(document.createElement("br"));
     // increase number of services
     service++;
     // append service to parent
@@ -102,26 +117,36 @@ function addService() {
  * Function creates a new characteristic appended to a parent service.
  * The characteristic itself can be the parent for appended descriptors.
  * It is also possible to select different types of a characteristic depending of its usage.
- * @param serviceDivID Contains the parents service identifier e.g. service1
+ *
+ * @method addCharacteristic
+ * @param {String} serviceDivID Contains the parents service identifier e.g. service1
+ * @for dynamic_forms
  */
 function addCharacteristic(serviceDivID) {
 
+    // local variables to define read only or notifying characteristic
+    var isNotifying = false;
+
+    // get the counter value out of the id-string
     var serviceNumber = retnum(serviceDivID);
 
+    // create unique name prefix for all elements
     var characteristicNamePrefix = "services[" + serviceNumber + "].characteristics[" + characteristic + "]";
 
-    // parent node
+    // parent node container for the all appending characteristics for that service
     var characteristicContainer = document.getElementById("characteristics_service" + serviceNumber);
 
-    // create new characteristic container for values, properties and descriptors
+    // create new characteristic container for all characteristic child elements
     var characteristicDiv = document.createElement("div");
     characteristicDiv.id = "characteristic" + characteristic;
     characteristicDiv.className = "characteristic";
 
-    // Characteristic description for reuse
+    // Characteristic description in a user friendly form
+    var labelCharacteristic = document.createElement("H4");
+    labelCharacteristic.innerHTML = "Characteristic";
     var labelCharacteristicDescription = document.createElement("label");
     labelCharacteristicDescription.setAttribute("for", "CharacteristicDescription" + characteristic);
-    labelCharacteristicDescription.innerHTML = "Characteristic description:";
+    labelCharacteristicDescription.innerHTML = "Characteristic name:";
     var inputCharacteristicDescription = document.createElement("input");
     inputCharacteristicDescription.id = "characteristic_description" + characteristic;
     inputCharacteristicDescription.className = "input";
@@ -140,10 +165,116 @@ function addCharacteristic(serviceDivID) {
     inputCharacteristicUUID.type = "characteristic";
     inputCharacteristicUUID.setAttribute("placeholder", "Enter Characteristic UUID");
 
+    // Container for different kinds of characteristic attributes defined by properties and characteristic type
+    var characteristicTypeContainer = document.createElement("div");
+    characteristicTypeContainer.id = "characteristicTypeContainer" + characteristic;
+    characteristicTypeContainer.className = "characteristic";
+
+    // Characteristic properties
+    var labelCharacteristicProperty = document.createElement("label");
+    labelCharacteristicProperty.innerHTML = "Characteristic properties:";
+
+    var writeLabel = document.createElement('label');
+    writeLabel.setAttribute("for", "write" + characteristic);
+    writeLabel.innerHTML = "WRITE";
+
+    var writeCheckbox = document.createElement('input');
+    writeCheckbox.type = "checkbox";
+    writeCheckbox.name = characteristicNamePrefix + ".properties[]";
+    writeCheckbox.value = "write";
+    writeCheckbox.id = "write" + characteristic;
+
+    var readLabel = document.createElement('label');
+    readLabel.setAttribute("for", "read" + characteristic);
+    readLabel.innerHTML = "READ";
+
+    var readCheckbox = document.createElement('input');
+    readCheckbox.type = "checkbox";
+    readCheckbox.name = characteristicNamePrefix + ".properties[]";
+    readCheckbox.value = "read";
+    readCheckbox.id = "read" + characteristic;
+    readCheckbox.onclick = function () {
+        // reload content of the characteristicTypeContainer
+        if (singleRadioButton.checked === true) {
+            singleRadioButton.click();
+        }
+        if (arrayRadioButton.checked === true) {
+            arrayRadioButton.click();
+        }
+        if (baseRadioButton.checked === true) {
+            baseRadioButton.click();
+        }
+        if (rangeRadioButton.checked === true) {
+            rangeRadioButton.click();
+        }
+    };
+
+    var notifyLabel = document.createElement('label');
+    notifyLabel.setAttribute("for", "notify" + characteristic);
+    notifyLabel.innerHTML = "NOTIFY";
+
+    var notifyCheckbox = document.createElement('input');
+    notifyCheckbox.type = "checkbox";
+    notifyCheckbox.name = characteristicNamePrefix + ".properties[]";
+    notifyCheckbox.value = "notify";
+    notifyCheckbox.id = "notify" + characteristic;
+    notifyCheckbox.onclick = function () {
+
+        if (notifyCheckbox.checked === true) {
+            isNotifying = true;
+
+
+            addCCCDescriptor(serviceDivID, characteristicDiv.id);
+        } else {
+            isNotifying = false;
+
+            removeCCCDescriptor(serviceDivID, characteristicDiv.id);
+        }
+        // reload content of the characteristicTypeContainer
+        if (singleRadioButton.checked === true) {
+            singleRadioButton.click();
+        }
+        if (arrayRadioButton.checked === true) {
+            arrayRadioButton.click();
+        }
+        if (baseRadioButton.checked === true) {
+            baseRadioButton.click();
+        }
+        if (rangeRadioButton.checked === true) {
+            rangeRadioButton.click();
+        }
+    };
+
+
     // Checkboxes for different characteristic types
     var labelCharacteristicType = document.createElement("label");
-    labelCharacteristicType.innerHTML = "Type of characteristic:";
+    labelCharacteristicType.innerHTML = "Characteristic type:";
     // Characteristic type checkboxes
+    var singleRadioButton = document.createElement('input');
+    singleRadioButton.type = "radio";
+    singleRadioButton.name = characteristicNamePrefix + ".type";
+    singleRadioButton.value = "single";
+    singleRadioButton.id = "single" + characteristic;
+    singleRadioButton.defaultChecked = true;
+    singleRadioButton.onclick = function () {
+
+        if (singleRadioButton.checked === true) {
+
+            removeChild(characteristicTypeContainer);
+
+            characteristicTypeContainer.appendChild(characteristicValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            if (isNotifying) {
+
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
+    };
     var arrayRadioButton = document.createElement('input');
     arrayRadioButton.type = "radio";
     arrayRadioButton.name = characteristicNamePrefix + ".type";
@@ -151,23 +282,22 @@ function addCharacteristic(serviceDivID) {
     arrayRadioButton.id = "array" + characteristic;
     arrayRadioButton.onclick = function () {
 
-        characteristicValuesArrayLabel.style.display = 'inline';
-        characteristicValuesArrayLabel.style.visibility = '';
-        characteristicValuesArray.style.display = 'inline';
-        characteristicValuesArray.style.visibility = '';
+        if (arrayRadioButton.checked === true) {
 
-        characteristicBaseValueLabel.style.display = 'none';
-        characteristicBaseValueLabel.style.visibility = 'hidden';
-        characteristicBaseValue.style.display = 'none';
-        characteristicBaseValue.style.visibility = 'hidden';
-        characteristicMinValueLabel.style.display = 'none';
-        characteristicMinValueLabel.style.visibility = 'hidden';
-        characteristicMinValue.style.display = 'none';
-        characteristicMinValue.style.visibility = 'hidden';
-        characteristicMaxValueLabel.style.display = 'none';
-        characteristicMaxValueLabel.style.visibility = 'hidden';
-        characteristicMaxValue.style.display = 'none';
-        characteristicMaxValue.style.visibility = 'hidden';
+            removeChild(characteristicTypeContainer);
+            characteristicTypeContainer.appendChild(characteristicValuesArrayLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicValuesArray);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+
+            if (isNotifying) {
+
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
     };
 
     var rangeRadioButton = document.createElement('input');
@@ -177,23 +307,25 @@ function addCharacteristic(serviceDivID) {
     rangeRadioButton.id = "range" + characteristic;
     rangeRadioButton.onclick = function () {
 
-        characteristicValuesArrayLabel.style.display = 'none';
-        characteristicValuesArrayLabel.style.visibility = 'hidden';
-        characteristicValuesArray.style.display = 'none';
-        characteristicValuesArray.style.visibility = 'hidden';
-        characteristicBaseValueLabel.style.display = 'none';
-        characteristicBaseValueLabel.style.visibility = 'hidden';
-        characteristicBaseValue.style.display = 'none';
-        characteristicBaseValue.style.visibility = 'hidden';
+        if (rangeRadioButton.checked === true) {
+            removeChild(characteristicTypeContainer);
+            characteristicTypeContainer.appendChild(characteristicMinValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMinValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            if (isNotifying) {
 
-        characteristicMinValueLabel.style.display = 'inline';
-        characteristicMinValueLabel.style.visibility = '';
-        characteristicMinValue.style.display = 'inline';
-        characteristicMinValue.style.visibility = '';
-        characteristicMaxValueLabel.style.display = 'inline';
-        characteristicMaxValueLabel.style.visibility = '';
-        characteristicMaxValue.style.display = 'inline';
-        characteristicMaxValue.style.visibility = '';
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
+
     };
 
     var baseRadioButton = document.createElement('input');
@@ -203,25 +335,34 @@ function addCharacteristic(serviceDivID) {
     baseRadioButton.id = "basetype" + characteristic;
     baseRadioButton.onclick = function () {
 
-        characteristicValuesArrayLabel.style.display = 'none';
-        characteristicValuesArrayLabel.style.visibility = 'hidden';
-        characteristicValuesArray.style.display = 'none';
-        characteristicValuesArray.style.visibility = 'hidden';
+        if (baseRadioButton.checked === true) {
+            removeChild(characteristicTypeContainer);
+            characteristicTypeContainer.appendChild(characteristicBaseValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicBaseValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMinValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMinValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValueLabel);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            characteristicTypeContainer.appendChild(characteristicMaxValue);
+            characteristicTypeContainer.appendChild(addLinefeedElement());
+            if (isNotifying) {
 
-        characteristicBaseValueLabel.style.display = 'inline';
-        characteristicBaseValueLabel.style.visibility = '';
-        characteristicBaseValue.style.display = 'inline';
-        characteristicBaseValue.style.visibility = '';
-        characteristicMinValueLabel.style.display = 'inline';
-        characteristicMinValueLabel.style.visibility = '';
-        characteristicMinValue.style.display = 'inline';
-        characteristicMinValue.style.visibility = '';
-        characteristicMaxValueLabel.style.display = 'inline';
-        characteristicMaxValueLabel.style.visibility = '';
-        characteristicMaxValue.style.display = 'inline';
-        characteristicMaxValue.style.visibility = '';
+                characteristicTypeContainer.appendChild(characteristicIntervalLabel);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+                characteristicTypeContainer.appendChild(characteristicInterval);
+                characteristicTypeContainer.appendChild(addLinefeedElement());
+            }
+        }
+
     };
 
+    var singleRadioLabel = document.createElement('label');
+    singleRadioLabel.setAttribute("for", "array" + characteristic);
+    singleRadioLabel.innerHTML = "SINGLE VALUE";
     var arrayRadioLabel = document.createElement('label');
     arrayRadioLabel.setAttribute("for", "array" + characteristic);
     arrayRadioLabel.innerHTML = "ARRAY";
@@ -232,34 +373,6 @@ function addCharacteristic(serviceDivID) {
     baseRadioLabel.setAttribute("for", "base" + characteristic);
     baseRadioLabel.innerHTML = "BASE";
 
-    // Characteristic properties
-    var labelCharacteristicProperty = document.createElement("label");
-    labelCharacteristicProperty.innerHTML = "Characteristic properties:";
-    // checkboxes for the properties
-    var readCheckbox = document.createElement('input');
-    readCheckbox.type = "checkbox";
-    readCheckbox.name = characteristicNamePrefix + ".properties[]";
-    readCheckbox.value = "read";
-    readCheckbox.id = "read" + characteristic;
-    var writeCheckbox = document.createElement('input');
-    writeCheckbox.type = "checkbox";
-    writeCheckbox.name = characteristicNamePrefix + ".properties[]";
-    writeCheckbox.value = "write";
-    writeCheckbox.id = "write" + characteristic;
-    var notifyCheckbox = document.createElement('input');
-    notifyCheckbox.type = "checkbox";
-    notifyCheckbox.name = characteristicNamePrefix + ".properties[]";
-    notifyCheckbox.value = "notify";
-    notifyCheckbox.id = "notify" + characteristic;
-    var readLabel = document.createElement('label');
-    readLabel.setAttribute("for", "read" + characteristic);
-    readLabel.innerHTML = "READ";
-    var writeLabel = document.createElement('label');
-    writeLabel.setAttribute("for", "write" + characteristic);
-    writeLabel.innerHTML = "WRITE";
-    var notifyLabel = document.createElement('label');
-    notifyLabel.setAttribute("for", "notify" + characteristic);
-    notifyLabel.innerHTML = "NOTIFY";
 
     // Characteristic value
     var characteristicValueLabel = document.createElement('label');
@@ -273,7 +386,7 @@ function addCharacteristic(serviceDivID) {
     // Characteristic data type
     var characteristicDataTypeLabel = document.createElement('label');
     characteristicDataTypeLabel.setAttribute("for", "datatype" + characteristic);
-    characteristicDataTypeLabel.innerHTML = "Type of value data:";
+    characteristicDataTypeLabel.innerHTML = "Datatype of value:";
     var characteristicDataType = document.createElement('input');
     characteristicDataType.id = 'datatype' + characteristic;
     characteristicDataType.name = characteristicNamePrefix + ".datatype";
@@ -338,6 +451,7 @@ function addCharacteristic(serviceDivID) {
     inputAddDescriptor.id = "addDescriptor" + characteristic;
     inputAddDescriptor.type = "button";
     inputAddDescriptor.textContent = "Add Descriptor";
+    inputAddDescriptor.className = "addDescriptor";
     inputAddDescriptor.onclick = function () {
         addDescriptor(serviceDivID, characteristicDiv.id);
     };
@@ -352,11 +466,13 @@ function addCharacteristic(serviceDivID) {
     removeCharacteristic.id = "removeCharacteristic" + characteristic;
     removeCharacteristic.type = "button";
     removeCharacteristic.textContent = "Remove Characteristic";
+    removeCharacteristic.className = "removeCharacteristic";
     removeCharacteristic.onclick = function () {
         characteristicContainer.removeChild(characteristicDiv);
     };
 
     // append all labels, buttons and input fields to characteristic div
+    characteristicDiv.appendChild(labelCharacteristic);
     characteristicDiv.appendChild(labelCharacteristicDescription);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputCharacteristicDescription);
@@ -364,6 +480,7 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(labelCharacteristicUUID);
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputCharacteristicUUID);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(labelCharacteristicProperty);
     characteristicDiv.appendChild(document.createElement("br"));
@@ -376,49 +493,39 @@ function addCharacteristic(serviceDivID) {
     characteristicDiv.appendChild(notifyCheckbox);
     characteristicDiv.appendChild(notifyLabel);
     characteristicDiv.appendChild(document.createElement("br"));
-
-    // additional characteristic input fields to differ which kind of characteristic is used
-    characteristicDiv.appendChild(characteristicValueLabel);
-    characteristicDiv.appendChild(characteristicValue);
     characteristicDiv.appendChild(document.createElement("br"));
-
-
     characteristicDiv.appendChild(labelCharacteristicType);
     characteristicDiv.appendChild(document.createElement("br"));
-
-    characteristicDiv.appendChild(arrayRadioLabel);
+    characteristicDiv.appendChild(singleRadioButton);
+    characteristicDiv.appendChild(singleRadioLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(arrayRadioButton);
-
-    characteristicDiv.appendChild(rangeRadioLabel);
+    characteristicDiv.appendChild(arrayRadioLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(rangeRadioButton);
-
-    characteristicDiv.appendChild(baseRadioLabel);
+    characteristicDiv.appendChild(rangeRadioLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(baseRadioButton);
+    characteristicDiv.appendChild(baseRadioLabel);
     characteristicDiv.appendChild(document.createElement("br"));
 
+    // contains type specific labels and input fields
+    characteristicDiv.appendChild(characteristicTypeContainer);
+    characteristicDiv.appendChild(document.createElement("br"));
+
+    // common characteristic input fields used by all types
     characteristicDiv.appendChild(characteristicDataTypeLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicDataType);
     characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicIntervalLabel);
-    characteristicDiv.appendChild(characteristicInterval);
-    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicOffsetLabel);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(characteristicOffset);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicValuesArrayLabel);
-    characteristicDiv.appendChild(characteristicValuesArray);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicBaseValueLabel);
-    characteristicDiv.appendChild(characteristicBaseValue);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicMinValueLabel);
-    characteristicDiv.appendChild(characteristicMinValue);
-    characteristicDiv.appendChild(document.createElement("br"));
-    characteristicDiv.appendChild(characteristicMaxValueLabel);
-    characteristicDiv.appendChild(characteristicMaxValue);
-    characteristicDiv.appendChild(document.createElement("br"));
 
+    characteristicDiv.appendChild(document.createElement("br"));
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(inputAddDescriptor);
+    characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(document.createElement("br"));
     characteristicDiv.appendChild(descriptorsDiv);
     characteristicDiv.appendChild(document.createElement("br"));
@@ -430,6 +537,14 @@ function addCharacteristic(serviceDivID) {
     characteristicContainer.appendChild(characteristicDiv);
 }
 
+/**
+ * Function creates a new descriptor appended to a parent characteristic.
+ *
+ * @method addDescriptor
+ * @param {String} serviceDivID Contains the parent characteristic parent service identifier e.g. service1
+ * @param {String} characteristicDivID Contains the parents characteristic identifier e.g characteristic1
+ * @for dynamic_forms
+ */
 function addDescriptor(serviceDivID, characteristicDivID) {
 
     var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
@@ -445,6 +560,8 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorDiv.className = "descriptor";
 
     // description for Descriptor for later reuse
+    var labelDescriptor = document.createElement("H4");
+    labelDescriptor.innerHTML = "Descriptor";
     var labelDescriptorDescription = document.createElement("label");
     labelDescriptorDescription.setAttribute("for", "DescriptorDescription" + descriptor);
     labelDescriptorDescription.innerHTML = "Descriptor name:";
@@ -469,25 +586,24 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     // value data type
     var labelDescriptorValueType = document.createElement("label");
     labelDescriptorValueType.innerHTML = "Value type:";
+
     // radio buttons for the value data type
+    var stringRadioButtonLabel = document.createElement('label');
+    stringRadioButtonLabel.setAttribute("for", "descriptor_datatype_string" + descriptor);
+    stringRadioButtonLabel.innerHTML = "STRING";
     var stringRadioButton = document.createElement('input');
     stringRadioButton.type = "radio";
     stringRadioButton.name = descriptorNamePrefix + ".datatype";
     stringRadioButton.value = "string";
     stringRadioButton.id = "descriptor_datatype_string" + descriptor;
-
-    var bufferRadioButton = document.createElement('input');
-    bufferRadioButton.type = "radio";
-    bufferRadioButton.name = descriptorNamePrefix + ".datatype";
-    bufferRadioButton.value = "buffer";
-    bufferRadioButton.id = "descriptor_datatype_buffer" + descriptor;
-
-    var stringRadioButtonLabel = document.createElement('label');
-    stringRadioButtonLabel.setAttribute("for", "descriptor_datatype_string" + descriptor);
-    stringRadioButtonLabel.innerHTML = "STRING";
-    var bufferRadioButtonLabel = document.createElement('label');
-    bufferRadioButtonLabel.setAttribute("for", "descriptor_datatype_buffer" + descriptor);
-    bufferRadioButtonLabel.innerHTML = "BUFFER";
+    var bytesRadioButtonLabel = document.createElement('label');
+    bytesRadioButtonLabel.setAttribute("for", "descriptor_datatype_bytes" + descriptor);
+    bytesRadioButtonLabel.innerHTML = "BYTES";
+    var bytesRadioButton = document.createElement('input');
+    bytesRadioButton.type = "radio";
+    bytesRadioButton.name = descriptorNamePrefix + ".datatype";
+    bytesRadioButton.value = "bytes";
+    bytesRadioButton.id = "descriptor_datatype_bytes" + descriptor;
 
     //  Descriptor value
     var labelDescriptorValue = document.createElement("label");
@@ -505,10 +621,12 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     removeDescriptor.id = "removeDescriptor" + descriptor;
     removeDescriptor.type = "button";
     removeDescriptor.textContent = "Remove Descriptor";
+    removeDescriptor.className = "removeDescriptor";
     removeDescriptor.onclick = function () {
         descriptorContainer.removeChild(descriptorDiv);
     };
 
+    descriptorDiv.appendChild(labelDescriptor);
     descriptorDiv.appendChild(labelDescriptorDescription);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(inputDescriptorDescription);
@@ -522,8 +640,8 @@ function addDescriptor(serviceDivID, characteristicDivID) {
     descriptorDiv.appendChild(stringRadioButtonLabel);
     descriptorDiv.appendChild(stringRadioButton);
     descriptorDiv.appendChild(document.createElement("br"));
-    descriptorDiv.appendChild(bufferRadioButtonLabel);
-    descriptorDiv.appendChild(bufferRadioButton);
+    descriptorDiv.appendChild(bytesRadioButtonLabel);
+    descriptorDiv.appendChild(bytesRadioButton);
     descriptorDiv.appendChild(document.createElement("br"));
     descriptorDiv.appendChild(labelDescriptorValue);
     descriptorDiv.appendChild(document.createElement("br"));
@@ -539,22 +657,131 @@ function addDescriptor(serviceDivID, characteristicDivID) {
 }
 
 /**
- * Function returns the numbers inside a string
- * @param str String which may include numbers
- * @returns {void|string} Included numbers as string
+ * Function adds a Client Characteristic Configuration Descriptor to a characteristic
+ * if the characteristic property notify is checked.
+ *
+ * @method addCCCDescriptor
+ * @param {String} serviceDivID Contains the parent characteristic parent service identifier e.g. service1
+ * @param {String} characteristicDivID Contains the parents characteristic identifier e.g characteristic1
+ * @for dynamic_forms
+ */
+function addCCCDescriptor(serviceDivID, characteristicDivID) {
+    var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
+
+    var serviceNumber = retnum(serviceDivID);
+    var characteristicNumber = retnum(characteristicDivID);
+
+    var descriptorNamePrefix = "services[" + serviceNumber + "].characteristics[" + characteristicNumber + "].descriptors[" + descriptor + "]";
+
+    // create new descriptor node
+    var descriptorDiv = document.createElement("div");
+    descriptorDiv.id = serviceDivID + characteristicDivID + "cccd";
+    descriptorDiv.className = "descriptor";
+
+    // description for Descriptor for later reuse
+    var labelDescriptor = document.createElement("H4");
+    labelDescriptor.innerHTML = "Descriptor";
+    var labelDescriptorDescription = document.createElement("label");
+    labelDescriptorDescription.setAttribute("for", "DescriptorDescription" + descriptor);
+    labelDescriptorDescription.innerHTML = "Descriptor name:";
+    var inputDescriptorDescription = document.createElement("input");
+    inputDescriptorDescription.id = "descriptor_name" + descriptor;
+    inputDescriptorDescription.className = "input";
+    inputDescriptorDescription.name = descriptorNamePrefix + ".name";
+    inputDescriptorDescription.value = "Client Characteristic Configuration";
+
+    //  Descriptor UUID
+    var labelDescriptorUUID = document.createElement("label");
+    labelDescriptorUUID.setAttribute("for", "DescriptorUUID" + descriptor);
+    labelDescriptorUUID.innerHTML = "Descriptor UUID:";
+    var inputDescriptorUUID = document.createElement("input");
+    inputDescriptorUUID.id = "descriptor_uuid" + descriptor;
+    inputDescriptorUUID.className = "input";
+    inputDescriptorUUID.name = descriptorNamePrefix + ".uuid";
+    inputDescriptorUUID.value = "2902";
+
+    // Descriptor value type
+    var labelDescriptorValueType = document.createElement('label');
+    labelDescriptorValueType.setAttribute("for", "descriptor_datatype_bytes" + descriptor);
+    labelDescriptorValueType.innerHTML = "Datatype of value:";
+    var inputDescriptorValueType = document.createElement('input');
+    inputDescriptorValueType.id = "descriptor_datatype_bytes" + descriptor;
+    inputDescriptorValueType.className = "input";
+    inputDescriptorValueType.name = descriptorNamePrefix + ".datatype";
+    inputDescriptorValueType.value = "bytes";
+
+
+    //  Descriptor value
+    var labelDescriptorValue = document.createElement("label");
+    labelDescriptorValue.setAttribute("for", "DescriptorValue" + descriptor);
+    labelDescriptorValue.innerHTML = "Descriptor value:";
+    var inputDescriptorValue = document.createElement("input");
+    inputDescriptorValue.id = "descriptor_value" + descriptor;
+    inputDescriptorValue.className = "input";
+    inputDescriptorValue.name = descriptorNamePrefix + ".value";
+    inputDescriptorValue.value = "0x00";
+
+    descriptorDiv.appendChild(labelDescriptor);
+    descriptorDiv.appendChild(labelDescriptorDescription);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorDescription);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(labelDescriptorUUID);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorUUID);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(labelDescriptorValueType);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorValueType);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(labelDescriptorValue);
+    descriptorDiv.appendChild(document.createElement("br"));
+    descriptorDiv.appendChild(inputDescriptorValue);
+    // add descriptor to characteristic
+    descriptorContainer.insertAdjacentElement('afterbegin', descriptorDiv);
+}
+
+/**
+ * Function removes an added Client Characteristic Configuration Descriptor from a characteristic
+ * if the characteristic property notify is unchecked.
+ *
+ * @method addCCCDescriptor
+ * @param {String} serviceDivID Contains the parent characteristic parent service identifier e.g. service1
+ * @param {String} characteristicDivID Contains the parents characteristic identifier e.g characteristic1
+ * @for dynamic_forms
+ */
+function removeCCCDescriptor(serviceDivID, characteristicDivID) {
+    var descriptorContainer = document.getElementById('descriptors_' + characteristicDivID);
+    var cccd = document.getElementById(serviceDivID + characteristicDivID + 'cccd');
+    descriptorContainer.removeChild(cccd);
+}
+
+
+/**
+ * Function returns the numbers inside a string.
+ *
+ * @method retnum
+ * @param {String} str String which may include numbers
+ * @returns {String} number Included numbers as string
+ * @for dynamic_forms
  */
 function retnum(str) {
 
     return str.replace(/[^0-9]/g, '');
 }
 
+
 /**
- * Function converts all data from the profile form into a json object.
- * It uses a external library for this parsing process, which scans all possible input
+ * Function converts all data from the profile form into a json array.
+ * It uses an external library for this parsing process, which scans all possible input
  * field for a name and corresponding value attribute.
  * These attributes are stored as key value pairs to the json object.
  * The library uses the special format of the name to generate a correct json format structure
  * including arrays of values.
+ * Function is called when the submit button is clicked.
+
+ * @method convertForm
+ * @for dynamic_forms
  */
 function convertForm() {
 
@@ -564,11 +791,19 @@ function convertForm() {
     transferData(data);
 }
 
+/**
+ * Function creates for every comma separated value inside the array of values input field,
+ * an extra input field, with its own unique identifier, to get all values into an array
+ * inside the json object.
+ *
+ * @method buildInputFieldsForValuesArray
+ * @for dynamic_forms
+ */
 function buildInputFieldsForValuesArray() {
     // get collection of all elements which are arrays of values
     var values_arrays = document.getElementsByClassName('values_array');
 
-    for(var i=0; i < values_arrays.length; i++) {
+    for (var i = 0; i < values_arrays.length; i++) {
         // get next array from the collection
         var array = values_arrays[i];
         // get the array value which is a comma separated string
@@ -583,11 +818,11 @@ function buildInputFieldsForValuesArray() {
         // set current node to append new element to the array node
         var currentNode = array;
         // if more than 1 number is available
-        if(numbers.length > 0) {
+        if (numbers.length > 0) {
             // create a new element which contains a single value
-            for(var k = 0; k < numbers.length; k++) {
+            for (var k = 0; k < numbers.length; k++) {
                 // first element gets overwritten
-                if( k === 0) {
+                if (k === 0) {
                     array.name = name + "[]";
                     array.value = numbers[k];
                 } else {
@@ -610,24 +845,28 @@ function buildInputFieldsForValuesArray() {
 }
 
 /**
- * Function generates a HTTP POST request and transfers the json object to the web server
- * using the correct REST API ressources.
- * @param data JSON object containing data from the profile form
+ * Function generates a HTTP POST request and transfers the json object to the backend
+ * using the correct REST API resource.
+ * After transmitting the data an alert dialog is shown and the user gets redirected to the start page.
+ *
+ * @method transferData
+ * @param {Object} data JSON object containing data from the profile form
+ * @for dynamic_forms
  */
 function transferData(data) {
     var xhr = new XMLHttpRequest();
 
     // React on state changes from the request
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         console.log(xhr.readyState);
         console.log(xhr.status);
-        if(xhr.readyState === 4 && xhr.status === 201) {
+        if (xhr.readyState === 4 && xhr.status === 201) {
             // Request finished. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
             document.location.href = '/';
         }
 
-        if(xhr.readyState === 4 && xhr.status === 500) {
+        if (xhr.readyState === 4 && xhr.status === 500) {
             // Request error on server. Do processing here.
             alert(xhr.responseText + "   ...redirecting to start page");
             document.location.href = '/';
@@ -644,7 +883,42 @@ function transferData(data) {
 }
 
 /**
- * After page is loaded start function addService()
+ * Function creates DOM  "br" elements with an unique id.
+ * Otherwise the "br" elements could not be removed from an node appended at.
+ *
+ * @method addLineFeedElement
+ * @return {HTMLBRElement}
+ * @for dynamic_forms
+ */
+function addLinefeedElement() {
+
+    var linefeed = document.createElement("br");
+    linefeed.id = "linefeed" + linefeedCounter;
+    linefeedCounter++;
+    return linefeed;
+}
+
+/**
+ * Function removes all child elements from an parent node.
+ *
+ * @method removeChild
+ * @param {Object} fromNode Node element
+ * @for dynamic_forms
+ */
+function removeChild(fromNode) {
+    var last;
+    while (last = fromNode.lastChild) {
+        console.log(last);
+        fromNode.removeChild(last);
+    }
+}
+
+/**
+ * After page is loaded call function addService() to append the first
+ * service to the profile form.
+ *
+ * @method window.onload
+ * @for dynamic_forms
  */
 window.onload = function () {
     addService();

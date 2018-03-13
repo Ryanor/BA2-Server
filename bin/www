@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+/**
+ * File www is the entry point for the web application.
+ * It is used as frontend, backend and integrates the REST API as routes.
+ * It defines the listening port for the web application to 3000.
+ *
+ * @class www
+ * @main
+ * @uses app
+ *
+ * @author gwu
+ * @version 1.0
+ */
 
 /**
  * Module dependencies.
@@ -10,31 +22,61 @@ var http = require('http');
 var server;
 var port;
 
-
 /**
  * Get port from environment and store in Express.
+ *
+ * @method normalizePort
+ * @param {Mixed} port Port input from mixed source
+ * @return {String|Number} port Port number as mixed source
+ * @for www
  */
 port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTP server using the express application middleware.
+ *
+ * @method createServer
+ * @param {Object} app Express middleware variable
+ * @return {Object} server Object of server
+ * @for www
  */
 server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
+ *
+ * @method listen
+ * @param {String|Number} port Port number
+ * @return {Object} server Object of server listening on port
+ * @for www
  */
 server.listen(port);
+
+/**
+ * Server error event
+ *
+ * @event error
+ * @for www
+ */
 server.on('error', onError);
+
+/**
+ * Server listening event
+ *
+ * @event listening
+ * @for www
+ */
 server.on('listening', onListening);
-
-
 
 /**
  * Normalize a port into a number, string, or false.
+ *
+ * @method normalizePort
+ * @param {Mixed} val Port number from mixed source
+ * @return {String|Number} port Port as number or string
+ * @for www
  */
-
 function normalizePort(val) {
     var port = parseInt(val, 10);
 
@@ -53,8 +95,12 @@ function normalizePort(val) {
 
 /**
  * Event listener for HTTP server "error" event.
+ *
+ * @method onError
+ * @param {Event} error Error event
+ * @throws error
+ * @for www
  */
-
 function onError(error) {
     if (error.syscall !== 'listen') {
         throw error;
@@ -81,8 +127,10 @@ function onError(error) {
 
 /**
  * Event listener for HTTP server "listening" event.
+ *
+ * @method onListening
+ * @for www
  */
-
 function onListening() {
     var addr = server.address();
     var bind = typeof addr === 'string'

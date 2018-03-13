@@ -1,14 +1,19 @@
 extends layout
 
 block content
-    script(src="/javascripts/dynamic_form.js")
-    script(src="/javascripts/form2js.js")
-    p Please be sure to fill in all values before submitting
-        br
-        div
-            form(id="profile", action='/profile', method='post')
-                div(id="services")
-                    h3 Profile
-                    button(type='button', name="add_service", onclick='addService()') Add Service
+    #content
+        script(src="/javascripts/dynamic_form.js")
+        script(src="/javascripts/form2js.js")
+        p Please be sure to fill in all values before submitting
+            br
+            div
+                form(id="profile", action='/profile', method='post')
+                    h4 Profile
+                    input(type="profile", id="name", name="name", placeholder="Profile name")
                     br
-                button(type='button', name ="send_profile", onclick='convertForm()') Send Profile
+                    br
+                    div(id="services")
+                        button(type='button', class="addService", name="add_service", onclick='addService()') Add Service
+                        button(type='button', class="submit_top", name ="submit_top_profile", onclick='convertForm()') Send Profile
+                        br
+                button(type='button', class="submit", name ="submit_bottom_profile", onclick='convertForm()') Send Profile

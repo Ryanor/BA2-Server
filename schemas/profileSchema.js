@@ -1,7 +1,14 @@
 /**
  * Schema for the Profile database model.
- * Used to store an array of services to the database collection as correct schema.
- * @type {*|Mongoose}
+ * Used to store a profile and its containing array of services to the database collection as correct schema.
+ *
+ * @class profileSchema
+ * @type Mongoose Schema
+ * @constructor profileSchema
+ * @uses serviceSchema
+ *
+ * @author gwu
+ * @version 1.0
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -10,11 +17,16 @@ var serviceSchema = mongoose.model('Service').schema;
 
 
 /**
- * Profile schema containing data for an array of services
- * Each service can contains its own characteristics and their descriptors
+ * Profile schema used to store profile data in form of the exchange format.
+ * Fields defined by the SIG standard:
+ * array of services
+ *
+ * Additional fields:
+ * name
  */
 var profileSchema = new Schema({
-    services : [serviceSchema]
+    services : [serviceSchema],
+    name : { type : String, default : null }
 });
 
 // Export model as Mongoose Schema

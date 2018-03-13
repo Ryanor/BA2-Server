@@ -1,4 +1,13 @@
 /**
+ * File app.js is the basic file of the express application
+ *
+ * @class app
+ *
+ * @author gwu
+ * @version 1.0
+ */
+
+/**
  * Initial import of required modules for an express application,
  * done by Webstorm IDE at project start.
  */
@@ -12,7 +21,6 @@ var bodyParser = require('body-parser');
 /**
  * Manually added requirements
  */
-// load module for mongodb
 var mongoose = require('mongoose');
 
 /**
@@ -20,8 +28,7 @@ var mongoose = require('mongoose');
  *  and rest api calls
  */
 var index = require('./routes/index');
-var profile = require('./routes/profile');
-var submit = require('./routes/submit');
+var startProfile = require('./routes/startProfile');
 
 // set express application variable
 var app = express();
@@ -58,15 +65,15 @@ db.on('connected', function () {
 
 
 /**
- * Set routes for our web pages
+ * Set routes for the webservice pages
  */
 app.use('/', index);
-app.use('/profile', profile);
-app.use('/submit', submit);
+app.use('/startProfile', startProfile);
 
 
 /**
  * HTTP status and error handling is automatically done for a new project
+ * catch 404 and forward to error handler
  */
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -75,7 +82,9 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-// error handler
+/**
+ * Error handler
+ */
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -86,4 +95,5 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
+// Export all functions as app
 module.exports = app;

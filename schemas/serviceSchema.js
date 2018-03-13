@@ -1,7 +1,14 @@
 /**
  * Schema for the Service database model.
- * Used to store a service an its containing characteristics into the database collection.
- * @type {*|Mongoose}
+ * Used to store a service and its containing characteristics into the database collection.
+ *
+ * @class serviceSchema
+ * @type Mongoose Schema
+ * @constructor serviceSchema
+ * @uses characteristicSchema
+ *
+ * @author gwu
+ * @version 1.0
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -9,8 +16,12 @@ var Characteristic = require('./characteristicSchema');
 var characteristicSchema = mongoose.model('Characteristic').schema;
 
 /**
- * Service schema containing data for
- * uuid, characteristics array and name of types defined in the exchange format.
+ * Service schema used to store service data in form of the exchange format.
+ * Fields defined by the SIG standard:
+ * uuid, array of characteristics
+ *
+ * Additional fields:
+ * name
  */
 var serviceSchema = new Schema({
     // values defined and used by the the SIG standard

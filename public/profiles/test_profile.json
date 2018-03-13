@@ -10,13 +10,13 @@
           {
             "uuid": "00002901-0000-1000-8000-00805f9b34fb",
             "value": "Heart rate measurement in bpm",
-            "data" : "string",
+            "datatype" : "string",
             "name" : "User Description"
           }
         ],
 
         "name" : "Heart Rate Measurement",
-        "data" : "uint16",
+        "datatype" : "uint16",
         "offset" : 0,
         "interval" : 2000,
         "values" : [
@@ -34,12 +34,12 @@
           {
             "uuid": "00002901-0000-1000-8000-00805f9b34fb",
             "value":"Body sensor location",
-            "data" : "string",
+            "datatype" : "string",
             "name" : "User Description"
           }
         ],
         "name" : "Body Location",
-        "data" : "uint8",
+        "datatype" : "uint8",
         "offset" : 0,
         "interval" : 0,
         "values" : [ ],
@@ -60,24 +60,24 @@
           {
             "uuid": "2901",
             "value": "Humidity level in %, values between 0 and 100%",
-            "data" : "string",
+            "datatype" : "string",
             "name" : "User Description"
           },
           {
             "uuid": "2904",
             "value" : ["0x06", "0xFE", "0xAD", "0x27", "0x01", "0x00", "0x00"],
-            "data" : "bytes",
+            "datatype" : "bytes",
             "name" : "Presentation format little endian format"
           },
           {
             "uuid": "2906",
             "value": ["0x00", "0x00", "0x00", "0x64"],
-            "data" : "bytes",
+            "datatype" : "bytes",
             "name" : "Lower and Upper bounds little endian format"
           }
         ],
         "name" : "Humidity Measurement",
-        "data" : "uint16",
+        "datatype" : "uint16",
         "offset" : 0,
         "interval" : 5000,
         "values" : [
@@ -95,24 +95,24 @@
           {
             "uuid": "2901",
             "value":"Pressure level in Pa, values between 32000 and 102500 Pa",
-            "data" : "string",
+            "datatype" : "string",
             "name" : "User Description"
           },
           {
             "uuid": "2904",
             "value" : [ "0x08", "0xFF", "0x24", "0x27", "0x01", "0x00", "0x00"],
-            "data" : "bytes",
+            "datatype" : "bytes",
             "name" : "Presentation format little endian format"
           },
           {
             "uuid": "2906",
             "value": ["0x00", "0xE2", "0x04", "0x00","0xE8", "0xA3", "0x0F", "0x00" ],
-            "data" : "bytes",
+            "datatype" : "bytes",
             "name" : "Lower and Upper bounds little endian format"
           }
         ],
         "name" : "Pressure Measurement",
-        "data" : "uint32",
+        "datatype" : "uint32",
         "offset" : 0,
         "interval" : 2000,
         "values" : [ ],
