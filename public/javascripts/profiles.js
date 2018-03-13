@@ -30,7 +30,12 @@ var characteristic = 0;
 var descriptor = 0;
 
 
-// DOM Ready =============================================================
+/**
+ * DOM ready function entry point after loading DOM structure into browser
+ *
+ * @method jquery.ready
+ * @for profiles
+ */
 $(document).ready(function () {
     button = document.getElementById('simulator');
     form = document.getElementById('profile');
@@ -52,6 +57,14 @@ $(document).ready(function () {
 
 });
 
+/**
+ * Function request all existing profiles as a AJAX call from the REST API
+ * and populates the a table with the response as data source.
+ * Writes data directly to body
+ *
+ * @method populateTable
+ * @for profiles
+ */
 function populateTable() {
     // Empty content string
     var tableContent = '';
@@ -76,6 +89,14 @@ function populateTable() {
     });
 }
 
+/**
+ * Function does a GET request to the REST API to start a shell script.
+ * This script checks if the simulator is running and returns this state.
+ * The state is used to switch the label and color of the start/stop button.
+ *
+ * @method checkSimulatorRunning
+ * @for profiles
+ */
 function checkSimulatorRunning() {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("readystatechange", function () {
@@ -91,6 +112,13 @@ function checkSimulatorRunning() {
     xhr.send(null);
 }
 
+/**
+ * Function is triggered on button click event and starting/stopping the simulator
+ * depending on its current state which is stored as boolean variable start_stop
+ *
+ * @method startStop
+ * @for profiles
+ */
 function startStop() {
     if (start_stop) {
         startSimulator();
@@ -99,6 +127,15 @@ function startStop() {
     }
 }
 
+/**
+ * After a confirmation dialog is confirmed positive,
+ * this function sends a POST request to the REST API to start the simulator.
+ * Also the start/stop button on the page is changing its label and color.
+ * Prints either a success or error dialog from the response state.
+ *
+ * @method startSimulator
+ * @for profiles
+ */
 function startSimulator() {
     var confirmation = confirm('Are you sure you want to start the simulator?');
 
@@ -122,11 +159,18 @@ function startSimulator() {
         });
         xhr.send(null);
     }
-    else {
-        return false;
-    }
 }
 
+
+/**
+ * After a confirmation dialog is confirmed positive,
+ * this function sends a POST request to the REST API to stop the simulator.
+ * Also the start/stop button on the page is changing its label and color.
+ * Prints either a success or error dialog from the response state.
+ *
+ * @method stopSimulator
+ * @for profiles
+ */
 function stopSimulator() {
     var confirmation = confirm('Are you sure you want to stop the simulator?');
 
@@ -151,12 +195,19 @@ function stopSimulator() {
 
         xhr.send(null);
     }
-    else {
-        return false;
-    }
 }
 
-// Delete profile
+/**
+ * After a confirmation dialog is confirmed positive,
+ * this function sends a DELETE request to the REST API to delete an existing profile
+ * using the profiles ID.
+ * Prints either a success or error dialog from the response message.
+ * And repopulates the profile table which has changed.
+ *
+ * @method deleteProfile
+ * @event event
+ * @for profiles
+ */
 function deleteProfile(event) {
 
     event.preventDefault();
@@ -173,12 +224,18 @@ function deleteProfile(event) {
             populateTable();
         });
     }
-    else {
-        return false;
-    }
 }
 
-// save profile for next simulator start
+/**
+ * After a confirmation dialog is confirmed positive,
+ * this function sends a POST request to the REST API containing the selected profile.
+ * The profile is stored in a file for further use with the simulator.
+ * Prints either a success or error dialog from the response message.
+ *
+ * @method selectProfile
+ * @event event
+ * @for profiles
+ */
 function selectProfile(event) {
     event.preventDefault();
 
@@ -206,15 +263,20 @@ function selectProfile(event) {
         xhr.setRequestHeader("content-type", "application/json");
         xhr.send(profile);
     }
-    else {
-        return false;
-    }
 }
 
+/**
+ * Function populates a form with the json data from the selected profile.
+ * Before the new form is created any existing old form is removed from the DOM.
+ *
+ * @method watchProfile
+ * @event event
+ * @for profiles
+ */
 function watchProfile(event) {
     event.preventDefault();
 
-    removeChild(form);
+    removeChilds(form);
     $("#populate").show();
 
     serviceCount = 0;
@@ -224,9 +286,18 @@ function watchProfile(event) {
     var profile = getJSONById($(this).attr('rel'));
     console.log(profile);
     populateFormFromJson(form, profile);
-
 }
 
+/**
+ * Function returns the profile data as json from the profiles array
+ * used to populate the table inside the body element.
+ * To get the correct profile data the ID from the selection is used.
+ *
+ * @method getJSONById
+ * @param {String} id ID from the selected profile
+ * @return {Object} profile Single profile identified by its ID from the profiles array
+ * @for profiles
+ */
 function getJSONById(id) {
     for (var i = 0; i < profiles.length; i++) {
         if (profiles[i]._id === id) {
@@ -235,13 +306,33 @@ function getJSONById(id) {
     }
 }
 
-function removeChild(fromNode) {
+/**
+ * Function removes all appending child elements from a node.
+ * Used to clear the form.
+ *
+ * @method removeChilds
+ * @param {Object} fromNode Node to remove all child elements from
+ * @for profiles
+ */
+function removeChilds(fromNode) {
     var last;
     while (last = fromNode.lastChild) {
         fromNode.removeChild(last);
     }
 }
 
+/**
+ * Function populates the form with the selected profile data as json.
+ * this function sends a DELETE request to the REST API to delete an existing profile
+ * using the profiles ID.
+ * Prints either a success or error dialog from the response message.
+ * And repopulates the profile table which has changed.
+ *
+ * @method populateFormFromJson
+ * @param {Object} parentNode Node to start populating the form from
+ * @param {Array} jsonProfile Contains the profile data as json
+ * @for profiles
+ */
 function populateFormFromJson(parentNode, jsonProfile) {
 
     // iterate over elements in json profile
@@ -266,6 +357,15 @@ function populateFormFromJson(parentNode, jsonProfile) {
     }
 }
 
+/**
+ * Function appends a service and its containing data to the form.
+ *
+ * @method populateService
+ * @param {Object} parentNode Node to append service at
+ * @param {Object} service Object of service
+ * @return null
+ * @for profiles
+ */
 function populateService(parentNode, service) {
     var currentNode = parentNode;
     for (var elem in service) {
@@ -291,6 +391,15 @@ function populateService(parentNode, service) {
     return null;
 }
 
+/**
+ * Function appends a characteristic and its containing data to the form.
+ *
+ * @method populateCharacteristic
+ * @param {Object} parentNode Node to append characteristic at
+ * @param {Object} characteristic Object of characteristic
+ * @return null
+ * @for profiles
+ */
 function populateCharacteristic(parentNode, characteristic) {
     var currentNode = parentNode;
     var oldParentNode;
@@ -327,6 +436,15 @@ function populateCharacteristic(parentNode, characteristic) {
     return null;
 }
 
+/**
+ * Function appends a descriptor and its containing data to the form.
+ *
+ * @method populateDescriptor
+ * @param {Object} parentNode Node to append descriptor at
+ * @param {String} descriptor Object of descriptor
+ * @return null
+ * @for profiles
+ */
 function populateDescriptor(parentNode, descriptor) {
     for (var elem in descriptor) {
         createInputElement(parentNode,
@@ -336,6 +454,16 @@ function populateDescriptor(parentNode, descriptor) {
     return null;
 }
 
+/**
+ * Function creates a new div element with an id and a class.
+ * The created element is appended to a parent node.
+ *
+ * @method appendNewDivElement
+ * @param {Object} parent Parent node
+ * @param {String} id Element ID
+ * @param {String} name Element class
+ * @for profiles
+ */
 function appendNewDivElement(parent, id, name) {
     var div = document.createElement("div");
     div.id = id;
@@ -343,6 +471,18 @@ function appendNewDivElement(parent, id, name) {
     parent.appendChild(div);
 }
 
+/**
+ * Function creates a label and corresponding input element to the form.
+ * Label and input fields building a key value pair.
+ * Depending on a condition the elements are appended to a parent node
+ * or inserted before an existing element.
+ *
+ * @method createInputElement
+ * @param {Object} parentNode Parent node
+ * @param {String} key Key for the label
+ * @param {String} value Value for the input field
+ * @for profiles
+ */
 function createInputElement(parentNode, key, value) {
     console.log("Key: " + key);
     if ( (key.indexOf('__v') === -1) && ( key.indexOf('_id') === -1)) { //services' || 'characteristics' || 'descriptors')) {
