@@ -1,4 +1,13 @@
 /**
+ * File app.js is the basic file of the express application
+ *
+ * @class app
+ *
+ * @author gwu
+ * @version 1.0
+ */
+
+/**
  * Initial import of required modules for an express application,
  * done by Webstorm IDE at project start.
  */
@@ -12,7 +21,6 @@ var bodyParser = require('body-parser');
 /**
  * Manually added requirements
  */
-// load module for mongodb
 var mongoose = require('mongoose');
 
 /**
@@ -65,6 +73,7 @@ app.use('/startProfile', startProfile);
 
 /**
  * HTTP status and error handling is automatically done for a new project
+ * catch 404 and forward to error handler
  */
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -73,7 +82,9 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-// error handler
+/**
+ * Error handler
+ */
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -84,4 +95,5 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
+// Export all functions as app
 module.exports = app;

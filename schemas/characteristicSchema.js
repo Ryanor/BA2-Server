@@ -4,6 +4,11 @@
  *
  * @class characteristicSchema
  * @type Mongoose Schema
+ * @constructor characteristicSchema
+ * @uses descriptorSchema
+ *
+ * @author gwu
+ * @version 1.0
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;

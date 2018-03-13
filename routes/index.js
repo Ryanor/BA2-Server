@@ -1,3 +1,17 @@
+/**
+ * Javascript file index.js contains:
+ *     GET routes for the three web pages
+ *     GET and POST routes for the simulator control
+ *     REST API routes with GET, POST and DELETE
+ *
+ * @class index
+ * @author gwu
+ * @version 1.0
+ */
+
+/**
+ * Required modules
+ */
 var process = require('child_process');
 var path = require('path');
 var fs = require('fs');
@@ -8,26 +22,52 @@ var Profile = require('../schemas/profileSchema');
 var profile = mongoose.model('Profile');
 
 /**
- *  GET routes
+ *  GET routes for the three web pages
  */
-// get index page
+/**
+ * Route to get the root page
+ *
+ * @method router.get('/')
+ * @return res Returns the web page as response
+ * @for index
+ */
 router.get('/', function (req, res) {
     res.render('index', {title: 'Bluetooth LE Profile Generator'});
 });
 
-// route for page create new profile
+/**
+ * Route to get the create profile page
+ *
+ * @method router.get('/profile')
+ * @return res Returns the web page as response
+ * @for index
+ */
 router.get('/profile', function (req, res) {
     res.render('profile', {title: 'Bluetooth LE Profile Generator'});
 });
 
-// route for existing profiles page
+/**
+ * Route to get the existing profiles page
+ *
+ * @method router.get('/profiles')
+ * @return res Returns the web page as response
+ * @for index
+ */
 router.get('/profiles', function (req, res) {
     res.render('profiles', {title: 'Bluetooth LE Profile Generator'});
 });
 
-
 /**
- *  POST routes
+ * Simulator
+ */
+/**
+ * Route to check if the simulator is running.
+ * Shell script is used to get the PID of the running process.
+ * If a process is found the simulator is running.
+ *
+ * @method router.get('/checkSimulator')
+ * @return res Returns a response containing the status code and a message whether the simulator is running or not
+ * @for index
  */
 router.get('/checkSimulator', function (req, res) {
     console.log("Checking for running simulator...");
@@ -43,13 +83,15 @@ router.get('/checkSimulator', function (req, res) {
     });
 });
 
-router.post('/selectProfile', function (req, res) {
-    var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
-    console.log("Received data: " + JSON.stringify(req.body));
-    fs.writeFileSync(file, JSON.stringify(req.body));
-    res.send({msg: 'Profile saved and ready for use.'});
-});
-
+/**
+ * Route to start the simulator.
+ * Simulator is executed as a child process of the web app.
+ * If simulator could not start error message is printed to the console.
+ *
+ * @method router.post('/startSimulator')
+ * @return res Returns a response containing a success message
+ * @for index
+ */
 router.post('/startSimulator', function (req, res) {
 
     console.log("Simulator will start up...");
@@ -61,6 +103,15 @@ router.post('/startSimulator', function (req, res) {
 
 });
 
+/**
+ * Route to stop the simulator.
+ * Shell script is used to get the PID of the running process and kills the running process.
+ * Prompts result code to the console.
+ *
+ * @method router.post('/stopSimulator')
+ * @return res Returns a response containing a success message.
+ * @for index
+ */
 router.post('/stopSimulator', function (req, res) {
     console.log("Simulator will be stopped...");
     var stopping = process.execFile(path.join(__dirname, '../', 'stopSimulator.sh'), ['/usr/bin/node', '/home/pi/project/BA2-Simulator/main.js']);
@@ -71,9 +122,33 @@ router.post('/stopSimulator', function (req, res) {
 });
 
 /**
+ * Route to save the selected profile json data to a file.
+ * If writing data to file failed error message is prompted to the console.
+ *
+ * @method router.post('/selectProfile')
+ * @return res Returns a response containing a success message
+ * @for index
+ */
+router.post('/selectProfile', function (req, res) {
+    var file = path.join(__dirname, '../public/profiles', 'start_profile.json');
+    console.log("Received data: " + JSON.stringify(req.body));
+    if(fs.writeFileSync(file, JSON.stringify(req.body))){
+        res.send({msg: 'Profile saved and ready for use.'});
+    } else {
+        console.log("Error saving selected profile to file!");
+    }
+});
+
+/**
  * REST API routes
  */
-// load all profiles from database
+/**
+ * Route to GET all profiles stored in the database.
+ *
+ * @method router.get('/profiles/all')
+ * @return res Returns a response containing profiles as json data.
+ * @for index
+ */
 router.get('/profile/all', function (req, res, next) {
 
     profile.find(function (err, profile) {
@@ -84,7 +159,13 @@ router.get('/profile/all', function (req, res, next) {
     });
 });
 
-// post route to create a new profile in the database
+/**
+ * POST route to create a new profile in the database.
+ *
+ * @method router.post('/profile')
+ * @return res Returns a response containing the status code and a message.
+ * @for index
+ */
 router.post('/profile', function (req, res) {
 
     profile.create(req.body, function (err, profile) {
@@ -96,7 +177,13 @@ router.post('/profile', function (req, res) {
     });
 });
 
-// load a single profile from the database using its ID
+/**
+ * Route to GET a profile by its ID from the database.
+ *
+ * @method router.get('/profile/:id')
+ * @return res Returns a response containing profile as json data or propagate error.
+ * @for index
+ */
 router.get('/profile/:id', function (req, res, next) {
 
     profile.findById(req.params.id, function (err, profile) {
@@ -107,7 +194,13 @@ router.get('/profile/:id', function (req, res, next) {
     });
 });
 
-// delete a single profile from database using ID
+/**
+ * Route to DELETE a profile by its ID from the database.
+ *
+ * @method router.delete('/profile/:id')
+ * @return res Returns a response containing a message or propagate error.
+ * @for index
+ */
 router.delete('/profile/:id', function (req, res, next) {
 
     profile.remove({_id: req.params.id}, function (err, profile) {
