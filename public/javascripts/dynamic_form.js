@@ -252,7 +252,7 @@ function addCharacteristic(serviceDivID) {
     // Characteristic type checkboxes
     var singleRadioButton = document.createElement('input');
     singleRadioButton.type = "radio";
-    singleRadioButton.name = characteristicNamePrefix + ".type";
+    singleRadioButton.name = characteristicNamePrefix + ".characteristicType";
     singleRadioButton.value = "single";
     singleRadioButton.id = "single" + characteristic;
     singleRadioButton.defaultChecked = true;
@@ -277,7 +277,7 @@ function addCharacteristic(serviceDivID) {
     };
     var arrayRadioButton = document.createElement('input');
     arrayRadioButton.type = "radio";
-    arrayRadioButton.name = characteristicNamePrefix + ".type";
+    arrayRadioButton.name = characteristicNamePrefix + ".characteristicType";
     arrayRadioButton.value = "array";
     arrayRadioButton.id = "array" + characteristic;
     arrayRadioButton.onclick = function () {
@@ -301,9 +301,9 @@ function addCharacteristic(serviceDivID) {
     };
 
     var rangeRadioButton = document.createElement('input');
-    rangeRadioButton.setAttribute('type', 'radio');
-    rangeRadioButton.setAttribute('name', characteristicNamePrefix + ".type");
-    rangeRadioButton.setAttribute('value', "range");
+    rangeRadioButton.type = 'radio';
+    rangeRadioButton.name = characteristicNamePrefix + ".characteristicType";
+    rangeRadioButton.value = "range";
     rangeRadioButton.id = "range" + characteristic;
     rangeRadioButton.onclick = function () {
 
@@ -330,7 +330,7 @@ function addCharacteristic(serviceDivID) {
 
     var baseRadioButton = document.createElement('input');
     baseRadioButton.type = "radio";
-    baseRadioButton.name = characteristicNamePrefix + ".type";
+    baseRadioButton.name = characteristicNamePrefix + ".characteristicType";
     baseRadioButton.value = "base";
     baseRadioButton.id = "basetype" + characteristic;
     baseRadioButton.onclick = function () {

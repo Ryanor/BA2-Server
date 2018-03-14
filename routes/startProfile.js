@@ -16,7 +16,7 @@ var path = require('path');
 var router = express.Router();
 
 /**
- * Route to GET a single profile out of a file.
+ * Route to GET the selected profile which is used in the simulator.
  *
  * @method router.get('/startProfile/profile')
  * @return res Returns a response containing profile as json data.
@@ -25,18 +25,6 @@ var router = express.Router();
 router.get('/profile', function (req, res, next) {
     res.set('Content-Type', 'application/json');
     res.sendFile(path.join(__dirname, '../public/profiles', 'start_profile.json'));
-});
-
-/**
- * Route to GET a single profile out of a file.
- *
- * @method router.get('/startProfile/json')
- * @return res Returns a response containing profile as json data.
- * @for startProfile
- */
-router.get('/json', function (req, res, next) {
-    res.set('Content-Type', 'application/json');
-    res.sendFile(path.join(__dirname, '../public/profiles', 'test_profile.json'));
 });
 
 // export all functions from router to the express application
