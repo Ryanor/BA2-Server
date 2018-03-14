@@ -32,6 +32,7 @@ var characteristicSchema = new Schema({
 
     // extra values defined for the exchange format
     name : String,
+    characteristicType : String,
     datatype : String,
     offset : {type : Number, default : 0},
     interval : {type : Number, default : 1000},
