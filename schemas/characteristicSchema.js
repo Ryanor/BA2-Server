@@ -26,7 +26,7 @@ var descriptorSchema = mongoose.model('Descriptor').schema;
 var characteristicSchema = new Schema({
     // values defined and used by the the SIG standard
     uuid : String,
-    value : {type : Schema.Types.Mixed, default: null },
+    value : {type : Number, default: null },
     properties : {type : [String], enum : ['read','write','notify']},
     descriptors : [descriptorSchema],
 
@@ -36,7 +36,7 @@ var characteristicSchema = new Schema({
     datatype : String,
     offset : {type : Number, default : 0},
     interval : {type : Number, default : 1000},
-    values : [Schema.Types.Mixed],
+    values : [Number],
     base : {type : Number, default : 0},
     min : {type : Number, default : 0},
     max : {type : Number, default : 0}
