@@ -32,6 +32,11 @@ block content
         p This characteristic generates a random value between the min and max value. It can be used to simulate
         p the battery or humidity level, e.g. min: 0, max: 100.
         p
+        p <b>Data-types:</b> The following data-types for characteristic values can be used:
+        p <b>uint8, uint16, uint32, float, sint8, sint16, sint32</b>
+        p Any other input may crash the simulation or cause incorrect data transmission
+        p
+        p
         p If the input fields for interval, offset, base, min or max value are not filled the default values are used:
         p interval: 1000
         p offset: 0
