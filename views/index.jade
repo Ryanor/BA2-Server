@@ -3,9 +3,54 @@ extends layout
 block content
     #content
         h1 Welcome to #{title}
-        h3 FAQ
-        p Tab  <b>Existing Profiles</b> shows all stored profiles in the database.
-        p It can be used to get information about existing profiles or delete unused ones.
-        br
-        p Use <b>Create Profile</b> for the creation form.
-        p Add services, characteristics and descriptors containing specific attributes to define your own device profile.
+        p
+        h1 FAQ
+        p
+        h2 Create a new profile
+        p
+        p To create a new profile use the menu tab <b>Create profile</b>
+        p The input field name for profile, service, characteristic and descriptors is optional and used for readability.
+        p The format for UUIDs can be small format like 2A01 or of full size like 00002A01-0000-1000-8000-00805F9B34FB
+        p
+        h3 Characteristic types
+        p There are currently four different kinds of characteristics available:
+        p
+        p <b>Single value characteristic:</b>
+        p Is a characteristic which contains only one value. E.g. a read only characteristic.
+        p
+        p <b>Array of values characteristic:</b>
+        p If you have a file containing values from a sensor you can use the array characteristic.
+        p Copy the comma separated values to the array input field. During the simulation the values step throw the values of the array.
+        p If the end of the array is reached, the simulations starts from the beginning again.
+        p
+        p <b>Base value characteristic:</b>
+        p The base value characteristic starts the simulation with the base value. The min and max values are used to
+        p create a random value. This value is added tho the base value if its even or is subtracted if its odd. This characteristic can be used to simulate
+        p temperature or a heart beat like: Base: 60, min: 1, max: 10.
+        p
+        p <b>Range values characteristic:</b>
+        p This characteristic generates a random value between the min and max value. It can be used to simulate
+        p the battery or humidity level, e.g. min: 0, max: 100.
+        p
+        p If the input fields for interval, offset, base, min or max value are not filled the default values are used:
+        p interval: 1000
+        p offset: 0
+        p base: 0
+        p min: 0
+        p max: 0
+        p
+        p
+        h2 Select a profile for the simulator
+        p
+        p To select a profile for the simulator use the menu tab <b>Existing profiles</b>. The website lists all currently existing profiles from the database.
+        p Click on the <b>Select</b> link to choose a profile for the simulator. After choosing a profile the simulator has to be restarted to simulate the new profile.
+        p
+        p
+        h2 Start / Stop the simulator
+        p To stop or start the simulator use the menu tab <b>Existing profiles</b>.
+        p Below the list of existing profiles the start/stop button is visible.
+        p
+        p
+        h2 View profile data
+        p If you want to look at a profiles data, click on the name of the profile in the <b>Existing profiles</b> page.
+        p The profile data will be shown below the start/stop simulator button.

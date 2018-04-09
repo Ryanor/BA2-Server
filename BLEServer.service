@@ -1,0 +1,10 @@
+ [Unit]
+Description=BLEServer service
+After=multi-user.target mongodb.service
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/node /home/pi/project/BA2-Server/bin/www
+
+[Install]
+WantedBy=multi-user.target

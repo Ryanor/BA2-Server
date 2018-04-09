@@ -18,8 +18,8 @@ var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Profile = require('../schemas/profileSchema');
-var profile = mongoose.model('Profile');
+var profileSchema = require('../schemas/profileSchema');
+var profileDB = mongoose.model('Profile');
 
 /**
  *  GET routes for the three web pages
@@ -151,7 +151,7 @@ router.post('/selectProfile', function (req, res) {
  */
 router.get('/profile/all', function (req, res, next) {
 
-    profile.find(function (err, profile) {
+    profileDB.find(function (err, profile) {
         if (err) {
             return next(err);
         }
@@ -168,7 +168,7 @@ router.get('/profile/all', function (req, res, next) {
  */
 router.post('/profile', function (req, res) {
 
-    profile.create(req.body, function (err, profile) {
+    profileDB.create(req.body, function (err, profile) {
         if (err) {
             res.status(500).send("Database write error!");
         } else {
@@ -186,7 +186,7 @@ router.post('/profile', function (req, res) {
  */
 router.get('/profile/:id', function (req, res, next) {
 
-    profile.findById(req.params.id, function (err, profile) {
+    profileDB.findById(req.params.id, function (err, profile) {
         if (err) {
             return next(err);
         }
@@ -203,7 +203,7 @@ router.get('/profile/:id', function (req, res, next) {
  */
 router.delete('/profile/:id', function (req, res, next) {
 
-    profile.remove({_id: req.params.id}, function (err, profile) {
+    profileDB.remove({_id: req.params.id}, function (err, profile) {
         if (err) {
             return next(err);
         }

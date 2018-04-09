@@ -2,8 +2,7 @@ extends layout
 
 block content
     #content
-        h1 Welcome to #{title}
-        h3 Manage existing profiles
+        h1 Manage existing profiles and simulator control
         script(src="/jquery/jquery.js")
         script(src="/javascripts/profiles.js")
         #wrapper
@@ -17,9 +16,11 @@ block content
                     th Delete?
                 tbody#body
 
-        h3 Selected profile will be used on next simulator start.
+        h3 Click on Select to choose a profile for the use with the simulator.
+        h3 The selected profile will be used after the simulator was restarted.
         h3 Click on the profile name to see all of its attributes.
-        h3 Delete will remove the profile from the database. If deleted profile was the last selected profile for the simulator it will still be used until a new profile is selected.
+        h3 Delete will remove a profile from the database.
+        h3 If the deleted profile was the last selected profile for the simulator it will still be used until a new profile is selected.
         br
         input#simulator(class='start', type='button', name='start_stop', value='Start Simulator', onclick='startStop()')
         br
