@@ -18,7 +18,6 @@ var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var profileSchema = require('../schemas/profileSchema');
 var profileDB = mongoose.model('Profile');
 
 /**

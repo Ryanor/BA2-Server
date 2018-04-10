@@ -4,6 +4,7 @@ After=multi-user.target mongodb.service
 
 [Service]
 Type=idle
+User=pi
 ExecStart=/usr/bin/node /home/pi/project/BA2-Server/bin/www
 
 [Install]
